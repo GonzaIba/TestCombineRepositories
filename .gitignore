@@ -1,0 +1,6 @@
+obj/
+bin/
+.vs/
+v15/
+packages/
+*.csproj.user
