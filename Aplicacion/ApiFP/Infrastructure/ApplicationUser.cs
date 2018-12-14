@@ -20,10 +20,20 @@ namespace ApiFP.Infrastructure
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; }
-        /*
+        
         [Required]
-        public byte Level { get; set; }
+        public long Cuit { get; set; }
 
+        [Required]
+        public string BusinessName { get; set; }
+
+        [Required]
+        public string Profile { get; set; }
+
+        [Required]
+        public string Category { get; set; }
+       
+        /*
         [Required]
         public DateTime JoinDate { get; set; }
         */

@@ -154,6 +154,10 @@
     <Compile Include="Migrations\201812120433464_ChangeApplicationUser.Designer.cs">
       <DependentUpon>201812120433464_ChangeApplicationUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812141827167_ChangeApplicationUser1.cs" />
+    <Compile Include="Migrations\201812141827167_ChangeApplicationUser1.Designer.cs">
+      <DependentUpon>201812141827167_ChangeApplicationUser1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\ModelFactory.cs" />
@@ -181,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812120433464_ChangeApplicationUser.resx">
       <DependentUpon>201812120433464_ChangeApplicationUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812141827167_ChangeApplicationUser1.resx">
+      <DependentUpon>201812141827167_ChangeApplicationUser1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
