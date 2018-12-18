@@ -13,24 +13,16 @@ namespace ApiFP.Infrastructure
     public class ApplicationUser : IdentityUser
     {
         
-        [Required]
-        [MaxLength(100)]
         public string FirstName { get; set; }
 
-        [Required]
-        [MaxLength(100)]
         public string LastName { get; set; }
+                
+        public string Cuit { get; set; }
         
-        [Required]
-        public long Cuit { get; set; }
-
-        [Required]
         public string BusinessName { get; set; }
-
-        [Required]
+        
         public string Profile { get; set; }
-
-        [Required]
+        
         public string Category { get; set; }
        
         /*

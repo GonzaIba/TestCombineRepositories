@@ -144,19 +144,20 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
+    <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
     <Compile Include="Infrastructure\ApplicationUserManager.cs" />
     <Compile Include="Migrations\201812110545104_InitialCreate.cs" />
     <Compile Include="Migrations\201812110545104_InitialCreate.Designer.cs">
       <DependentUpon>201812110545104_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812120433464_ChangeApplicationUser.cs" />
-    <Compile Include="Migrations\201812120433464_ChangeApplicationUser.Designer.cs">
-      <DependentUpon>201812120433464_ChangeApplicationUser.cs</DependentUpon>
+    <Compile Include="Migrations\201812180312317_ChangeUser.cs" />
+    <Compile Include="Migrations\201812180312317_ChangeUser.Designer.cs">
+      <DependentUpon>201812180312317_ChangeUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812141827167_ChangeApplicationUser1.cs" />
-    <Compile Include="Migrations\201812141827167_ChangeApplicationUser1.Designer.cs">
-      <DependentUpon>201812141827167_ChangeApplicationUser1.cs</DependentUpon>
+    <Compile Include="Migrations\201812180322225_AddFactura.cs" />
+    <Compile Include="Migrations\201812180322225_AddFactura.Designer.cs">
+      <DependentUpon>201812180322225_AddFactura.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -183,11 +184,11 @@
     <EmbeddedResource Include="Migrations\201812110545104_InitialCreate.resx">
       <DependentUpon>201812110545104_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812120433464_ChangeApplicationUser.resx">
-      <DependentUpon>201812120433464_ChangeApplicationUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812180312317_ChangeUser.resx">
+      <DependentUpon>201812180312317_ChangeUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812141827167_ChangeApplicationUser1.resx">
-      <DependentUpon>201812141827167_ChangeApplicationUser1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812180322225_AddFactura.resx">
+      <DependentUpon>201812180322225_AddFactura.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

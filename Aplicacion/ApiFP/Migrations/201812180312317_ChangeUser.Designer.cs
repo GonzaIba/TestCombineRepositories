@@ -7,13 +7,13 @@ namespace ApiFP.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class ChangeApplicationUser1 : IMigrationMetadata
+    public sealed partial class ChangeUser : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangeApplicationUser1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangeUser));
         
         string IMigrationMetadata.Id
         {
-            get { return "201812141827167_ChangeApplicationUser1"; }
+            get { return "201812180312317_ChangeUser"; }
         }
         
         string IMigrationMetadata.Source
