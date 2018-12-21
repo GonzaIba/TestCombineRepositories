@@ -160,9 +160,17 @@
     <Compile Include="Migrations\201812210156260_CreateFacturas.Designer.cs">
       <DependentUpon>201812210156260_CreateFacturas.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812210157283_CreateRubro.cs" />
-    <Compile Include="Migrations\201812210157283_CreateRubro.Designer.cs">
-      <DependentUpon>201812210157283_CreateRubro.cs</DependentUpon>
+    <Compile Include="Migrations\201812210422447_CreateRubros.cs" />
+    <Compile Include="Migrations\201812210422447_CreateRubros.Designer.cs">
+      <DependentUpon>201812210422447_CreateRubros.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812210503305_AddUserRubros.cs" />
+    <Compile Include="Migrations\201812210503305_AddUserRubros.Designer.cs">
+      <DependentUpon>201812210503305_AddUserRubros.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812210515240_CreateFacturas1.cs" />
+    <Compile Include="Migrations\201812210515240_CreateFacturas1.Designer.cs">
+      <DependentUpon>201812210515240_CreateFacturas1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -195,8 +203,14 @@
     <EmbeddedResource Include="Migrations\201812210156260_CreateFacturas.resx">
       <DependentUpon>201812210156260_CreateFacturas.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812210157283_CreateRubro.resx">
-      <DependentUpon>201812210157283_CreateRubro.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812210422447_CreateRubros.resx">
+      <DependentUpon>201812210422447_CreateRubros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812210503305_AddUserRubros.resx">
+      <DependentUpon>201812210503305_AddUserRubros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812210515240_CreateFacturas1.resx">
+      <DependentUpon>201812210515240_CreateFacturas1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

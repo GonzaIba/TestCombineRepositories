@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
 
@@ -34,7 +35,9 @@ namespace ApiFP.Infrastructure
             modelBuilder.Entity<ApplicationUser>().Property(p => p.Cuit).IsRequired().HasColumnType("varchar").HasMaxLength(50);
             modelBuilder.Entity<ApplicationUser>().Property(p => p.BusinessName).IsRequired().HasColumnType("varchar").HasMaxLength(100);
             modelBuilder.Entity<ApplicationUser>().Property(p => p.Profile).IsRequired().HasColumnType("varchar").HasMaxLength(50);
-            modelBuilder.Entity<ApplicationUser>().Property(p => p.Category).IsRequired().HasColumnType("varchar").HasMaxLength(50); 
+            modelBuilder.Entity<ApplicationUser>().Property(p => p.Category).IsRequired().HasColumnType("varchar").HasMaxLength(50);            
+
+            modelBuilder.Entity<Rubro>().ToTable("Rubros");
         }
 
     }

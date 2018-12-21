@@ -68,8 +68,10 @@ namespace ApiFP.Controllers
                 Email = createUserModel.Email,
                 FirstName = createUserModel.FirstName,
                 LastName = createUserModel.LastName,
-                //Level = 3,
-                //JoinDate = DateTime.Now.Date,
+                Cuit = createUserModel.Cuit,
+                BusinessName = createUserModel.BusinessName,
+                Profile = createUserModel.Profile,
+                Category = createUserModel.Category
             };
 
             IdentityResult addUserResult = await this.AppUserManager.CreateAsync(user, createUserModel.Password);
@@ -157,5 +159,16 @@ namespace ApiFP.Controllers
             return NotFound();
 
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("rubros")]
+        public IHttpActionResult GetRubros()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var rubros = db.Rubros.ToList();            
+            return Ok(rubros);
+        }
+
     }
 }

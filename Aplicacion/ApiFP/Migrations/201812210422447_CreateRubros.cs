@@ -3,7 +3,7 @@ namespace ApiFP.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class CreateRubro : DbMigration
+    public partial class CreateRubros : DbMigration
     {
         public override void Up()
         {

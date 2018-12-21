@@ -38,5 +38,9 @@ namespace ApiFP.Infrastructure
         [MaxLength(100), Column(TypeName = "varchar")]
         public string ImpuestosNoGravados { get; set; }
 
+        public ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string UserIdFK { get; set; }
+
     }
 }

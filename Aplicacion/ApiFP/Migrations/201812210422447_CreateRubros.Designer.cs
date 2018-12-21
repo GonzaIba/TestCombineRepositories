@@ -7,13 +7,13 @@ namespace ApiFP.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class CreateRubro : IMigrationMetadata
+    public sealed partial class CreateRubros : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CreateRubro));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CreateRubros));
         
         string IMigrationMetadata.Id
         {
-            get { return "201812210157283_CreateRubro"; }
+            get { return "201812210422447_CreateRubros"; }
         }
         
         string IMigrationMetadata.Source
