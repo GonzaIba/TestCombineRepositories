@@ -11,6 +11,7 @@ namespace ApiFP.Infrastructure
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Factura> Facturas { get; set; }
+        public DbSet<Rubro> Rubros { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

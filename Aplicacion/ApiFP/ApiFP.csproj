@@ -144,6 +144,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
+    <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
     <Compile Include="Infrastructure\ApplicationUserManager.cs" />
@@ -155,9 +156,13 @@
     <Compile Include="Migrations\201812180312317_ChangeUser.Designer.cs">
       <DependentUpon>201812180312317_ChangeUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812180322225_AddFactura.cs" />
-    <Compile Include="Migrations\201812180322225_AddFactura.Designer.cs">
-      <DependentUpon>201812180322225_AddFactura.cs</DependentUpon>
+    <Compile Include="Migrations\201812210156260_CreateFacturas.cs" />
+    <Compile Include="Migrations\201812210156260_CreateFacturas.Designer.cs">
+      <DependentUpon>201812210156260_CreateFacturas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812210157283_CreateRubro.cs" />
+    <Compile Include="Migrations\201812210157283_CreateRubro.Designer.cs">
+      <DependentUpon>201812210157283_CreateRubro.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -187,8 +192,11 @@
     <EmbeddedResource Include="Migrations\201812180312317_ChangeUser.resx">
       <DependentUpon>201812180312317_ChangeUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812180322225_AddFactura.resx">
-      <DependentUpon>201812180322225_AddFactura.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812210156260_CreateFacturas.resx">
+      <DependentUpon>201812210156260_CreateFacturas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812210157283_CreateRubro.resx">
+      <DependentUpon>201812210157283_CreateRubro.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
