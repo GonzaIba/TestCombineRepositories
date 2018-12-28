@@ -39,7 +39,7 @@ namespace ApiFP.Services
             // Specify the email sender.
             // Create a mailing address that includes a UTF8 character
             // in the display name.
-            MailAddress from = new MailAddress("jane@contoso.com", "Jane " + (char)0xD8 + " Clayton", System.Text.Encoding.UTF8);
+            MailAddress from = new MailAddress(ConfigurationManager.AppSettings["EMAIL_FROM"], ConfigurationManager.AppSettings["EMAIL_DISPLAY_NAME"], System.Text.Encoding.UTF8);
             // Set destinations for the email message.
             MailAddress to = new MailAddress(message.Destination);
             // Specify the message content.
