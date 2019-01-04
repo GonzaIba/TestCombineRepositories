@@ -13,7 +13,7 @@ using ApiFP.Models;
 
 namespace ApiFP.Controllers
 {
-    [RoutePrefix("api/accounts")]
+    [RoutePrefix("accounts")]
     public class AccountsController : BaseApiController
     {
         [Authorize]
@@ -71,7 +71,11 @@ namespace ApiFP.Controllers
                 Cuit = createUserModel.Cuit,
                 BusinessName = createUserModel.BusinessName,
                 Profile = createUserModel.Profile,
-                Category = createUserModel.Category
+                Category = createUserModel.Category,
+                RubroOperativoFK = createUserModel.RubroOperativo,
+                RubroOperativoDescripcion = createUserModel.RubroOperativoDescripcion,
+                RubroExpensasFK = createUserModel.RubroExpensas,
+                RubroExpensasDescripcion = createUserModel.RubroExpensasDescripcion
             };
 
             IdentityResult addUserResult = await this.AppUserManager.CreateAsync(user, createUserModel.Password);

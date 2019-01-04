@@ -13,7 +13,7 @@ using ApiFP.Models;
 
 namespace ApiFP.Controllers
 {
-    [RoutePrefix("api/diagnostics")]
+    [RoutePrefix("diagnostics")]
     public class DiagnosticController : BaseApiController
     {
         [AllowAnonymous]
