@@ -165,9 +165,8 @@ namespace ApiFP.Controllers
         [Route("rubros")]
         public IHttpActionResult GetRubros()
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            var rubrosList = db.Rubros.ToList();            
-            return Ok(new { rubros = rubrosList });
+            ApplicationDbContext db = new ApplicationDbContext();            
+            return Ok(db.Rubros.ToList());
         }
 
     }
