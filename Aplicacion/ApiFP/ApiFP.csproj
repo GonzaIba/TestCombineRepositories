@@ -190,6 +190,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\FacturaController.cs" />
     <Compile Include="Controllers\DiagnosticController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
@@ -226,6 +227,7 @@
       <DependentUpon>201812210515240_CreateFacturas1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\FacturaBindingModels.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\ModelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

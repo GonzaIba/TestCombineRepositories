@@ -42,5 +42,12 @@ namespace ApiFP.Infrastructure
         [ForeignKey("ApplicationUser")]
         public string UserIdFK { get; set; }
 
+        public void Insert()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            db.Facturas.Add(this);
+            db.SaveChanges();
+        }
     }
+
 }
