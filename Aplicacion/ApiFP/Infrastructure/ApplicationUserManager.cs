@@ -36,7 +36,7 @@ namespace ApiFP.Infrastructure
             //Configure validation logic for usernames
             appUserManager.UserValidator = new UserValidator<ApplicationUser>(appUserManager)
             {
-                AllowOnlyAlphanumericUserNames = true,
+                AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
             };
 

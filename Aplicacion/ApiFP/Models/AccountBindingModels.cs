@@ -32,11 +32,11 @@ namespace ApiFP.Models
         public string Profile { get; set; }
         [Required]
         public string Category { get; set; }
-
+        [Required]
         public int RubroOperativo { get; set; }
 
         public string RubroOperativoDescripcion { get; set; }
-
+        [Required]
         public int RubroExpensas { get; set; }
 
         public string RubroExpensasDescripcion { get; set; }        
