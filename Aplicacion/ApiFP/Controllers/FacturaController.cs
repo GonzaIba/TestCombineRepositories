@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using ApiFP.Models;
+using ApiFP.Services;
 
 namespace ApiFP.Controllers
 {
@@ -26,7 +27,7 @@ namespace ApiFP.Controllers
                 return BadRequest(ModelState);
             }
 
-            var factura = new Factura()
+            var factura = new Infrastructure.Factura()
             {
                 Tipo = createFacturaModel.Tipo,
                 Numero = createFacturaModel.Numero,
@@ -39,11 +40,30 @@ namespace ApiFP.Controllers
                 Retenciones = createFacturaModel.Retenciones,
                 Percepciones = createFacturaModel.Percepciones,
                 ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
-                UserIdFK = User.Identity.GetUserId()
+                UserIdFK = User.Identity.GetUserId(),                
             };
 
             factura.Insert();
 
+            var archivo = new Infrastructure.Archivo()
+            {
+                Nombre = createFacturaModel.Archivo.Nombre,
+                Extension = createFacturaModel.Archivo.Extension,
+                FacturaIdFK = factura.Id
+            };
+
+            StorageService storageService = new StorageService();
+            StorageService.StoreResult storeResult = new StorageService.StoreResult();
+            storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+
+            if (storeResult.Result == 0)
+            {
+                archivo.Ruta = storeResult.FullPath; ;
+                archivo.TipoAlmacenamiento = storeResult.StorageType;
+                archivo.Volumen = storeResult.Volume;
+                archivo.Insert();
+            }
+            
             return Ok();
         }
 
@@ -54,7 +74,7 @@ namespace ApiFP.Controllers
         {
             ApplicationDbContext db = new ApplicationDbContext();
             string user = User.Identity.GetUserId();
-            var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();            
+            var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
             return Ok(facturas);
 
         }
