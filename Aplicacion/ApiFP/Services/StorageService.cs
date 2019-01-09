@@ -24,8 +24,24 @@ namespace ApiFP.Services
         {
 
             string volume = ConfigurationManager.AppSettings["FSS_CURRENT_VOLUME"];
-            string volumePath = ConfigurationManager.AppSettings["FSS_VOLUME_" + volume];
-            string fileFullPath = volumePath + fileName;
+            string pathType = ConfigurationManager.AppSettings["FSS_CURRENT_PATH_TYPE"];
+            string volumePath = ConfigurationManager.AppSettings["FSS_VOLUME_" + volume + "_" + pathType];
+            string fileFullPath;
+            /*
+            if (pathType == "ABSOLUTE")
+            {
+                volumePath = ConfigurationManager.AppSettings["FSS_VOLUME_" + volume + "_" + pathType];
+                
+            }else 
+            */
+            if (pathType == "RELATIVE")
+            {
+                volumePath = System.Web.Hosting.HostingEnvironment.MapPath("~");
+                volumePath = volumePath + ConfigurationManager.AppSettings["FSS_VOLUME_" + volume + "_" + pathType];
+            }
+
+            fileFullPath = volumePath + fileName;
+
             StoreResult result = new StoreResult();
             try
             {
@@ -39,6 +55,7 @@ namespace ApiFP.Services
             catch (Exception ex)
             {
                 result.Result = 1;
+                throw new Exception(ex.Message);
             }
 
             return result;
