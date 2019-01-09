@@ -157,7 +157,9 @@
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -190,6 +192,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\ArchivoController.cs" />
     <Compile Include="Controllers\FacturaController.cs" />
     <Compile Include="Controllers\DiagnosticController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -198,6 +201,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
+    <Compile Include="Infrastructure\Archivo.cs" />
     <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
@@ -226,13 +230,19 @@
     <Compile Include="Migrations\201812210515240_CreateFacturas1.Designer.cs">
       <DependentUpon>201812210515240_CreateFacturas1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901072351261_AddArchivos.cs" />
+    <Compile Include="Migrations\201901072351261_AddArchivos.Designer.cs">
+      <DependentUpon>201901072351261_AddArchivos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ArchivosBindingModels.cs" />
     <Compile Include="Models\FacturaBindingModels.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\ModelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CustomJwtFormat.cs" />
     <Compile Include="Providers\CustomOAuthProvider.cs" />
+    <Compile Include="Services\StorageService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -287,6 +297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812210515240_CreateFacturas1.resx">
       <DependentUpon>201812210515240_CreateFacturas1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901072351261_AddArchivos.resx">
+      <DependentUpon>201901072351261_AddArchivos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

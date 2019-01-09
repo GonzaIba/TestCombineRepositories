@@ -30,7 +30,9 @@ namespace ApiFP.Models
         public string Percepciones { get; set; }
         
         public string ImpuestosNoGravados { get; set; }
-                  
+        [Required]
+        public Archivo Archivo { get; set; }
+
     }
 
 }

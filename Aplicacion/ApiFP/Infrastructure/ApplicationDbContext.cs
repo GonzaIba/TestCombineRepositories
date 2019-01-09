@@ -13,6 +13,7 @@ namespace ApiFP.Infrastructure
     {
         public DbSet<Factura> Facturas { get; set; }
         public DbSet<Rubro> Rubros { get; set; }
+        public DbSet<Archivo> Archivos { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
@@ -38,6 +39,7 @@ namespace ApiFP.Infrastructure
             modelBuilder.Entity<ApplicationUser>().Property(p => p.Category).IsRequired().HasColumnType("varchar").HasMaxLength(50);            
 
             modelBuilder.Entity<Rubro>().ToTable("Rubros");
+            modelBuilder.Entity<Archivo>().ToTable("Archivos");
         }
 
     }
