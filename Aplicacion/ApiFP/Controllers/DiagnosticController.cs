@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using ApiFP.Models;
 using System.Configuration;
+using ApiFP.Services;
 
 namespace ApiFP.Controllers
 {
@@ -29,11 +30,37 @@ namespace ApiFP.Controllers
         public IHttpActionResult GetStoragePath()
         {
             string volume = ConfigurationManager.AppSettings["FSS_CURRENT_VOLUME"];
-            string pathType = ConfigurationManager.AppSettings["FSS_CURRENT_PATH_TYPE"];            
+            string pathType = ConfigurationManager.AppSettings["FSS_CURRENT_PATH_TYPE"];
             string path = System.Web.Hosting.HostingEnvironment.MapPath("~");
             path = path + ConfigurationManager.AppSettings["FSS_VOLUME_" + volume + "_" + pathType];
             return Ok(new { path = path });
         }
 
+
+        public class MailTest
+        {
+            public string destination;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("email/send")]
+        public IHttpActionResult SendEmailTest(MailTest mail)
+        {
+            IdentityMessage mailToSend = new IdentityMessage();
+            mailToSend.Destination = mail.destination;
+            mailToSend.Subject = "Test";
+            mailToSend.Body = "Test Email";
+
+            EmailService service = new EmailService();
+            try
+            {
+                service.Send(mailToSend);
+                return Ok();
+            }catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
