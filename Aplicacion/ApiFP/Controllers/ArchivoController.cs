@@ -21,7 +21,7 @@ namespace ApiFP.Controllers
         [Authorize]
         [HttpGet]
         [Route("id/{fileid}")]        
-        public async Task<IHttpActionResult> GetFileById(string fileid)
+        public async Task<Models.Archivo> GetFileById(string fileid)
         
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -34,7 +34,7 @@ namespace ApiFP.Controllers
             archivo.Extension = archivoInfo.Extension;
             archivo.ContenidoBase64 = storageService.Restore(archivoInfo.Ruta, archivoInfo.Volumen, archivoInfo.Ruta);
 
-            return Ok(archivo);
+            return archivo;
         }
     }
 }

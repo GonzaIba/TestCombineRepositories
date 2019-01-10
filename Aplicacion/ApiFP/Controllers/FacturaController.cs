@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using ApiFP.Models;
 using ApiFP.Services;
+using System.Data.SqlClient;
 
 namespace ApiFP.Controllers
 {
@@ -70,12 +71,27 @@ namespace ApiFP.Controllers
         [Authorize]
         [HttpGet]
         [Route("user")]
-        public async Task<IHttpActionResult> GetFacturasByUser()
+        public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
         {
             ApplicationDbContext db = new ApplicationDbContext();
             string user = User.Identity.GetUserId();
-            var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
-            return Ok(facturas);
+            //var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
+            /*
+            var facturasList = (from facturas in db.Facturas
+                                join archivos in db.Archivos on facturas.Id equals archivos.FacturaIdFK                            
+                                where facturas.UserIdFK == user
+                                select new
+                                  {
+                                    facturas,
+                                    ArchivoId = archivos.Id
+                                }).ToList();
+*/
+
+            var facturasList = db.Database.SqlQuery<GetFacturaBindingModel>(
+                "SELECT fac.*,arc.Id as ArchivoId From Facturas as fac " +
+                "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
+                "Where fac.UserIdFK = @user", new SqlParameter("@user", user)).ToList();
+            return facturasList;
 
         }
 
