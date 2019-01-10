@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using ApiFP.Models;
+using System.Configuration;
 
 namespace ApiFP.Controllers
 {
@@ -21,6 +22,17 @@ namespace ApiFP.Controllers
         public IHttpActionResult GetStatus()
         {
             return Ok(new { status = "OK" });
+        }
+
+        [AllowAnonymous]
+        [Route("storage/path/relative")]
+        public IHttpActionResult GetStoragePath()
+        {
+            string volume = ConfigurationManager.AppSettings["FSS_CURRENT_VOLUME"];
+            string pathType = ConfigurationManager.AppSettings["FSS_CURRENT_PATH_TYPE"];            
+            string path = System.Web.Hosting.HostingEnvironment.MapPath("~");
+            path = path + ConfigurationManager.AppSettings["FSS_VOLUME_" + volume + "_" + pathType];
+            return Ok(new { path = path });
         }
 
     }
