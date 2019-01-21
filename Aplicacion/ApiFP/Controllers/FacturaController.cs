@@ -20,7 +20,8 @@ namespace ApiFP.Controllers
     {
 
         [Authorize]
-        [Route("create")]
+        [Route("")]
+        [HttpPost]
         public async Task<IHttpActionResult> CreateFactura(CreateFacturaBindingModel createFacturaModel)
         {
             if (!ModelState.IsValid)
@@ -69,8 +70,8 @@ namespace ApiFP.Controllers
         }
 
         [Authorize]
-        [HttpGet]
-        [Route("user")]
+        [Route("")]
+        [HttpGet]        
         public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -95,5 +96,40 @@ namespace ApiFP.Controllers
 
         }
 
+        [Authorize]
+        [Route("")]
+        [HttpPatch]
+        public async Task<IHttpActionResult> UpdateFactura(UpdateFacturaBindingModel createFacturaModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                string user = User.Identity.GetUserId();
+                var factura = db.Facturas.Find(createFacturaModel.Id);
+
+                if (factura.UserIdFK == user)
+                {
+                    factura.Tipo = createFacturaModel.Tipo;
+                    factura.Numero = createFacturaModel.Numero;
+                    factura.Importe = createFacturaModel.Importe;
+                    factura.CuitOrigen = createFacturaModel.CuitOrigen;
+                    factura.CuitDestino = createFacturaModel.CuitDestino;
+                    factura.Detalle = createFacturaModel.Detalle;
+                    factura.Servicio = createFacturaModel.Servicio;
+                    factura.IvaDiscriminado = createFacturaModel.IvaDiscriminado;
+                    factura.Retenciones = createFacturaModel.Retenciones;
+                    factura.Percepciones = createFacturaModel.Percepciones;
+                    factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
+
+                    db.SaveChanges();
+                };
+            }                          
+
+            return Ok();
+        }
     }
 }
