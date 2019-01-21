@@ -17,8 +17,36 @@ namespace ApiFP.Services
             await configSendGridasync(message);
         }
 
-        // Use NuGet to install SendGrid (Basic C# client lib) 
         private async Task configSendGridasync(IdentityMessage message)
+        {
+            EmailSendGridApiService service = new EmailSendGridApiService();
+
+            EmailSendGridApiService.SendMailRequest request = new EmailSendGridApiService.SendMailRequest();
+
+            request.personalizations = new List<EmailSendGridApiService.Personalization>();
+            EmailSendGridApiService.Personalization personalization = new EmailSendGridApiService.Personalization();
+            personalization.subject = message.Subject;
+            EmailSendGridApiService.Email email = new EmailSendGridApiService.Email();
+            email.email = message.Destination;
+            personalization.to = new List<EmailSendGridApiService.Email>();
+            personalization.to.Add(email);
+            request.personalizations.Add(personalization);
+
+            EmailSendGridApiService.Email emailFrom = new EmailSendGridApiService.Email();
+            emailFrom.email = ConfigurationManager.AppSettings["EMAIL_FROM"];
+            request.from = emailFrom;
+
+            request.content = new List<EmailSendGridApiService.Content>();
+
+            EmailSendGridApiService.Content content = new EmailSendGridApiService.Content();
+            content.type = "text/html";
+            content.value = message.Body;
+            request.content.Add(content);
+
+            service.methodSendMail(request);
+        }
+        
+        private async Task configSendSmtpasync(IdentityMessage message)
         {
             // Command-line argument must be the SMTP host.
             SmtpClient client = new SmtpClient(ConfigurationManager.AppSettings["SMTP_HOST"], Convert.ToInt32(ConfigurationManager.AppSettings["SMTP_PORT"]));

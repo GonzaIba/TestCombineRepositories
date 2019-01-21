@@ -89,7 +89,7 @@ namespace ApiFP.Controllers
 
             var callbackUrl = new Uri(Url.Link("ConfirmEmailRoute", new { userId = user.Id, code = code }));
 
-            await this.AppUserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            await this.AppUserManager.SendEmailAsync(user.Id, "Confirmacion de cuenta portal proveedores", "Para confirmar la suscripcion de su cuenta haga click <a href=\"" + callbackUrl + "\">aquí</a>");
 
             Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.Id }));
 
