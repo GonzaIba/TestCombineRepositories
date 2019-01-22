@@ -25,6 +25,8 @@ namespace ApiFP.Infrastructure
         public string CuitOrigen { get; set; }
         [MaxLength(50), Column(TypeName = "varchar")]
         public string CuitDestino { get; set; }
+        [Column(TypeName = "Date")]
+        public Nullable<DateTime> Fecha { get; set; }
         [MaxLength(500), Column(TypeName = "varchar")]
         public string Detalle { get; set; }
         [MaxLength(50), Column(TypeName = "varchar")]

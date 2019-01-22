@@ -13,6 +13,7 @@ namespace ApiFP.Models
         public string Importe { get; set; }
         public string CuitOrigen { get; set; }
         public string CuitDestino { get; set; }
+        public string Fecha { get; set; }
         public string Detalle { get; set; }
         public string Servicio { get; set; }
         public string IvaDiscriminado { get; set; }

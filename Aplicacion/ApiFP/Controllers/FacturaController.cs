@@ -12,6 +12,7 @@ using System.Security.Claims;
 using ApiFP.Models;
 using ApiFP.Services;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace ApiFP.Controllers
 {
@@ -42,8 +43,9 @@ namespace ApiFP.Controllers
                 Retenciones = createFacturaModel.Retenciones,
                 Percepciones = createFacturaModel.Percepciones,
                 ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
-                UserIdFK = User.Identity.GetUserId(),                
-            };
+                UserIdFK = User.Identity.GetUserId(),
+                Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false))
+        };
 
             factura.Insert();
 
