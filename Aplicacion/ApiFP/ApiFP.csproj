@@ -247,6 +247,7 @@
     <Compile Include="Providers\CustomJwtFormat.cs" />
     <Compile Include="Providers\CustomOAuthProvider.cs" />
     <Compile Include="Services\EmailSendGridApiService.cs" />
+    <Compile Include="Services\DataAccessService.cs" />
     <Compile Include="Services\StorageService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Startup.cs" />
