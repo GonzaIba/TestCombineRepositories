@@ -238,6 +238,10 @@
     <Compile Include="Migrations\201901221601596_AddDateFactura.Designer.cs">
       <DependentUpon>201901221601596_AddDateFactura.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.cs" />
+    <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.Designer.cs">
+      <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
     <Compile Include="Models\FacturaBindingModels.cs" />
@@ -309,6 +313,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901221601596_AddDateFactura.resx">
       <DependentUpon>201901221601596_AddDateFactura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901241351402_AddSinArchivoFactura.resx">
+      <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

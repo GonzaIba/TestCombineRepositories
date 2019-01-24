@@ -25,6 +25,12 @@ namespace ApiFP.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFactura(CreateFacturaBindingModel createFacturaModel)
         {
+
+            if (!createFacturaModel.ValidarSinArchivo())
+            {
+                ModelState.AddModelError(string.Empty, "Error en la especificacion del parametro SinArchivo.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -44,30 +50,34 @@ namespace ApiFP.Controllers
                 Percepciones = createFacturaModel.Percepciones,
                 ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
                 UserIdFK = User.Identity.GetUserId(),
-                Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false))               
+                Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)),
+                SinArchivo = createFacturaModel.SinArchivo
             };
 
             factura.Insert();
 
-            var archivo = new Infrastructure.Archivo()
-            {
-                Nombre = createFacturaModel.Archivo.Nombre,
-                Extension = createFacturaModel.Archivo.Extension,
-                FacturaIdFK = factura.Id
-            };
+            if (createFacturaModel.Archivo != null) {
 
-            StorageService storageService = new StorageService();
-            StorageService.StoreResult storeResult = new StorageService.StoreResult();
-            storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+                var archivo = new Infrastructure.Archivo()
+                {
+                    Nombre = createFacturaModel.Archivo.Nombre,
+                    Extension = createFacturaModel.Archivo.Extension,
+                    FacturaIdFK = factura.Id
+                };
 
-            if (storeResult.Result == 0)
-            {
-                archivo.Ruta = storeResult.FullPath; ;
-                archivo.TipoAlmacenamiento = storeResult.StorageType;
-                archivo.Volumen = storeResult.Volume;
-                archivo.Insert();
+                StorageService storageService = new StorageService();
+                StorageService.StoreResult storeResult = new StorageService.StoreResult();
+                storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+
+                if (storeResult.Result == 0)
+                {
+                    archivo.Ruta = storeResult.FullPath; ;
+                    archivo.TipoAlmacenamiento = storeResult.StorageType;
+                    archivo.Volumen = storeResult.Volume;
+                    archivo.Insert();
+                }
             }
-            
+
             return Ok();
         }
 
@@ -95,7 +105,7 @@ namespace ApiFP.Controllers
                 string user = User.Identity.GetUserId();
                 var factura = db.Facturas.Find(createFacturaModel.Id);
 
-                if (factura.UserIdFK == user)
+                if ((factura.UserIdFK == user) && (!factura.Confirmada))
                 {
                     factura.Tipo = createFacturaModel.Tipo;
                     factura.Numero = createFacturaModel.Numero;
@@ -111,6 +121,10 @@ namespace ApiFP.Controllers
                     factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
 
                     db.SaveChanges();
+                }
+                else {
+                    ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no se puede actualizar.");
+                    return BadRequest(ModelState);
                 };
             }                          
 

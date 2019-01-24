@@ -46,6 +46,8 @@ namespace ApiFP.Services
                     "fac.Retenciones," +
                     "fac.Percepciones," +
                     "fac.ImpuestosNoGravados," +
+                    "fac.SinArchivo," +
+                    "fac.Confirmada," +
                     "convert(varchar, fac.Fecha, 103) as Fecha," +
                     "arc.Id as ArchivoId " +
                 "From Facturas as fac " +
