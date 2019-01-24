@@ -26,6 +26,13 @@ namespace ApiFP.Controllers
         }
 
         [AllowAnonymous]
+        [Route("version")]
+        public IHttpActionResult GetApiVersion()
+        {
+            return Ok(new { apiVersion = typeof(BaseApiController).Assembly.GetName().Version.ToString() });
+        }
+
+        [AllowAnonymous]
         [Route("storage/path/relative")]
         public IHttpActionResult GetStoragePath()
         {
