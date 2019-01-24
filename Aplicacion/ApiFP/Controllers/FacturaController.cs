@@ -123,10 +123,46 @@ namespace ApiFP.Controllers
                     db.SaveChanges();
                 }
                 else {
-                    ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no se puede actualizar.");
+                    ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no puede ser actualizada.");
                     return BadRequest(ModelState);
                 };
             }                          
+
+            return Ok();
+        }
+
+        [Authorize]
+        [Route("confirm")]
+        [HttpPost]
+        public async Task<IHttpActionResult> ConfirmFactura(List<int> confirmFacturaModel)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string user = User.Identity.GetUserId();
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {                
+                var facturas = db.Facturas.Where(x => confirmFacturaModel.Contains(x.Id) && x.UserIdFK == user);
+
+                if (facturas  != null)
+                {
+                    foreach (Factura factura in facturas)
+                    {
+                        factura.Confirmada = true;
+                    }
+
+                    db.SaveChanges();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "No se han encontrado las facturas indicadas.");
+                    return BadRequest(ModelState);
+                };
+            }
 
             return Ok();
         }
