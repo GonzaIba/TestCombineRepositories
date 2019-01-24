@@ -12,6 +12,8 @@ using System.Security.Claims;
 using ApiFP.Models;
 using ApiFP.Services;
 using System.Data.SqlClient;
+using System.Globalization;
+using System.Data.Entity;
 
 namespace ApiFP.Controllers
 {
@@ -20,9 +22,16 @@ namespace ApiFP.Controllers
     {
 
         [Authorize]
-        [Route("create")]
+        [Route("")]
+        [HttpPost]
         public async Task<IHttpActionResult> CreateFactura(CreateFacturaBindingModel createFacturaModel)
         {
+
+            if (!createFacturaModel.ValidarSinArchivo())
+            {
+                ModelState.AddModelError(string.Empty, "Error en la especificacion del parametro SinArchivo.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -41,59 +50,161 @@ namespace ApiFP.Controllers
                 Retenciones = createFacturaModel.Retenciones,
                 Percepciones = createFacturaModel.Percepciones,
                 ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
-                UserIdFK = User.Identity.GetUserId(),                
+                UserIdFK = User.Identity.GetUserId(),
+                Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)),
+                SinArchivo = createFacturaModel.SinArchivo
             };
 
             factura.Insert();
 
-            var archivo = new Infrastructure.Archivo()
-            {
-                Nombre = createFacturaModel.Archivo.Nombre,
-                Extension = createFacturaModel.Archivo.Extension,
-                FacturaIdFK = factura.Id
-            };
+            if (createFacturaModel.Archivo != null) {
 
-            StorageService storageService = new StorageService();
-            StorageService.StoreResult storeResult = new StorageService.StoreResult();
-            storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+                var archivo = new Infrastructure.Archivo()
+                {
+                    Nombre = createFacturaModel.Archivo.Nombre,
+                    Extension = createFacturaModel.Archivo.Extension,
+                    FacturaIdFK = factura.Id
+                };
 
-            if (storeResult.Result == 0)
-            {
-                archivo.Ruta = storeResult.FullPath; ;
-                archivo.TipoAlmacenamiento = storeResult.StorageType;
-                archivo.Volumen = storeResult.Volume;
-                archivo.Insert();
+                StorageService storageService = new StorageService();
+                StorageService.StoreResult storeResult = new StorageService.StoreResult();
+                storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+
+                if (storeResult.Result == 0)
+                {
+                    archivo.Ruta = storeResult.FullPath; ;
+                    archivo.TipoAlmacenamiento = storeResult.StorageType;
+                    archivo.Volumen = storeResult.Volume;
+                    archivo.Insert();
+                }
             }
-            
+
             return Ok();
         }
 
         [Authorize]
+        [Route("")]
         [HttpGet]
-        [Route("user")]
         public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            string user = User.Identity.GetUserId();
-            //var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
-            /*
-            var facturasList = (from facturas in db.Facturas
-                                join archivos in db.Archivos on facturas.Id equals archivos.FacturaIdFK                            
-                                where facturas.UserIdFK == user
-                                select new
-                                  {
-                                    facturas,
-                                    ArchivoId = archivos.Id
-                                }).ToList();
-*/
-
-            var facturasList = db.Database.SqlQuery<GetFacturaBindingModel>(
-                "SELECT fac.*,arc.Id as ArchivoId From Facturas as fac " +
-                "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
-                "Where fac.UserIdFK = @user", new SqlParameter("@user", user)).ToList();
-            return facturasList;
-
+            DataAccessService service = new DataAccessService();
+            return service.GetFacturasByUser(User.Identity.GetUserId());
         }
 
+        [Authorize]
+        [Route("")]
+        [HttpPatch]
+        public async Task<IHttpActionResult> UpdateFactura(UpdateFacturaBindingModel createFacturaModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                string user = User.Identity.GetUserId();
+                var factura = db.Facturas.Find(createFacturaModel.Id);
+
+                if ((factura.UserIdFK == user) && (!factura.Confirmada))
+                {
+                    factura.Tipo = createFacturaModel.Tipo;
+                    factura.Numero = createFacturaModel.Numero;
+                    factura.Importe = createFacturaModel.Importe;
+                    factura.CuitOrigen = createFacturaModel.CuitOrigen;
+                    factura.CuitDestino = createFacturaModel.CuitDestino;
+                    factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false));
+                    factura.Detalle = createFacturaModel.Detalle;
+                    factura.Servicio = createFacturaModel.Servicio;
+                    factura.IvaDiscriminado = createFacturaModel.IvaDiscriminado;
+                    factura.Retenciones = createFacturaModel.Retenciones;
+                    factura.Percepciones = createFacturaModel.Percepciones;
+                    factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
+
+                    db.SaveChanges();
+                }
+                else {
+                    ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no puede ser actualizada.");
+                    return BadRequest(ModelState);
+                };
+            }                          
+
+            return Ok();
+        }
+
+
+        [Authorize]
+        [Route("{facturaId}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> DeleteFactura(int facturaId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                string user = User.Identity.GetUserId();
+                Factura factura = db.Facturas.Find(facturaId);                              
+
+                if ((factura != null) && (factura.UserIdFK == user))
+                {
+
+                    Infrastructure.Archivo archivo = db.Archivos.First(x => x.FacturaIdFK == facturaId);                     
+
+                    if (archivo != null)
+                    {
+                        archivo.Delete();
+                    }
+                    
+                    db.Facturas.Remove(factura);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "No se ha encontrado la factura especificada.");
+                    return BadRequest(ModelState);
+                };
+            }
+
+            return Ok();
+        }
+
+        [Authorize]
+        [Route("confirm")]
+        [HttpPost]
+        public async Task<IHttpActionResult> ConfirmFactura(List<int> confirmFacturaModel)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            string user = User.Identity.GetUserId();
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {                
+                var facturas = db.Facturas.Where(x => confirmFacturaModel.Contains(x.Id) && x.UserIdFK == user);
+
+                if (facturas  != null)
+                {
+                    foreach (Factura factura in facturas)
+                    {
+                        factura.Confirmada = true;
+                    }
+
+                    db.SaveChanges();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "No se han encontrado las facturas indicadas.");
+                    return BadRequest(ModelState);
+                };
+            }
+
+            return Ok();
+        }
     }
 }

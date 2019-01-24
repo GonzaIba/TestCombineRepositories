@@ -234,6 +234,14 @@
     <Compile Include="Migrations\201901072351261_AddArchivos.Designer.cs">
       <DependentUpon>201901072351261_AddArchivos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901221601596_AddDateFactura.cs" />
+    <Compile Include="Migrations\201901221601596_AddDateFactura.Designer.cs">
+      <DependentUpon>201901221601596_AddDateFactura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.cs" />
+    <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.Designer.cs">
+      <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
     <Compile Include="Models\FacturaBindingModels.cs" />
@@ -243,6 +251,7 @@
     <Compile Include="Providers\CustomJwtFormat.cs" />
     <Compile Include="Providers\CustomOAuthProvider.cs" />
     <Compile Include="Services\EmailSendGridApiService.cs" />
+    <Compile Include="Services\DataAccessService.cs" />
     <Compile Include="Services\StorageService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Startup.cs" />
@@ -301,6 +310,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901072351261_AddArchivos.resx">
       <DependentUpon>201901072351261_AddArchivos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901221601596_AddDateFactura.resx">
+      <DependentUpon>201901221601596_AddDateFactura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901241351402_AddSinArchivoFactura.resx">
+      <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

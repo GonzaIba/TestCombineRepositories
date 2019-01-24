@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using ApiFP.Services;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,13 @@ namespace ApiFP.Infrastructure
 
         public string CreateStorageName()
         {
-            return FacturaIdFK.ToString() + "_" + Nombre + "." + Extension;
+            return FacturaIdFK.ToString() + "_" + Nombre + Extension;
+        }
+
+        public void Delete()
+        {
+            StorageService storageService = new StorageService();
+            storageService.Delete(this.TipoAlmacenamiento, this.Volumen, this.Ruta);
         }
     }
 
