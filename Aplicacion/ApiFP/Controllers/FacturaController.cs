@@ -83,7 +83,7 @@ namespace ApiFP.Controllers
 
         [Authorize]
         [Route("")]
-        [HttpGet]        
+        [HttpGet]
         public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
         {
             DataAccessService service = new DataAccessService();

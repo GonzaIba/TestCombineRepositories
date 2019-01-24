@@ -39,7 +39,7 @@ namespace ApiFP.Infrastructure
 
         public string CreateStorageName()
         {
-            return FacturaIdFK.ToString() + "_" + Nombre + "." + Extension;
+            return FacturaIdFK.ToString() + "_" + Nombre + Extension;
         }
     }
 
