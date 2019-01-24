@@ -13,6 +13,7 @@ using ApiFP.Models;
 using ApiFP.Services;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Data.Entity;
 
 namespace ApiFP.Controllers
 {
@@ -127,6 +128,45 @@ namespace ApiFP.Controllers
                     return BadRequest(ModelState);
                 };
             }                          
+
+            return Ok();
+        }
+
+
+        [Authorize]
+        [Route("{facturaId}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> DeleteFactura(int facturaId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                string user = User.Identity.GetUserId();
+                Factura factura = db.Facturas.Find(facturaId);                              
+
+                if ((factura != null) && (factura.UserIdFK == user))
+                {
+
+                    Infrastructure.Archivo archivo = db.Archivos.First(x => x.FacturaIdFK == facturaId);                     
+
+                    if (archivo != null)
+                    {
+                        archivo.Delete();
+                    }
+                    
+                    db.Facturas.Remove(factura);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "No se ha encontrado la factura especificada.");
+                    return BadRequest(ModelState);
+                };
+            }
 
             return Ok();
         }

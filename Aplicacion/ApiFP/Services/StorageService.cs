@@ -68,5 +68,10 @@ namespace ApiFP.Services
 
             return file;                        
         }
+
+        public void Delete(string storageType, string volume, string fileFullPath)
+        {
+            File.Delete(fileFullPath);
+        }
     }
 }
