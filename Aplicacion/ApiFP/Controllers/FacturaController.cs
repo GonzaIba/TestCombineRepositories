@@ -50,10 +50,11 @@ namespace ApiFP.Controllers
                 Retenciones = createFacturaModel.Retenciones,
                 Percepciones = createFacturaModel.Percepciones,
                 ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
-                UserIdFK = User.Identity.GetUserId(),
-                Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)),
+                UserIdFK = User.Identity.GetUserId(),                
                 SinArchivo = createFacturaModel.SinArchivo
             };
+
+            if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
 
             factura.Insert();
 
@@ -88,7 +89,7 @@ namespace ApiFP.Controllers
         public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
         {
             DataAccessService service = new DataAccessService();
-            return service.GetFacturasByUser(User.Identity.GetUserId());
+            return service.GetFacturas(User.Identity.GetUserId());
         }
 
         [Authorize]
@@ -169,6 +170,17 @@ namespace ApiFP.Controllers
             }
 
             return Ok();
+        }
+
+        [Authorize]
+        [Route("{facturaId}")]
+        [HttpGet]
+        public async Task<GetFacturaBindingModel> GetFacturasById(int facturaId)
+        {
+            DataAccessService service = new DataAccessService();
+            var facturaList = service.GetFacturas(User.Identity.GetUserId(), facturaId);
+
+            return facturaList[0];
         }
 
         [Authorize]

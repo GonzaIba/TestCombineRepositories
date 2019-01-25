@@ -17,9 +17,9 @@ namespace ApiFP.Services
     public class DataAccessService
     {
 
-        public List<GetFacturaBindingModel> GetFacturasByUser(string userId)
+        public List<GetFacturaBindingModel> GetFacturas(string userId, int? facturaId = null)
         {
-            ApplicationDbContext db = new ApplicationDbContext();            
+            ApplicationDbContext db = new ApplicationDbContext();
             //var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
             /*
             var facturasList = (from facturas in db.Facturas
@@ -52,8 +52,14 @@ namespace ApiFP.Services
                     "arc.Id as ArchivoId " +
                 "From Facturas as fac " +
                 "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
-                "Where fac.UserIdFK = @user", new SqlParameter("@user", userId)).ToList();
-            return facturasList;
+                "Where fac.UserIdFK = @user", new SqlParameter("@user", userId)); //.ToList();
+
+            if (facturaId != null)
+            {
+                facturasList.Where(x => x.Id == facturaId);
+            }            
+
+            return facturasList.ToList();
         }
 
     }
