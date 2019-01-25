@@ -26,6 +26,7 @@ namespace ApiFP.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFactura(CreateFacturaBindingModel createFacturaModel)
         {
+            log.Debug("");
 
             if (!createFacturaModel.ValidarSinArchivo())
             {
