@@ -164,7 +164,7 @@ namespace ApiFP.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "No se ha encontrado la factura especificada.");
+                    ModelState.AddModelError("NotFound", "No se ha encontrado la factura especificada.");
                     return BadRequest(ModelState);
                 };
             }

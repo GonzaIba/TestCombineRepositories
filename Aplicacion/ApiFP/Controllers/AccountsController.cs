@@ -16,12 +16,14 @@ namespace ApiFP.Controllers
     [RoutePrefix("accounts")]
     public class AccountsController : BaseApiController
     {
+        /*
         [Authorize]
         [Route("users")]
         public IHttpActionResult GetUsers()
         {
             return Ok(this.AppUserManager.Users.ToList().Select(u => this.TheModelFactory.Create(u)));
         }
+        */
 
         [Authorize]
         [Route("user/{id:guid}", Name = "GetUserById")]
@@ -139,6 +141,7 @@ namespace ApiFP.Controllers
             return Ok();
         }
 
+        /*
         [Authorize]
         [Route("user/{id:guid}")]
         public async Task<IHttpActionResult> DeleteUser(string id)
@@ -164,6 +167,7 @@ namespace ApiFP.Controllers
             return NotFound();
 
         }
+        */
 
         [AllowAnonymous]
         [HttpGet]
