@@ -39,10 +39,11 @@ namespace ApiFP.Controllers
         }
 
         [Authorize]
-        [Route("user/{username}")]
-        public async Task<IHttpActionResult> GetUserByName(string username)
+        [HttpGet]
+        [Route("user")]
+        public async Task<IHttpActionResult> GetUserByName()
         {
-            var user = await this.AppUserManager.FindByNameAsync(username);
+            var user = await this.AppUserManager.FindByNameAsync(User.Identity.GetUserName());
 
             if (user != null)
             {

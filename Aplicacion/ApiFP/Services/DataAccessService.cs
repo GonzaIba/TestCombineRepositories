@@ -56,7 +56,7 @@ namespace ApiFP.Services
 
             if (facturaId != null)
             {
-                facturasList.Where(x => x.Id == facturaId);
+                return facturasList.Where(x => x.Id == facturaId).ToList();
             }            
 
             return facturasList.ToList();
