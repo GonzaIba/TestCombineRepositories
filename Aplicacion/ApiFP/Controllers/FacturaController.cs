@@ -107,7 +107,7 @@ namespace ApiFP.Controllers
                 string user = User.Identity.GetUserId();
                 var factura = db.Facturas.Find(createFacturaModel.Id);
 
-                if ((factura.UserIdFK == user) && (!factura.Confirmada))
+                if ((factura.UserIdFK == user)) //&& (!factura.Confirmada))
                 {
                     factura.Tipo = createFacturaModel.Tipo;
                     factura.Numero = createFacturaModel.Numero;
