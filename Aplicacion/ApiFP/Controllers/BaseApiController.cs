@@ -13,6 +13,7 @@ namespace ApiFP.Controllers
 {
     public class BaseApiController : ApiController
     {
+        public static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ModelFactory _modelFactory;
         private ApplicationUserManager _AppUserManager = null;

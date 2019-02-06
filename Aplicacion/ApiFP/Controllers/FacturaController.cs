@@ -14,6 +14,8 @@ using ApiFP.Services;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Data.Entity;
+using ApiFP.Helpers;
+using Newtonsoft.Json;
 
 namespace ApiFP.Controllers
 {
@@ -97,39 +99,53 @@ namespace ApiFP.Controllers
         [HttpPatch]
         public async Task<IHttpActionResult> UpdateFactura(UpdateFacturaBindingModel createFacturaModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            string userName = User.Identity.GetUserName();
 
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                string user = User.Identity.GetUserId();
-                var factura = db.Facturas.Find(createFacturaModel.Id);
+            LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
 
-                if ((factura.UserIdFK == user)) //&& (!factura.Confirmada))
+            try
+            {
+
+                if (!ModelState.IsValid)
                 {
-                    factura.Tipo = createFacturaModel.Tipo;
-                    factura.Numero = createFacturaModel.Numero;
-                    factura.Importe = createFacturaModel.Importe;
-                    factura.CuitOrigen = createFacturaModel.CuitOrigen;
-                    factura.CuitDestino = createFacturaModel.CuitDestino;
-                    factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false));
-                    factura.Detalle = createFacturaModel.Detalle;
-                    factura.Servicio = createFacturaModel.Servicio;
-                    factura.IvaDiscriminado = createFacturaModel.IvaDiscriminado;
-                    factura.Retenciones = createFacturaModel.Retenciones;
-                    factura.Percepciones = createFacturaModel.Percepciones;
-                    factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
-
-                    db.SaveChanges();
-                }
-                else {
-                    ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no puede ser actualizada.");
                     return BadRequest(ModelState);
-                };
-            }                          
+                }
 
+                using (ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    string user = User.Identity.GetUserId();
+                    var factura = db.Facturas.Find(createFacturaModel.Id);
+
+                    if ((factura.UserIdFK == user)) //&& (!factura.Confirmada))
+                    {
+                        factura.Tipo = createFacturaModel.Tipo;
+                        factura.Numero = createFacturaModel.Numero;
+                        factura.Importe = createFacturaModel.Importe;
+                        factura.CuitOrigen = createFacturaModel.CuitOrigen;
+                        factura.CuitDestino = createFacturaModel.CuitDestino;
+                        factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false));
+                        factura.Detalle = createFacturaModel.Detalle;
+                        factura.Servicio = createFacturaModel.Servicio;
+                        factura.IvaDiscriminado = createFacturaModel.IvaDiscriminado;
+                        factura.Retenciones = createFacturaModel.Retenciones;
+                        factura.Percepciones = createFacturaModel.Percepciones;
+                        factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
+
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no puede ser actualizada.");
+                        return BadRequest(ModelState);
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.GenerateInfo(userName + " Exception:" + ex.Message);
+                LogHelper.GenerateLog(ex);
+                throw ex;
+            }
             return Ok();
         }
 
@@ -139,14 +155,15 @@ namespace ApiFP.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> DeleteFactura(int facturaId)
         {
+            string user = User.Identity.GetUserId();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                string user = User.Identity.GetUserId();
+            {                
                 Factura factura = db.Facturas.Find(facturaId);                              
 
                 if ((factura != null) && (factura.UserIdFK == user))
