@@ -153,6 +153,7 @@ namespace ApiFP.Controllers
         [Authorize]
         [Route("{facturaId}")]
         [HttpDelete]
+        [HttpPost]
         public async Task<IHttpActionResult> DeleteFactura(int facturaId)
         {
             string user = User.Identity.GetUserId();
@@ -168,14 +169,16 @@ namespace ApiFP.Controllers
 
                 if ((factura != null) && (factura.UserIdFK == user))
                 {
-
-                    Infrastructure.Archivo archivo = db.Archivos.First(x => x.FacturaIdFK == facturaId);                     
-
-                    if (archivo != null)
+                    if (factura.SinArchivo.HasValue && !factura.SinArchivo.Value)
                     {
-                        archivo.Delete();
+                        Infrastructure.Archivo archivo = db.Archivos.FirstOrDefault(x => x.FacturaIdFK == facturaId);
+
+                        if (archivo != null)
+                        {
+                            archivo.Delete();
+                        }
                     }
-                    
+
                     db.Facturas.Remove(factura);
                     db.SaveChanges();
                 }
