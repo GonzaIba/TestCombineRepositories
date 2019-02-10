@@ -51,6 +51,13 @@ namespace ApiFP.Infrastructure
         [Column(TypeName = "bit"), DefaultValue(false)]
         public bool Confirmada { get; set; }
 
+        [Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime FechaCreacion { get; set; }
+
+        public EstadoFactura EstadoFactura { get; set; }
+        [ForeignKey("EstadoFactura")]
+        public int EstadoFacturaFK { get; set; }
+
         public void Insert()
         {
             ApplicationDbContext db = new ApplicationDbContext();

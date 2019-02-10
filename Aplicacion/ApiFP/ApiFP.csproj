@@ -206,6 +206,7 @@
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Archivo.cs" />
+    <Compile Include="Infrastructure\EstadoFactura.cs" />
     <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
@@ -245,6 +246,10 @@
     <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.cs" />
     <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.Designer.cs">
       <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902102326184_EstadoFactura.cs" />
+    <Compile Include="Migrations\201902102326184_EstadoFactura.Designer.cs">
+      <DependentUpon>201902102326184_EstadoFactura.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
@@ -324,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901241351402_AddSinArchivoFactura.resx">
       <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902102326184_EstadoFactura.resx">
+      <DependentUpon>201902102326184_EstadoFactura.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
