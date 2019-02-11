@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -52,7 +53,7 @@ namespace ApiFP.Services
                     "arc.Id as ArchivoId " +
                 "From Facturas as fac " +
                 "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
-                "Where fac.UserIdFK = @user", new SqlParameter("@user", userId)); //.ToList();
+                "Where fac.UserIdFK = @user and fac.EstadoFacturaFK <> 3", new SqlParameter("@user", userId)); //.ToList();
 
             if (facturaId != null)
             {
@@ -62,5 +63,33 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
+        public List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var facturasList = db.Database.SqlQuery<GetFacturaCCBindingModel>(
+                            "SELECT " +
+                                "fac.Id," +
+                                "fac.Tipo," +
+                                "fac.Numero," +                                
+                                "fac.CuitOrigen," +
+                                "fac.CuitDestino," +
+                                "fac.SinArchivo," +                                
+                                "convert(varchar, fac.Fecha, 103) as Fecha " +                                
+                            "From Facturas as fac " +
+                            "Where fac.EstadoFacturaFK = 2 and fac.CuitDestino = @cuitDestino", new SqlParameter("@cuitDestino", cuitDestino));
+
+            return facturasList.ToList();
+        }
+
+        private string DBDateToString(Nullable<DateTime> fecha)
+        {
+            if (fecha.HasValue)
+            {
+                return fecha.Value.ToString("d", CultureInfo.CreateSpecificCulture("es-ES"));
+            }
+
+            return "";
+        }
     }
 }
