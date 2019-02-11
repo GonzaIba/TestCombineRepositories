@@ -208,6 +208,7 @@
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Archivo.cs" />
+    <Compile Include="Infrastructure\CentroComputo.cs" />
     <Compile Include="Infrastructure\EstadoFactura.cs" />
     <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
@@ -249,9 +250,13 @@
     <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.Designer.cs">
       <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201902102326184_EstadoFactura.cs" />
-    <Compile Include="Migrations\201902102326184_EstadoFactura.Designer.cs">
-      <DependentUpon>201902102326184_EstadoFactura.cs</DependentUpon>
+    <Compile Include="Migrations\201902111555393_AddEstadoFactura.cs" />
+    <Compile Include="Migrations\201902111555393_AddEstadoFactura.Designer.cs">
+      <DependentUpon>201902111555393_AddEstadoFactura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902111602563_AddCentrosDeComputo.cs" />
+    <Compile Include="Migrations\201902111602563_AddCentrosDeComputo.Designer.cs">
+      <DependentUpon>201902111602563_AddCentrosDeComputo.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
@@ -332,8 +337,11 @@
     <EmbeddedResource Include="Migrations\201901241351402_AddSinArchivoFactura.resx">
       <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902102326184_EstadoFactura.resx">
-      <DependentUpon>201902102326184_EstadoFactura.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201902111555393_AddEstadoFactura.resx">
+      <DependentUpon>201902111555393_AddEstadoFactura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902111602563_AddCentrosDeComputo.resx">
+      <DependentUpon>201902111602563_AddCentrosDeComputo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

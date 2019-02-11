@@ -7,13 +7,13 @@ namespace ApiFP.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class EstadoFactura : IMigrationMetadata
+    public sealed partial class AddEstadoFactura : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(EstadoFactura));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddEstadoFactura));
         
         string IMigrationMetadata.Id
         {
-            get { return "201902102326184_EstadoFactura"; }
+            get { return "201902111555393_AddEstadoFactura"; }
         }
         
         string IMigrationMetadata.Source

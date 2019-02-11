@@ -28,6 +28,9 @@ namespace ApiFP.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFactura(CreateFacturaBindingModel createFacturaModel)
         {
+            string userName = User.Identity.GetUserName();
+
+            LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
 
             if (!createFacturaModel.ValidarSinArchivo())
             {
@@ -53,7 +56,8 @@ namespace ApiFP.Controllers
                 Percepciones = createFacturaModel.Percepciones,
                 ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
                 UserIdFK = User.Identity.GetUserId(),                
-                SinArchivo = createFacturaModel.SinArchivo
+                SinArchivo = createFacturaModel.SinArchivo,
+                EstadoFacturaFK = 1
             };
 
             if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
@@ -116,7 +120,8 @@ namespace ApiFP.Controllers
                     string user = User.Identity.GetUserId();
                     var factura = db.Facturas.Find(createFacturaModel.Id);
 
-                    if ((factura.UserIdFK == user)) //&& (!factura.Confirmada))
+                    //una factura puede ser editada si no se encuentra descargada
+                    if ((factura.UserIdFK == user) && (factura.EstadoFacturaFK != 3))
                     {
                         factura.Tipo = createFacturaModel.Tipo;
                         factura.Numero = createFacturaModel.Numero;
@@ -225,6 +230,7 @@ namespace ApiFP.Controllers
                     foreach (Factura factura in facturas)
                     {
                         factura.Confirmada = true;
+                        factura.EstadoFacturaFK = 2;
                     }
 
                     db.SaveChanges();

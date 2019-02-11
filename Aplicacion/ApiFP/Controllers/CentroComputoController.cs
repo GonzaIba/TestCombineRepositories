@@ -28,6 +28,7 @@ namespace ApiFP.Controllers
         [HttpGet]
         public async Task<List<GetFacturaCCBindingModel>> GetFacturas(string cuitDestino)
         {
+
             DataAccessService service = new DataAccessService();
             var facturaList = service.GetFacturasCC(cuitDestino);
 

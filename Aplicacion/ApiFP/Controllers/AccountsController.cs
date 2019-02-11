@@ -10,6 +10,8 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using ApiFP.Models;
+using System.Net;
+using System.Configuration;
 
 namespace ApiFP.Controllers
 {
@@ -102,7 +104,7 @@ namespace ApiFP.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("ConfirmEmail", Name = "ConfirmEmailRoute")]
-        public async Task<IHttpActionResult> ConfirmEmail(string userId = "", string code = "")
+        public async Task<Object> ConfirmEmail(string userId = "", string code = "")
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
             {
@@ -114,7 +116,10 @@ namespace ApiFP.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                var response = Request.CreateResponse(HttpStatusCode.Moved);
+                response.Headers.Location = new Uri(ConfigurationManager.AppSettings["URL_CONFIRMA_ACCOUNT"]);
+                return response;
+                //return Ok();
             }
             else
             {
