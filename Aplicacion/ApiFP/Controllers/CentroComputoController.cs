@@ -55,6 +55,8 @@ namespace ApiFP.Controllers
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
                     Factura factura = db.Facturas.Find(facturaId);
+                    var apiKey = GetApiKey();
+                    CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
 
                     if ((factura != null) && (factura.EstadoFacturaFK == 2))
                     {
@@ -92,8 +94,14 @@ namespace ApiFP.Controllers
                         }
 
                         factura.EstadoFacturaFK = 3;
-                        db.SaveChanges();
 
+                        var descarga = new Infrastructure.DescargaFactura()
+                        {
+                            CentroComputoIdFK = centroComputo.Id,
+                            FacturaIdFK = factura.Id
+                        };
+                        db.DescargasFactura.Add(descarga);
+                        db.SaveChanges();
                     }
                     else
                     {
@@ -112,13 +120,18 @@ namespace ApiFP.Controllers
 
         private bool ValidateApiKey()
         {
-            IEnumerable<string> headerValues = Request.Headers.GetValues("ApiKey");
-            var apiKey = headerValues.FirstOrDefault();
-
+            var apiKey = GetApiKey();
             ApplicationDbContext db = new ApplicationDbContext();
             CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
-
+                
             return (centroComputo != null);
+        }
+
+        private string GetApiKey()
+        {
+            IEnumerable<string> headerValues = Request.Headers.GetValues("ApiKey");
+            var apiKey = headerValues.FirstOrDefault();
+            return apiKey;
         }
     }
 }

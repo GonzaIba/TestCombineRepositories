@@ -210,6 +210,7 @@
     <Compile Include="Infrastructure\Archivo.cs" />
     <Compile Include="Infrastructure\CentroComputo.cs" />
     <Compile Include="Infrastructure\EstadoFactura.cs" />
+    <Compile Include="Infrastructure\DescargaFactura.cs" />
     <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
@@ -257,6 +258,10 @@
     <Compile Include="Migrations\201902111602563_AddCentrosDeComputo.cs" />
     <Compile Include="Migrations\201902111602563_AddCentrosDeComputo.Designer.cs">
       <DependentUpon>201902111602563_AddCentrosDeComputo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902131618106_AddDescargasFactura.cs" />
+    <Compile Include="Migrations\201902131618106_AddDescargasFactura.Designer.cs">
+      <DependentUpon>201902131618106_AddDescargasFactura.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
@@ -342,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902111602563_AddCentrosDeComputo.resx">
       <DependentUpon>201902111602563_AddCentrosDeComputo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902131618106_AddDescargasFactura.resx">
+      <DependentUpon>201902131618106_AddDescargasFactura.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

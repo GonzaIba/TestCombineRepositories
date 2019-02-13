@@ -16,7 +16,8 @@ namespace ApiFP.Infrastructure
         public DbSet<Archivo> Archivos { get; set; }
         public DbSet<EstadoFactura> EstadoFactura { get; set; }
         public DbSet<CentroComputo> CentrosDeComputo { get; set; }
-
+        public DbSet<DescargaFactura> DescargasFactura { get; set; }
+        
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -44,6 +45,7 @@ namespace ApiFP.Infrastructure
             modelBuilder.Entity<Archivo>().ToTable("Archivos");
             modelBuilder.Entity<EstadoFactura>().ToTable("EstadoFactura");
             modelBuilder.Entity<CentroComputo>().ToTable("CentrosDeComputo");
+            modelBuilder.Entity<DescargaFactura>().ToTable("DescargasFactura");
         }
 
     }
