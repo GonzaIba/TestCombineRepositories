@@ -63,21 +63,35 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
-        public List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino)
+        public List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino, string centroComputoId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
             var facturasList = db.Database.SqlQuery<GetFacturaCCBindingModel>(
                             "SELECT " +
-                                "fac.Id," +
-                                "fac.Tipo," +
-                                "fac.Numero," +                                
-                                "fac.CuitOrigen," +
-                                "fac.CuitDestino," +
-                                "fac.SinArchivo," +                                
-                                "convert(varchar, fac.Fecha, 103) as Fecha " +                                
-                            "From Facturas as fac " +
-                            "Where fac.EstadoFacturaFK = 2 and fac.CuitDestino = @cuitDestino", new SqlParameter("@cuitDestino", cuitDestino));
+                                "tf.Id," +
+                                "tf.Tipo," +
+                                "tf.Numero," +
+                                "tf.CuitOrigen," +
+                                "tf.CuitDestino," +
+                                "tf.SinArchivo," +
+                                "convert(varchar, tf.Fecha, 103) as Fecha " +                                
+                            "From [Facturas] as tf " +
+                            "where " +
+                                "(tf.CuitDestino = @cuitDestino) " +
+                                "and " +
+                                "(" +
+                                    "(tf.EstadoFacturaFK = 2) " + //confirmada
+                                    "or " +
+                                    "(" +
+                                        "(tf.EstadoFacturaFK = 3) " + //descargada
+                                        "and " +
+                                        "(tf.QtyDescargasCC < 2) " +
+                                        "and " +
+                                        "not exists(select * from[DescargasFactura] as td where td.FacturaIdFK = tf.Id and td.CentroComputoIdFK = @centroComputo) " +
+                                    ") " +
+                                ") "
+                            , new SqlParameter("@cuitDestino", cuitDestino), new SqlParameter("@centroComputo", centroComputoId));
 
             return facturasList.ToList();
         }

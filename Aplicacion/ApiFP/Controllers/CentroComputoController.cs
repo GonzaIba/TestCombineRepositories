@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Data.Entity;
 using ApiFP.Helpers;
 using Newtonsoft.Json;
+using System.Configuration;
 
 namespace ApiFP.Controllers
 {
@@ -32,8 +33,12 @@ namespace ApiFP.Controllers
 
             if (ValidateApiKey())
             {
+                var apiKey = GetApiKey();
+                ApplicationDbContext db = new ApplicationDbContext();
+                CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
+
                 DataAccessService service = new DataAccessService();
-                facturaList = service.GetFacturasCC(cuitDestino);
+                facturaList = service.GetFacturasCC(cuitDestino, centroComputo.Id.ToString());
             }
             else
             {
@@ -52,13 +57,37 @@ namespace ApiFP.Controllers
 
             if (ValidateApiKey())
             {
+                var apiKey = GetApiKey();
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
-                    Factura factura = db.Facturas.Find(facturaId);
-                    var apiKey = GetApiKey();
+                    Factura factura = db.Facturas.Find(facturaId);                    
                     CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
+                    var descargaFactura = db.DescargasFactura.Where(x => x.FacturaIdFK == factura.Id && x.CentroComputoIdFK == centroComputo.Id);
 
-                    if ((factura != null) && (factura.EstadoFacturaFK == 2))
+                    int qtyDownload = int.Parse(ConfigurationManager.AppSettings["QTY_MULTIPLE_DOWNLOADS_CC"]);
+                    bool descargaValida = 
+                        (factura != null) 
+                        &&
+                        (
+                            (factura.EstadoFacturaFK == 2) 
+                            || 
+                            (
+                                (factura.EstadoFacturaFK == 3)
+                                &&
+                                (
+                                    (factura.QtyDescargasCC < qtyDownload)
+                                    ||
+                                    (
+                                        (factura.QtyDescargasCC >= qtyDownload)
+                                        &&
+                                        (descargaFactura.Count() > 0)
+                                    )
+                                )
+                            )
+                        );
+
+
+                    if (descargaValida)
                     {
 
                         fac = new GetFacturaCCDBindingModel()
@@ -93,7 +122,7 @@ namespace ApiFP.Controllers
                             fac.Archivo = archivo;
                         }
 
-                        factura.EstadoFacturaFK = 3;
+                        factura.EstadoFacturaFK = 3;                        
 
                         var descarga = new Infrastructure.DescargaFactura()
                         {
@@ -102,6 +131,12 @@ namespace ApiFP.Controllers
                         };
                         db.DescargasFactura.Add(descarga);
                         db.SaveChanges();
+
+                        //validar incremento de descarga
+                        var descargasCC = db.DescargasFactura.Where(x => x.FacturaIdFK == factura.Id).Select(m => m.CentroComputoIdFK).Distinct();
+                        factura.QtyDescargasCC = descargasCC.Count();
+                        db.SaveChanges();
+
                     }
                     else
                     {
