@@ -20,6 +20,9 @@ namespace ApiFP.Infrastructure
         public string Nombre { get; set; }
         [MaxLength(32), Column(TypeName = "varchar")]
         public string ApiKey { get; set; }
-
+        [MaxLength(150), Column(TypeName = "varchar")]
+        public string Contacto { get; set; }
+        [MaxLength(150), Column(TypeName = "varchar")]
+        public string Email { get; set; }
     }
 }
