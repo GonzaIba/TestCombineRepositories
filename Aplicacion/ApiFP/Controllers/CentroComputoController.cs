@@ -55,101 +55,117 @@ namespace ApiFP.Controllers
         {            
             GetFacturaCCDBindingModel fac = null;
 
-            if (ValidateApiKey())
+            try
             {
-                var apiKey = GetApiKey();
-                using (ApplicationDbContext db = new ApplicationDbContext())
+                if (ValidateApiKey())
                 {
-                    Factura factura = db.Facturas.Find(facturaId);                    
-                    CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
-                    var descargaFactura = db.DescargasFactura.Where(x => x.FacturaIdFK == factura.Id && x.CentroComputoIdFK == centroComputo.Id);
+                    var apiKey = GetApiKey();
+                    using (ApplicationDbContext db = new ApplicationDbContext())
+                    {
+                        Factura factura = db.Facturas.Find(facturaId);
+                        CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
+                        var descargaFactura = db.DescargasFactura.Where(x => x.FacturaIdFK == factura.Id && x.CentroComputoIdFK == centroComputo.Id);
 
-                    int qtyDownload = int.Parse(ConfigurationManager.AppSettings["QTY_MULTIPLE_DOWNLOADS_CC"]);
-                    bool descargaValida = 
-                        (factura != null) 
-                        &&
-                        (
-                            (factura.EstadoFacturaFK == 2) 
-                            || 
+                        int qtyDownload = int.Parse(ConfigurationManager.AppSettings["QTY_MULTIPLE_DOWNLOADS_CC"]);
+                        bool descargaValida =
+                            (factura != null)
+                            &&
                             (
-                                (factura.EstadoFacturaFK == 3)
-                                &&
+                                (factura.EstadoFacturaFK == 2)
+                                ||
                                 (
-                                    (factura.QtyDescargasCC < qtyDownload)
-                                    ||
+                                    (factura.EstadoFacturaFK == 3)
+                                    &&
                                     (
-                                        (factura.QtyDescargasCC >= qtyDownload)
-                                        &&
-                                        (descargaFactura.Count() > 0)
+                                        (factura.QtyDescargasCC < qtyDownload)
+                                        ||
+                                        (
+                                            (factura.QtyDescargasCC >= qtyDownload)
+                                            &&
+                                            (descargaFactura.Count() > 0)
+                                        )
                                     )
                                 )
-                            )
-                        );
+                            );
 
 
-                    if (descargaValida)
-                    {
-
-                        fac = new GetFacturaCCDBindingModel()
+                        if (descargaValida)
                         {
-                            Id = factura.Id,
-                            Tipo = factura.Tipo,
-                            Numero = factura.Numero,
-                            Importe = factura.Importe,
-                            CuitOrigen = factura.CuitOrigen,
-                            CuitDestino = factura.CuitDestino,
-                            Fecha = factura.Fecha.HasValue ? factura.Fecha.Value.ToString("d", CultureInfo.CreateSpecificCulture("es-ES")) : null,
-                            Detalle = factura.Detalle,
-                            Servicio = factura.Servicio,
-                            IvaDiscriminado = factura.IvaDiscriminado,
-                            Retenciones = factura.Retenciones,
-                            Percepciones = factura.Percepciones,
-                            ImpuestosNoGravados = factura.ImpuestosNoGravados,
-                            SinArchivo = factura.SinArchivo
-                        };
 
-                        if (factura.SinArchivo.HasValue && !factura.SinArchivo.Value)
-                        {
-                            Infrastructure.Archivo archivoDb = db.Archivos.FirstOrDefault(x => x.FacturaIdFK == facturaId);
+                            fac = new GetFacturaCCDBindingModel()
+                            {
+                                Id = factura.Id,
+                                Tipo = factura.Tipo,
+                                Numero = factura.Numero,
+                                Importe = factura.Importe,
+                                CuitOrigen = factura.CuitOrigen,
+                                CuitDestino = factura.CuitDestino,
+                                Fecha = factura.Fecha.HasValue ? factura.Fecha.Value.ToString("d", CultureInfo.CreateSpecificCulture("es-ES")) : null,
+                                Detalle = factura.Detalle,
+                                Servicio = factura.Servicio,
+                                IvaDiscriminado = factura.IvaDiscriminado,
+                                Retenciones = factura.Retenciones,
+                                Percepciones = factura.Percepciones,
+                                ImpuestosNoGravados = factura.ImpuestosNoGravados,
+                                SinArchivo = factura.SinArchivo
+                            };
 
-                            StorageService storageService = new StorageService();
+                            if (factura.SinArchivo.HasValue && !factura.SinArchivo.Value)
+                            {
+                                Infrastructure.Archivo archivoDb = db.Archivos.FirstOrDefault(x => x.FacturaIdFK == facturaId);
 
-                            Models.Archivo archivo = new Models.Archivo();
-                            archivo.Nombre = archivoDb.Nombre;
-                            archivo.Extension = archivoDb.Extension;
-                            archivo.ContenidoBase64 = storageService.Restore(archivoDb.Ruta, archivoDb.Volumen, archivoDb.Ruta);
+                                StorageService storageService = new StorageService();
 
-                            fac.Archivo = archivo;
+                                Models.Archivo archivo = new Models.Archivo();
+                                archivo.Nombre = archivoDb.Nombre;
+                                archivo.Extension = archivoDb.Extension;
+                                archivo.ContenidoBase64 = storageService.Restore(archivoDb.Ruta, archivoDb.Volumen, archivoDb.Ruta);
+
+                                fac.Archivo = archivo;
+                                try
+                                {
+                                    fac.UrlArchivo = ConfigurationManager.AppSettings["BASE_URL_FILE"] + archivoDb.EncryptId();
+                                }
+                                catch (Exception exa)
+                                {
+                                    LogHelper.GenerateLog(exa);
+                                    throw exa;
+                                }
+
+                            }
+
+                            factura.EstadoFacturaFK = 3;
+
+                            var descarga = new Infrastructure.DescargaFactura()
+                            {
+                                CentroComputoIdFK = centroComputo.Id,
+                                FacturaIdFK = factura.Id
+                            };
+                            db.DescargasFactura.Add(descarga);
+                            db.SaveChanges();
+
+                            //validar incremento de descarga
+                            var descargasCC = db.DescargasFactura.Where(x => x.FacturaIdFK == factura.Id).Select(m => m.CentroComputoIdFK).Distinct();
+                            factura.QtyDescargasCC = descargasCC.Count();
+                            db.SaveChanges();
+
                         }
-
-                        factura.EstadoFacturaFK = 3;                        
-
-                        var descarga = new Infrastructure.DescargaFactura()
+                        else
                         {
-                            CentroComputoIdFK = centroComputo.Id,
-                            FacturaIdFK = factura.Id
+                            ModelState.AddModelError("NotFound", "No se ha encontrado la factura especificada.");
+                            //return BadRequest(ModelState);
                         };
-                        db.DescargasFactura.Add(descarga);
-                        db.SaveChanges();
-
-                        //validar incremento de descarga
-                        var descargasCC = db.DescargasFactura.Where(x => x.FacturaIdFK == factura.Id).Select(m => m.CentroComputoIdFK).Distinct();
-                        factura.QtyDescargasCC = descargasCC.Count();
-                        db.SaveChanges();
-
                     }
-                    else
-                    {
-                        ModelState.AddModelError("NotFound", "No se ha encontrado la factura especificada.");
-                        //return BadRequest(ModelState);
-                    };
                 }
-            }
-            else
+                else
+                {
+                    throw new Exception("ApiKey invalida");
+                }
+            }catch(Exception exf)
             {
-                throw new Exception("ApiKey invalida");
+                LogHelper.GenerateLog(exf);
+                throw exf;
             }
-
             return fac;
         }
 

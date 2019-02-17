@@ -60,6 +60,7 @@ namespace ApiFP.Models
     {
         public int Id { get; set; }
         public Archivo Archivo { get; set; }
+        public string UrlArchivo { get; set; }
         public bool Confirmada { get; set; }
     }
 }

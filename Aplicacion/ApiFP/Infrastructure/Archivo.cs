@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -47,6 +48,23 @@ namespace ApiFP.Infrastructure
         {
             StorageService storageService = new StorageService();
             storageService.Delete(this.TipoAlmacenamiento, this.Volumen, this.Ruta);
+        }
+
+        public string EncryptId()
+        {
+            string param = DateTime.Now.ToString() + "|" + this.Id.ToString();
+            var encParam = EncryptionLibrary.clsEncriptar.Encriptar(param, ConfigurationManager.AppSettings["ENCRYPTION_KEY_URL_FILE"]);
+            encParam = EncryptionLibrary.clsBase64.CodeToBase64(encParam);
+            return encParam;
+        }
+
+        public string DecryptId(string encParam)
+        {
+            var decrypParam = EncryptionLibrary.clsBase64.DecodeFromBase64(encParam);
+            decrypParam = EncryptionLibrary.clsEncriptar.Desencriptar(decrypParam, ConfigurationManager.AppSettings["ENCRYPTION_KEY_URL_FILE"]);
+            string[] param = decrypParam.Split('|');
+
+            return param[1];
         }
     }
 
