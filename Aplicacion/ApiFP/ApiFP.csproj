@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EncryptionLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\EncryptionLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -159,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="ConfirmAccount.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -196,6 +201,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ArchivoController.cs" />
+    <Compile Include="Controllers\CentroComputoController.cs" />
     <Compile Include="Controllers\FacturaController.cs" />
     <Compile Include="Controllers\DiagnosticController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -206,7 +212,9 @@
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Archivo.cs" />
+    <Compile Include="Infrastructure\CentroComputo.cs" />
     <Compile Include="Infrastructure\EstadoFactura.cs" />
+    <Compile Include="Infrastructure\DescargaFactura.cs" />
     <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
@@ -247,9 +255,25 @@
     <Compile Include="Migrations\201901241351402_AddSinArchivoFactura.Designer.cs">
       <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201902102326184_EstadoFactura.cs" />
-    <Compile Include="Migrations\201902102326184_EstadoFactura.Designer.cs">
-      <DependentUpon>201902102326184_EstadoFactura.cs</DependentUpon>
+    <Compile Include="Migrations\201902111555393_AddEstadoFactura.cs" />
+    <Compile Include="Migrations\201902111555393_AddEstadoFactura.Designer.cs">
+      <DependentUpon>201902111555393_AddEstadoFactura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902111602563_AddCentrosDeComputo.cs" />
+    <Compile Include="Migrations\201902111602563_AddCentrosDeComputo.Designer.cs">
+      <DependentUpon>201902111602563_AddCentrosDeComputo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902131618106_AddDescargasFactura.cs" />
+    <Compile Include="Migrations\201902131618106_AddDescargasFactura.Designer.cs">
+      <DependentUpon>201902131618106_AddDescargasFactura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902141527134_AlterCentroComputo.cs" />
+    <Compile Include="Migrations\201902141527134_AlterCentroComputo.Designer.cs">
+      <DependentUpon>201902141527134_AlterCentroComputo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201902141811476_AlterFacturaQtyDescargaCC.cs" />
+    <Compile Include="Migrations\201902141811476_AlterFacturaQtyDescargaCC.Designer.cs">
+      <DependentUpon>201902141811476_AlterFacturaQtyDescargaCC.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
@@ -330,8 +354,20 @@
     <EmbeddedResource Include="Migrations\201901241351402_AddSinArchivoFactura.resx">
       <DependentUpon>201901241351402_AddSinArchivoFactura.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201902102326184_EstadoFactura.resx">
-      <DependentUpon>201902102326184_EstadoFactura.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201902111555393_AddEstadoFactura.resx">
+      <DependentUpon>201902111555393_AddEstadoFactura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902111602563_AddCentrosDeComputo.resx">
+      <DependentUpon>201902111602563_AddCentrosDeComputo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902131618106_AddDescargasFactura.resx">
+      <DependentUpon>201902131618106_AddDescargasFactura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902141527134_AlterCentroComputo.resx">
+      <DependentUpon>201902141527134_AlterCentroComputo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902141811476_AlterFacturaQtyDescargaCC.resx">
+      <DependentUpon>201902141811476_AlterFacturaQtyDescargaCC.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

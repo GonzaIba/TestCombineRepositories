@@ -6,14 +6,17 @@ using System.Web;
 
 namespace ApiFP.Models
 {
-    public class BaseFacturaBindingModel
+    public class MinimalFacturaBindingModel
     {
         public string Tipo { get; set; }
         public string Numero { get; set; }
-        public string Importe { get; set; }
         public string CuitOrigen { get; set; }
         public string CuitDestino { get; set; }
         public string Fecha { get; set; }
+    }
+    public class BaseFacturaBindingModel : MinimalFacturaBindingModel
+    {
+        public string Importe { get; set; }
         public string Detalle { get; set; }
         public string Servicio { get; set; }
         public string IvaDiscriminado { get; set; }
@@ -46,5 +49,18 @@ namespace ApiFP.Models
     public class UpdateFacturaBindingModel : BaseFacturaBindingModel
     {
         public int Id { get; set; }
+    }
+
+    public class GetFacturaCCBindingModel : MinimalFacturaBindingModel
+    {
+        public int Id { get; set; }
+    }
+
+    public class GetFacturaCCDBindingModel : BaseFacturaBindingModel
+    {
+        public int Id { get; set; }
+        public Archivo Archivo { get; set; }
+        public string UrlArchivo { get; set; }
+        public bool Confirmada { get; set; }
     }
 }

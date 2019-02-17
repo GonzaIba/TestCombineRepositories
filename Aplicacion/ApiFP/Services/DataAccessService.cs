@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -52,7 +53,7 @@ namespace ApiFP.Services
                     "arc.Id as ArchivoId " +
                 "From Facturas as fac " +
                 "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
-                "Where fac.UserIdFK = @user", new SqlParameter("@user", userId)); //.ToList();
+                "Where fac.UserIdFK = @user and fac.EstadoFacturaFK <> 3", new SqlParameter("@user", userId)); //.ToList();
 
             if (facturaId != null)
             {
@@ -62,5 +63,47 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
+        public List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino, string centroComputoId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var facturasList = db.Database.SqlQuery<GetFacturaCCBindingModel>(
+                            "SELECT " +
+                                "tf.Id," +
+                                "tf.Tipo," +
+                                "tf.Numero," +
+                                "tf.CuitOrigen," +
+                                "tf.CuitDestino," +
+                                "tf.SinArchivo," +
+                                "convert(varchar, tf.Fecha, 103) as Fecha " +                                
+                            "From [Facturas] as tf " +
+                            "where " +
+                                "(tf.CuitDestino = @cuitDestino) " +
+                                "and " +
+                                "(" +
+                                    "(tf.EstadoFacturaFK = 2) " + //confirmada
+                                    "or " +
+                                    "(" +
+                                        "(tf.EstadoFacturaFK = 3) " + //descargada
+                                        "and " +
+                                        "(tf.QtyDescargasCC < 2) " +
+                                        "and " +
+                                        "not exists(select * from[DescargasFactura] as td where td.FacturaIdFK = tf.Id and td.CentroComputoIdFK = @centroComputo) " +
+                                    ") " +
+                                ") "
+                            , new SqlParameter("@cuitDestino", cuitDestino), new SqlParameter("@centroComputo", centroComputoId));
+
+            return facturasList.ToList();
+        }
+
+        private string DBDateToString(Nullable<DateTime> fecha)
+        {
+            if (fecha.HasValue)
+            {
+                return fecha.Value.ToString("d", CultureInfo.CreateSpecificCulture("es-ES"));
+            }
+
+            return "";
+        }
     }
 }
