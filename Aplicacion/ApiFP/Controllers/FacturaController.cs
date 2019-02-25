@@ -244,5 +244,32 @@ namespace ApiFP.Controllers
 
             return Ok();
         }
+
+
+        [Authorize]
+        [Route("cuit")]
+        [HttpGet]
+        public async Task<GetCuitsBindingModel> GetCuitsByUser()
+        {
+            GetCuitsBindingModel cuitlist = new GetCuitsBindingModel();
+            DataAccessService service = new DataAccessService();
+            cuitlist.CuitDestino = service.GetCuitDestino(User.Identity.GetUserId());
+            cuitlist.CuitOrigen = service.GetCuitOrigen(User.Identity.GetUserId());
+
+            return cuitlist;
+        }
+
+        [Authorize]
+        [Route("detalle/{cuitOrigen}")]
+        [HttpGet]
+        public async Task<List<string>> GetDetalleByUser(string cuitOrigen)
+        {
+            
+            DataAccessService service = new DataAccessService();
+            var listaDetalle = service.GetDetalleOrigen(User.Identity.GetUserId(), cuitOrigen);            
+
+            return listaDetalle;
+        }
+
     }
 }
