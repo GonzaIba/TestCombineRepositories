@@ -229,8 +229,16 @@ namespace ApiFP.Controllers
                 {
                     foreach (Factura factura in facturas)
                     {
-                        factura.Confirmada = true;
-                        factura.EstadoFacturaFK = 2;
+                        if (factura.ConfirmacionValida())
+                        {
+                            factura.Confirmada = true;
+                            factura.EstadoFacturaFK = 2;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Algunas facturas no han sido confirmadas.");
+                        }
+
                     }
 
                     db.SaveChanges();
@@ -242,6 +250,10 @@ namespace ApiFP.Controllers
                 };
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return Ok();
         }
 
