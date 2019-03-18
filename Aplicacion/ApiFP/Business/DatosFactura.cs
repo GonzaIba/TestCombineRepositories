@@ -8,6 +8,7 @@ namespace ApiFP.Business
     public class DatosFactura {
         public string Cuit_Origen { get; set; }
         public string Cuit_Destino { get; set; }
+        public string Detalle { get; set; }
         public string Tipo { get; set; }
         public string Numero { get; set; }
         public string Importe { get; set; }

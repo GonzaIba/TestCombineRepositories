@@ -8,8 +8,14 @@ namespace ApiFP.Tests
     {
         [TestMethod]
         public void TestMethod() {
-            MemoryStream pdfStream = ApiFP.Services.PDFParser.leerPdf("./Prueba.pdf");
-            ApiFP.Services.PDFParser.extraerCamposDePDF(pdfStream);
+
+            DirectoryInfo d = new DirectoryInfo(@"./PDFS");//Assuming Test is your Folder
+            FileInfo[] Files = d.GetFiles("*.pdf"); //Getting Text files
+            foreach (FileInfo file in Files) {
+                MemoryStream pdfStream = ApiFP.Services.PDFParser.leerPdf(file.FullName);
+                ApiFP.Services.PDFParser pdfParser = new ApiFP.Services.PDFParser();
+                pdfParser.extraerCamposDePDF(pdfStream);
+            }
         }
     }
 }
