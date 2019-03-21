@@ -87,18 +87,28 @@ namespace ApiFP.Services
 
         private bool tieneInformacionValida (string linea)
         {
-            string pattern = ConfigurationManager.AppSettings["DETALLE_REGEX_PATTERN"];
-            Regex rgx = new Regex(pattern);
-            return rgx.IsMatch(linea);
+            string patron_numeros = ConfigurationManager.AppSettings["DETALLE_REGEX_PATTERN"];
+            string palabrasAOmitir = ConfigurationManager.AppSettings["DETALLE_OMITIR_PALABRAS"];
+            Regex rgx1 = new Regex(patron_numeros);
+            Regex rgx2 = new Regex(palabrasAOmitir);
+            return !(rgx1.IsMatch(linea) || rgx2.IsMatch(linea));
         }
 
         private bool empiezaDetalle (string linea)
         {
             foreach(String palabra in comienzoDetalle_Palabras) {
-                if (linea.Contains(palabra))
+                string pattern = palabra + "$";
+                Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
+                if (rgx.IsMatch(linea))
                     return true;
             }
             return false;
+        }
+
+        private string filtrarNumerosAlFinal (string linea )
+        {
+            string patron = ConfigurationManager.AppSettings["NUMEROS_AL_FINAL_PATTERN"];
+            return Regex.Replace(linea, patron, "");
         }
 
         //Se especifican las líneas donde esta la información que debe guardarse 
@@ -180,9 +190,9 @@ namespace ApiFP.Services
 
                 if (empiezaDetalle(lineas[i])) { //TODO: POner palabra qe inciia
                     string separador = ConfigurationManager.AppSettings["SEPARADOR_DETALLE"];
-                    for (; !lineas[i].Contains(PALABRA_FIN_DETALLE); i++) {
+                    for (i++; !lineas[i].Contains(PALABRA_FIN_DETALLE); i++) {
                         if (tieneInformacionValida(lineas[i])) {  //TODO: poner que filtre lineas con cosas raras y palabras especificas. 
-                            datosExtraidos.Detalle += lineas[i] + separador;
+                            datosExtraidos.Detalle += filtrarNumerosAlFinal(lineas[i]) + separador;
                         }
                     }
                     continue; 
