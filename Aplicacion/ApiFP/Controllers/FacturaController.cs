@@ -229,8 +229,16 @@ namespace ApiFP.Controllers
                 {
                     foreach (Factura factura in facturas)
                     {
-                        factura.Confirmada = true;
-                        factura.EstadoFacturaFK = 2;
+                        if (factura.ConfirmacionValida())
+                        {
+                            factura.Confirmada = true;
+                            factura.EstadoFacturaFK = 2;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "Algunas facturas no han sido confirmadas.");
+                        }
+
                     }
 
                     db.SaveChanges();
@@ -242,7 +250,38 @@ namespace ApiFP.Controllers
                 };
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return Ok();
         }
+
+
+        [Authorize]
+        [Route("cuit")]
+        [HttpGet]
+        public async Task<GetCuitsBindingModel> GetCuitsByUser()
+        {
+            GetCuitsBindingModel cuitlist = new GetCuitsBindingModel();
+            DataAccessService service = new DataAccessService();
+            cuitlist.CuitDestino = service.GetCuitDestino(User.Identity.GetUserId());
+            cuitlist.CuitOrigen = service.GetCuitOrigen(User.Identity.GetUserId());
+
+            return cuitlist;
+        }
+
+        [Authorize]
+        [Route("detalle/{cuitOrigen}")]
+        [HttpGet]
+        public async Task<List<string>> GetDetalleByUser(string cuitOrigen)
+        {
+            
+            DataAccessService service = new DataAccessService();
+            var listaDetalle = service.GetDetalleOrigen(User.Identity.GetUserId(), cuitOrigen);            
+
+            return listaDetalle;
+        }
+
     }
 }

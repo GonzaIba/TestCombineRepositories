@@ -66,6 +66,19 @@ namespace ApiFP.Infrastructure
             db.Facturas.Add(this);
             db.SaveChanges();
         }
+
+        public bool ConfirmacionValida()
+        {
+            bool validacion = true;
+            validacion = validacion && (!string.IsNullOrEmpty(this.Tipo));
+            validacion = validacion && (!string.IsNullOrEmpty(this.Numero));
+            validacion = validacion && (!string.IsNullOrEmpty(this.Importe));
+            validacion = validacion && (!string.IsNullOrEmpty(this.CuitDestino));
+            validacion = validacion && (!string.IsNullOrEmpty(this.CuitOrigen));
+            validacion = validacion && (this.Fecha.HasValue) && (this.Fecha.Value != null);
+
+            return validacion;
+        }
     }
 
 }

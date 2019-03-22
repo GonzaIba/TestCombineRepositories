@@ -27,12 +27,12 @@ namespace ApiFP.Models
         public bool? SinArchivo { get; set; }
     }
     public class CreateFacturaBindingModel : BaseFacturaBindingModel
-    {        
+    {
         public Archivo Archivo { get; set; }
 
         public bool ValidarSinArchivo()
         {
-            bool result =  (this.SinArchivo == false) && (this.Archivo != null);
+            bool result = (this.SinArchivo == false) && (this.Archivo != null);
             result = result || (this.SinArchivo == true) && (this.Archivo == null);
 
             return result;
@@ -62,5 +62,10 @@ namespace ApiFP.Models
         public Archivo Archivo { get; set; }
         public string UrlArchivo { get; set; }
         public bool Confirmada { get; set; }
+    }
+
+    public class GetCuitsBindingModel{
+        public List<string> CuitOrigen;
+        public List<string> CuitDestino;
     }
 }
