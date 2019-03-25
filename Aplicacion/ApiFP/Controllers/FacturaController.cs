@@ -60,7 +60,8 @@ namespace ApiFP.Controllers
                 EstadoFacturaFK = 1
             };
 
-            if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
+            factura.ReadDate(createFacturaModel.Fecha);
+            //if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
 
             factura.Insert();
 
@@ -76,6 +77,8 @@ namespace ApiFP.Controllers
                 StorageService storageService = new StorageService();
                 StorageService.StoreResult storeResult = new StorageService.StoreResult();
                 storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+
+                factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
 
                 if (storeResult.Result == 0)
                 {
