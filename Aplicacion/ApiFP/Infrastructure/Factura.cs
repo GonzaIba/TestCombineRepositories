@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using ApiFP.Services;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -67,6 +71,15 @@ namespace ApiFP.Infrastructure
             db.SaveChanges();
         }
 
+        public void Update()
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                db.Entry(this).State = this.Id == 0 ? EntityState.Added : EntityState.Modified;
+                db.SaveChanges();
+            }
+        }
+
         public bool ConfirmacionValida()
         {
             bool validacion = true;
@@ -78,6 +91,40 @@ namespace ApiFP.Infrastructure
             validacion = validacion && (this.Fecha.HasValue) && (this.Fecha.Value != null);
 
             return validacion;
+        }
+
+        public void ReadDate(string Date)
+        {
+            if (!String.IsNullOrEmpty(Date)) { this.Fecha = DateTime.Parse(Date, new CultureInfo("es-ES", false)); };
+        }
+
+        public void Parse(string fileContent)
+        {
+            PDFParser pdfParser = new PDFParser();
+            Business.DatosFactura datosFactura;
+            try
+            {
+                datosFactura = pdfParser.extraerCamposDePDF(new MemoryStream(Convert.FromBase64String(fileContent)));
+
+                this.CuitOrigen = datosFactura.Cuit_Origen;
+                this.CuitDestino = datosFactura.Cuit_Destino;
+                this.Detalle = datosFactura.Detalle;
+                this.Tipo = datosFactura.Tipo;
+                this.Numero = datosFactura.Numero;
+                this.Importe = datosFactura.Importe;
+                this.IvaDiscriminado = datosFactura.IvaDescriminado;
+                this.Retenciones = datosFactura.Retenciones;
+                this.Percepciones = datosFactura.Percepciones;
+                this.ImpuestosNoGravados = datosFactura.ImpuestosNoGravados;
+                this.ReadDate(datosFactura.Fecha);
+
+                this.Update();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
         }
     }
 
