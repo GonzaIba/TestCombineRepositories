@@ -105,5 +105,44 @@ namespace ApiFP.Services
 
             return "";
         }
+
+
+        public List<string> GetCuitDestino(string userId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var facturasList = db.Database.SqlQuery<string>(
+                    "select distinct top 5 CuitDestino " +
+                    "From Facturas as fac " +
+                    "Where(fac.CuitDestino is not null) and fac.UserIdFK = @user", new SqlParameter("@user", userId)); //.ToList();
+
+            return facturasList.ToList();
+        }
+
+        public List<string> GetCuitOrigen(string userId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var facturasList = db.Database.SqlQuery<string>(
+                    "select distinct top 5 CuitOrigen " +
+                    "From Facturas as fac " +
+                    "Where(fac.CuitOrigen is not null) and fac.UserIdFK = @user", new SqlParameter("@user", userId)); //.ToList();
+
+            return facturasList.ToList();
+        }
+
+        public List<string> GetDetalleOrigen(string userId, string cuitOrigen)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var detalleList = db.Database.SqlQuery<string>(
+                    "select distinct top 5 Detalle " +
+                    "From Facturas as fac " +
+                    "Where(fac.Detalle is not null) " +
+                        "and fac.UserIdFK = @user " +
+                        "and fac.CuitOrigen = @cuitOrigen", new SqlParameter("@user", userId), new SqlParameter("@cuitOrigen", cuitOrigen)); //.ToList();
+
+            return detalleList.ToList();
+        }
     }
 }
