@@ -78,7 +78,7 @@ namespace ApiFP.Controllers
                 StorageService.StoreResult storeResult = new StorageService.StoreResult();
                 storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
 
-                factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
+                //factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
 
                 if (storeResult.Result == 0)
                 {
@@ -286,5 +286,42 @@ namespace ApiFP.Controllers
             return listaDetalle;
         }
 
+        [Authorize]
+        [Route("parse")]
+        [HttpPost]
+        public async Task<GetFacturaBindingModel> ParseFactura(Models.Archivo archivo)
+        {
+            //LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
+            var factura = new Infrastructure.Factura();
+            GetFacturaBindingModel dto = null;
+            try
+            {                
+                if (archivo.Extension.ToLower() == ".pdf")
+                {
+                    factura.Parse(archivo.ContenidoBase64);
+
+                    dto = new GetFacturaBindingModel()
+                    {
+                        CuitOrigen = factura.CuitOrigen,
+                        CuitDestino = factura.CuitDestino,
+                        Detalle = factura.Detalle,
+                        Tipo = factura.Tipo,
+                        Numero = factura.Numero,
+                        Importe = factura.Importe,
+                        IvaDiscriminado = factura.IvaDiscriminado,
+                        Retenciones = factura.Retenciones,
+                        Percepciones = factura.Percepciones,
+                        ImpuestosNoGravados = factura.ImpuestosNoGravados,
+                        Fecha = factura.Fecha.HasValue ? factura.Fecha.Value.ToString("d", new CultureInfo("es-ES", false)) : null
+                    };
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
+            return dto;
+        }
     }
 }
