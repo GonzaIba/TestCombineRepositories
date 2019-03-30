@@ -39,17 +39,6 @@ namespace ApiFP.Infrastructure
             db.SaveChanges();
         }
 
-        public string CreateStorageName()
-        {
-            return FacturaIdFK.ToString() + "_" + Nombre + Extension;
-        }
-
-        public void Delete()
-        {
-            StorageService storageService = new StorageService();
-            storageService.Delete(this.TipoAlmacenamiento, this.Volumen, this.Ruta);
-        }
-
         public string EncryptId()
         {
             string param = DateTime.Now.ToString() + "|" + this.Id.ToString();
@@ -65,6 +54,39 @@ namespace ApiFP.Infrastructure
             string[] param = decrypParam.Split('|');
 
             return param[1];
+        }
+
+
+        public string CreateStorageName()
+        {
+            return FacturaIdFK.ToString() + "_" + Nombre + Extension;
+        }
+
+        public void Delete()
+        {
+            StorageService storageService = StorageServiceFactory.Get(this.TipoAlmacenamiento);
+            storageService.Delete(this.Volumen, this.Ruta);
+        }
+
+        public bool Store(Models.Archivo file)
+        {
+            StorageService storageService = StorageServiceFactory.GetDefault();
+            StoreResult storeResult = storageService.Store(this.CreateStorageName(), file.ContenidoBase64);
+
+            if (storeResult.Result == 0)
+            {
+                this.Ruta = storeResult.FullPath;
+                this.TipoAlmacenamiento = storeResult.StorageType;
+                this.Volumen = storeResult.Volume;
+                return true;
+            }
+            return false;
+        }
+
+        public string Restore()
+        {
+            StorageService storageService = StorageServiceFactory.Get(this.TipoAlmacenamiento);
+            return storageService.Restore(this.Volumen, this.Ruta);
         }
     }
 

@@ -319,10 +319,12 @@
     <Compile Include="Providers\CustomOAuthProvider.cs" />
     <Compile Include="Services\EmailSendGridApiService.cs" />
     <Compile Include="Services\DataAccessService.cs" />
-    <Compile Include="Services\CloudStorageService.cs" />
-    <Compile Include="Services\StorageService.cs" />
+    <Compile Include="Services\Storage\CloudStorageService.cs" />
+    <Compile Include="Services\Storage\FileSystemStorageService.cs" />
+    <Compile Include="Services\Storage\StorageService.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\PDFParser.cs" />
+    <Compile Include="Services\Storage\StorageServiceFactory.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -20,8 +20,8 @@ namespace ApiFP.Services
     }
     public abstract class StorageService
     {
-        public abstract StoreResult Store(string fileName, string fileContent);
-        public abstract string Restore(string storageType, string volume, string fileFullPath);
-        public abstract void Delete(string storageType, string volume, string fileFullPath);
+        public abstract StoreResult Store(string filename, string contentFile);
+        public abstract string Restore(string volume, string fileFullPath);
+        public abstract void Delete(string volume, string fileFullPath);
     }
 }

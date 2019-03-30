@@ -72,39 +72,33 @@ namespace ApiFP.Controllers
             }
         }
 
-
         [AllowAnonymous]
         [HttpPost]
         [Route("storage/cloud/put")]
         public IHttpActionResult PutStorageCloud(Models.Archivo archivo)
         {
-
-            CloudStorageService service = new CloudStorageService();
+            var storageType = "GCS";
+            StorageService service = StorageServiceFactory.Get(storageType);            
             var fileName = archivo.Nombre + archivo.Extension;
             service.Store(fileName, archivo.ContenidoBase64);
 
-
             return Ok();
         }
-
 
         [AllowAnonymous]
         [HttpGet]
         [Route("storage/cloud/get")]
         public Models.Archivo GetStorageCloud()
         {
-
-            CloudStorageService service = new CloudStorageService();
-
             var storageType = "GCS";
-            var volume = ConfigurationManager.AppSettings["GCS_BUCKET_NAME"];
-
+            StorageService service = StorageServiceFactory.Get(storageType);
             
-
+            var volume = ConfigurationManager.AppSettings["GCS_BUCKET_NAME"];
+           
             Models.Archivo archivo = new Models.Archivo();
             archivo.Nombre = "Test";
             archivo.Extension = ".pdf";
-            archivo.ContenidoBase64 = service.Restore(storageType, volume, "", "Test.pdf");
+            archivo.ContenidoBase64 = service.Restore(volume, "Test.pdf");
 
             return archivo;            
         }

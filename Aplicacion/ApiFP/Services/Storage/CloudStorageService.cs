@@ -33,7 +33,7 @@ namespace ApiFP.Services
 
                 result.Result = 0;
                 result.Volume = bucketName;
-                result.FullPath = projectId;
+                result.FullPath = fileName;
                 result.StorageType = "GCS";
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace ApiFP.Services
             return result;
         }
 
-        public override string Restore(string storageType, string volume, string fileName)
+        public override string Restore(string volume, string fileFullPath)
         {
             string credentialFile = System.Web.Hosting.HostingEnvironment.MapPath("~");
             credentialFile = credentialFile + ConfigurationManager.AppSettings["GCS_CRED_FILE"];
@@ -55,18 +55,28 @@ namespace ApiFP.Services
 
             using (var outputFile = new MemoryStream())
             {
-                storageClient.DownloadObject(volume, fileName, outputFile);
+                storageClient.DownloadObject(volume, fileFullPath, outputFile);
                 return Convert.ToBase64String(outputFile.ToArray());
             }
 
             return "";
         }
 
-        public override void Delete(string storageType, string volume, string fileFullPath)
+        public override void Delete(string volume, string fileFullPath)
         {
-            //var storage = StorageClient.Create();
+            try
+            {
+                string credentialFile = System.Web.Hosting.HostingEnvironment.MapPath("~");
+                credentialFile = credentialFile + ConfigurationManager.AppSettings["GCS_CRED_FILE"];
+                var credential = GoogleCredential.FromFile(credentialFile);
+                StorageClient storageClient = StorageClient.Create(credential);
 
-            //storage.DeleteObject(bucketName, objectName);            
+                storageClient.DeleteObject(volume, fileFullPath);
+            }
+            catch (Exception ex)
+            {
+
+            }           
         }
     }
 }

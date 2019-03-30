@@ -13,7 +13,7 @@ namespace ApiFP.Services
 {
     public class FileSystemStorageService : StorageService
     {
-        public override StoreResult Store(string fileName, string fileContent)
+        public override StoreResult Store(string filename, string contentFile)
         {
 
             string volume = ConfigurationManager.AppSettings["FSS_CURRENT_VOLUME"];
@@ -33,12 +33,12 @@ namespace ApiFP.Services
                 volumePath = volumePath + ConfigurationManager.AppSettings["FSS_VOLUME_" + volume + "_" + pathType];
             }
 
-            fileFullPath = volumePath + fileName;
+            fileFullPath = volumePath + filename;
 
             StoreResult result = new StoreResult();
             try
             {
-                File.WriteAllBytes(fileFullPath, Convert.FromBase64String(fileContent));
+                File.WriteAllBytes(fileFullPath, Convert.FromBase64String(contentFile));
                
                 result.Result = 0;
                 result.Volume = volume;
@@ -54,7 +54,7 @@ namespace ApiFP.Services
             return result;
         }
 
-        public override string Restore(string storageType, string volume, string fileFullPath)
+        public override string Restore(string volume, string fileFullPath)
         {                            
             byte[] bytes = File.ReadAllBytes(fileFullPath);
             string file = Convert.ToBase64String(bytes);
@@ -62,7 +62,7 @@ namespace ApiFP.Services
             return file;                        
         }
 
-        public override void Delete(string storageType, string volume, string fileFullPath)
+        public override void Delete(string volume, string fileFullPath)
         {
             File.Delete(fileFullPath);
         }

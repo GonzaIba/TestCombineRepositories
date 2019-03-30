@@ -67,26 +67,17 @@ namespace ApiFP.Controllers
 
             if (createFacturaModel.Archivo != null) {
 
+                //factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
+
                 var archivo = new Infrastructure.Archivo()
                 {
                     Nombre = createFacturaModel.Archivo.Nombre,
                     Extension = createFacturaModel.Archivo.Extension,
-                    FacturaIdFK = factura.Id
+                    FacturaIdFK = factura.Id,                    
                 };
+                archivo.Store(createFacturaModel.Archivo);
 
-                StorageService storageService = new StorageService();
-                StorageService.StoreResult storeResult = new StorageService.StoreResult();
-                storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
-
-                //factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
-
-                if (storeResult.Result == 0)
-                {
-                    archivo.Ruta = storeResult.FullPath; ;
-                    archivo.TipoAlmacenamiento = storeResult.StorageType;
-                    archivo.Volumen = storeResult.Volume;
-                    archivo.Insert();
-                }
+                archivo.Insert();
             }
 
             return Ok();
