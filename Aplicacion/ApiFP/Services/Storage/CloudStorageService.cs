@@ -10,8 +10,7 @@ namespace ApiFP.Services
 {
     public class CloudStorageService : StorageService
     {
-
-        public StoreResult Store(string fileName, string fileContent)
+        public override StoreResult Store(string fileName, string fileContent)
         {
 
             string projectId = ConfigurationManager.AppSettings["GCS_PROJECT_ID"];
@@ -23,7 +22,7 @@ namespace ApiFP.Services
             //string bucketName = projectId + "-" + bucket;
 
             // Instantiates a client.
-            var credential = GoogleCredential.FromFile(credentialFile);            
+            var credential = GoogleCredential.FromFile(credentialFile);
             StorageClient storageClient = StorageClient.Create(credential);
             StoreResult result = new StoreResult();
             try
@@ -37,8 +36,8 @@ namespace ApiFP.Services
                 result.FullPath = projectId;
                 result.StorageType = "GCS";
             }
-            catch (Exception ex)            
-            {                
+            catch (Exception ex)
+            {
                 LogHelper.GenerateLog(ex);
                 result.Result = 1;
                 throw new Exception(ex.Message);
@@ -47,25 +46,27 @@ namespace ApiFP.Services
             return result;
         }
 
-        public string Restore(string storageType, string volume, string fileFullPath, string fileName)
+        public override string Restore(string storageType, string volume, string fileName)
         {
             string credentialFile = System.Web.Hosting.HostingEnvironment.MapPath("~");
             credentialFile = credentialFile + ConfigurationManager.AppSettings["GCS_CRED_FILE"];
             var credential = GoogleCredential.FromFile(credentialFile);
             StorageClient storageClient = StorageClient.Create(credential);
-            
+
             using (var outputFile = new MemoryStream())
             {
                 storageClient.DownloadObject(volume, fileName, outputFile);
                 return Convert.ToBase64String(outputFile.ToArray());
             }
 
-            return "";                        
+            return "";
         }
 
-        public void Delete(string storageType, string volume, string fileFullPath)
+        public override void Delete(string storageType, string volume, string fileFullPath)
         {
-            //
+            //var storage = StorageClient.Create();
+
+            //storage.DeleteObject(bucketName, objectName);            
         }
     }
 }
