@@ -49,6 +49,37 @@ namespace ApiFP.Controllers
         }
 
         [AllowAnonymous]
+        [Route("facturas/list")]
+        [HttpPost]
+        public async Task<List<GetFacturaCCBindingModel>> GetFacturasLote(List<string> cuitsDestino)
+        {
+            List<GetFacturaCCBindingModel> facturaList = null;
+
+            try
+            {
+                if (ValidateApiKey())
+                {
+                    var apiKey = GetApiKey();
+                    ApplicationDbContext db = new ApplicationDbContext();
+                    CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
+
+                    DataAccessService service = new DataAccessService();
+                    facturaList = service.GetFacturasCC(cuitsDestino, centroComputo.Id.ToString());
+                }
+                else
+                {
+                    throw new Exception("ApiKey invalida");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return facturaList;
+        }
+
+        [AllowAnonymous]
         [Route("facturas/{facturaId}")]
         [HttpGet]
         public async Task<GetFacturaCCDBindingModel> GetFactura(Int64 facturaId)
