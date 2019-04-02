@@ -96,6 +96,54 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
+        public List<GetFacturaCCBindingModel> GetFacturasCC(List<string> cuitsDestino, string centroComputoId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var query = "SELECT " +
+                                "tf.Id," +
+                                "tf.Tipo," +
+                                "tf.Numero," +
+                                "tf.CuitOrigen," +
+                                "tf.CuitDestino," +
+                                "tf.SinArchivo," +
+                                "convert(varchar, tf.Fecha, 103) as Fecha " +
+                            "From [Facturas] as tf " +
+                            "where " +
+                                "(tf.CuitDestino in ({0})) " +
+                                "and " +
+                                "(" +
+                                    "(tf.EstadoFacturaFK = 2) " + //confirmada
+                                    "or " +
+                                    "(" +
+                                        "(tf.EstadoFacturaFK = 3) " + //descargada
+                                        "and " +
+                                        "(tf.QtyDescargasCC < 2) " +
+                                        "and " +
+                                        "not exists(select * from[DescargasFactura] as td where td.FacturaIdFK = tf.Id and td.CentroComputoIdFK = @centroComputo) " +
+                                    ") " +
+                                ") ";
+            
+            var nameParameter = new List<string>();
+            var listParameter = new List<SqlParameter>();
+            listParameter.Add(new SqlParameter("@centroComputo", centroComputoId));
+
+            var index = 0; 
+            foreach (var cuit in cuitsDestino)
+            {
+                var paramName = "@cuitParam" + index;
+                listParameter.Add(new SqlParameter(paramName, cuit));                
+                nameParameter.Add(paramName);
+                index++;
+            }
+
+            query = String.Format(query, string.Join(",", nameParameter));
+
+            var facturasList = db.Database.SqlQuery<GetFacturaCCBindingModel>(query, listParameter.ToArray());
+
+            return facturasList.ToList();
+        }
+
         private string DBDateToString(Nullable<DateTime> fecha)
         {
             if (fecha.HasValue)
