@@ -143,14 +143,12 @@ namespace ApiFP.Controllers
 
                             if (factura.SinArchivo.HasValue && !factura.SinArchivo.Value)
                             {
-                                Infrastructure.Archivo archivoDb = db.Archivos.FirstOrDefault(x => x.FacturaIdFK == facturaId);
-
-                                StorageService storageService = new StorageService();
+                                Infrastructure.Archivo archivoDb = db.Archivos.FirstOrDefault(x => x.FacturaIdFK == facturaId);                                
 
                                 Models.Archivo archivo = new Models.Archivo();
                                 archivo.Nombre = archivoDb.Nombre;
                                 archivo.Extension = archivoDb.Extension;
-                                archivo.ContenidoBase64 = storageService.Restore(archivoDb.Ruta, archivoDb.Volumen, archivoDb.Ruta);
+                                archivo.ContenidoBase64 = archivoDb.Restore();
 
                                 fac.Archivo = archivo;
                                 try

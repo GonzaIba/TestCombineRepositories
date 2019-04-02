@@ -12,6 +12,7 @@ using System.Security.Claims;
 using ApiFP.Models;
 using System.Configuration;
 using ApiFP.Services;
+using Archivo = ApiFP.Models.Archivo;
 
 namespace ApiFP.Controllers
 {
@@ -64,10 +65,42 @@ namespace ApiFP.Controllers
             {
                 service.Send(mailToSend);
                 return Ok();
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("storage/cloud/put")]
+        public IHttpActionResult PutStorageCloud(Models.Archivo archivo)
+        {
+            var storageType = "GCS";
+            StorageService service = StorageServiceFactory.Get(storageType);            
+            var fileName = archivo.Nombre + archivo.Extension;
+            service.Store(fileName, archivo.ContenidoBase64);
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("storage/cloud/get")]
+        public Models.Archivo GetStorageCloud()
+        {
+            var storageType = "GCS";
+            StorageService service = StorageServiceFactory.Get(storageType);
+            
+            var volume = ConfigurationManager.AppSettings["GCS_BUCKET_NAME"];
+           
+            Models.Archivo archivo = new Models.Archivo();
+            archivo.Nombre = "Test";
+            archivo.Extension = ".pdf";
+            archivo.ContenidoBase64 = service.Restore(volume, "Test.pdf");
+
+            return archivo;            
         }
     }
 }

@@ -28,67 +28,67 @@ namespace ApiFP.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFactura(CreateFacturaBindingModel createFacturaModel)
         {
-            string userName = User.Identity.GetUserName();
-
-            LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
-
-            if (!createFacturaModel.ValidarSinArchivo())
+            try
             {
-                ModelState.AddModelError(string.Empty, "Error en la especificacion del parametro SinArchivo.");
-            }
+                string userName = User.Identity.GetUserName();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+                LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
 
-            var factura = new Infrastructure.Factura()
-            {
-                Tipo = createFacturaModel.Tipo,
-                Numero = createFacturaModel.Numero,
-                Importe = createFacturaModel.Importe,
-                CuitOrigen = createFacturaModel.CuitOrigen,
-                CuitDestino = createFacturaModel.CuitDestino,
-                Detalle = createFacturaModel.Detalle,
-                Servicio = createFacturaModel.Servicio,
-                IvaDiscriminado = createFacturaModel.IvaDiscriminado,
-                Retenciones = createFacturaModel.Retenciones,
-                Percepciones = createFacturaModel.Percepciones,
-                ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
-                UserIdFK = User.Identity.GetUserId(),                
-                SinArchivo = createFacturaModel.SinArchivo,
-                EstadoFacturaFK = 1
-            };
-
-            factura.ReadDate(createFacturaModel.Fecha);
-            //if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
-
-            factura.Insert();
-
-            if (createFacturaModel.Archivo != null) {
-
-                var archivo = new Infrastructure.Archivo()
+                if (!createFacturaModel.ValidarSinArchivo())
                 {
-                    Nombre = createFacturaModel.Archivo.Nombre,
-                    Extension = createFacturaModel.Archivo.Extension,
-                    FacturaIdFK = factura.Id
+                    ModelState.AddModelError(string.Empty, "Error en la especificacion del parametro SinArchivo.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var factura = new Infrastructure.Factura()
+                {
+                    Tipo = createFacturaModel.Tipo,
+                    Numero = createFacturaModel.Numero,
+                    Importe = createFacturaModel.Importe,
+                    CuitOrigen = createFacturaModel.CuitOrigen,
+                    CuitDestino = createFacturaModel.CuitDestino,
+                    Detalle = createFacturaModel.Detalle,
+                    Servicio = createFacturaModel.Servicio,
+                    IvaDiscriminado = createFacturaModel.IvaDiscriminado,
+                    Retenciones = createFacturaModel.Retenciones,
+                    Percepciones = createFacturaModel.Percepciones,
+                    ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
+                    UserIdFK = User.Identity.GetUserId(),
+                    SinArchivo = createFacturaModel.SinArchivo,
+                    EstadoFacturaFK = 1
                 };
 
-                StorageService storageService = new StorageService();
-                StorageService.StoreResult storeResult = new StorageService.StoreResult();
-                storeResult = storageService.Store(archivo.CreateStorageName(), createFacturaModel.Archivo.ContenidoBase64);
+                factura.ReadDate(createFacturaModel.Fecha);
+                //if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
 
-                //factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
+                factura.Insert();
 
-                if (storeResult.Result == 0)
+                if (createFacturaModel.Archivo != null)
                 {
-                    archivo.Ruta = storeResult.FullPath; ;
-                    archivo.TipoAlmacenamiento = storeResult.StorageType;
-                    archivo.Volumen = storeResult.Volume;
+
+                    //factura.Parse(createFacturaModel.Archivo.ContenidoBase64);
+
+                    var archivo = new Infrastructure.Archivo()
+                    {
+                        Nombre = createFacturaModel.Archivo.Nombre,
+                        Extension = createFacturaModel.Archivo.Extension,
+                        FacturaIdFK = factura.Id,
+                    };
+                    archivo.Store(createFacturaModel.Archivo);
+
                     archivo.Insert();
                 }
             }
-
+            catch (Exception ex)
+            {
+                LogHelper.GenerateLog(ex);
+                throw ex;
+            }
+            
             return Ok();
         }
 

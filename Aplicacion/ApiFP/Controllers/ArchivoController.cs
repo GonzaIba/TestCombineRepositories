@@ -29,14 +29,12 @@ namespace ApiFP.Controllers
         
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            Infrastructure.Archivo archivoInfo = db.Archivos.Find(int.Parse(fileid));
-
-            StorageService storageService = new StorageService();            
+            Infrastructure.Archivo archivoInfo = db.Archivos.Find(int.Parse(fileid));                    
 
             Models.Archivo archivo = new Models.Archivo();
             archivo.Nombre = archivoInfo.Nombre;
             archivo.Extension = archivoInfo.Extension;
-            archivo.ContenidoBase64 = storageService.Restore(archivoInfo.Ruta, archivoInfo.Volumen, archivoInfo.Ruta);
+            archivo.ContenidoBase64 = archivoInfo.Restore();
 
             return archivo;
         }
@@ -58,14 +56,12 @@ namespace ApiFP.Controllers
 
                 //buscar archivo
                 ApplicationDbContext db = new ApplicationDbContext();
-                archivoInfo = db.Archivos.Find(int.Parse(fileid));
-
-                StorageService storageService = new StorageService();
+                archivoInfo = db.Archivos.Find(int.Parse(fileid));                
 
                 archivo = new Models.Archivo();
                 archivo.Nombre = archivoInfo.Nombre;
                 archivo.Extension = archivoInfo.Extension;
-                archivo.ContenidoBase64 = storageService.Restore(archivoInfo.Ruta, archivoInfo.Volumen, archivoInfo.Ruta);
+                archivo.ContenidoBase64 = archivoInfo.Restore();
 
                 //var fsResult = new FileStreamResult(fileStream, "application/pdf");
                 var bytes = Convert.FromBase64String(archivo.ContenidoBase64);                
