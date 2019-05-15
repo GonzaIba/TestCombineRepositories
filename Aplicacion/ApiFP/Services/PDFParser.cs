@@ -153,7 +153,7 @@ namespace ApiFP.Services
                                 datosExtraidos.Numero = lineas[i].Trim();
                             }
                         }
-                        datosExtraidos.Numero = datosExtraidos.Numero.Replace(" ", "").Insert(4, "-");
+                        datosExtraidos.Numero = datosExtraidos.Numero.Replace(" ", "").Insert(6, "-");
                     }
                     continue;
                 }
