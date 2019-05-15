@@ -153,7 +153,8 @@ namespace ApiFP.Services
                                 datosExtraidos.Numero = lineas[i].Trim();
                             }
                         }
-                        datosExtraidos.Numero = datosExtraidos.Numero.Replace(" ", "").Insert(6, "-");
+                        int cantidadDigitosPuntoDeVenta = Convert.ToInt32(ConfigurationManager.AppSettings["CANTIDAD_DIGITOS_PUNTO_VENTA"]);
+                        datosExtraidos.Numero = datosExtraidos.Numero.Replace(" ", "").Insert(cantidadDigitosPuntoDeVenta, "-");
                     }
                     continue;
                 }
