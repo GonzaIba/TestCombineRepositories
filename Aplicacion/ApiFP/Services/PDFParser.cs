@@ -153,8 +153,15 @@ namespace ApiFP.Services
                                 datosExtraidos.Numero = lineas[i].Trim();
                             }
                         }
-                        int cantidadDigitosPuntoDeVenta = Convert.ToInt32(ConfigurationManager.AppSettings["CANTIDAD_DIGITOS_PUNTO_VENTA"]);
-                        datosExtraidos.Numero = datosExtraidos.Numero.Replace(" ", "").Insert(cantidadDigitosPuntoDeVenta, "-");
+
+                        int cantidadDigitosPuntoDeVenta = 4;
+                        datosExtraidos.Numero = datosExtraidos.Numero.Replace(" ", ""); //.Insert(cantidadDigitosPuntoDeVenta, "-");
+                        if (datosExtraidos.Numero.Length >= 13)
+                        {
+                            cantidadDigitosPuntoDeVenta = 5;
+                        }
+
+                        datosExtraidos.Numero = datosExtraidos.Numero.Insert(cantidadDigitosPuntoDeVenta, "-");
                     }
                     continue;
                 }
