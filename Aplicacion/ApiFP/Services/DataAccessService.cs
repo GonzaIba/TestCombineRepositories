@@ -10,15 +10,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace ApiFP.Services
 {
-    public class DataAccessService
+    public static class DataAccessService
     {
-
-        public List<GetFacturaBindingModel> GetFacturas(string userId, int? facturaId = null)
+        public static List<GetFacturaBindingModel> GetFacturas(string userId, int? facturaId = null)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             //var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
@@ -63,7 +63,7 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
-        public List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino, string centroComputoId)
+        public static List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino, string centroComputoId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
@@ -96,7 +96,7 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
-        public List<GetFacturaCCBindingModel> GetFacturasCC(List<string> cuitsDestino, string centroComputoId)
+        public static List<GetFacturaCCBindingModel> GetFacturasCC(List<string> cuitsDestino, string centroComputoId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
@@ -144,7 +144,7 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
-        private string DBDateToString(Nullable<DateTime> fecha)
+        private static string DBDateToString(Nullable<DateTime> fecha)
         {
             if (fecha.HasValue)
             {
@@ -155,7 +155,7 @@ namespace ApiFP.Services
         }
 
 
-        public List<string> GetCuitDestino(string userId)
+        public static List<string> GetCuitDestino(string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
@@ -167,7 +167,7 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
-        public List<string> GetCuitOrigen(string userId)
+        public static List<string> GetCuitOrigen(string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
@@ -179,7 +179,7 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
-        public List<string> GetDetalleOrigen(string userId, string cuitOrigen)
+        public static List<string> GetDetalleOrigen(string userId, string cuitOrigen)
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
@@ -191,6 +191,13 @@ namespace ApiFP.Services
                         "and fac.CuitOrigen = @cuitOrigen", new SqlParameter("@user", userId), new SqlParameter("@cuitOrigen", cuitOrigen)); //.ToList();
 
             return detalleList.ToList();
+        }
+
+        public static int GetDuplicates(string invoiceNumber)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var rxNonDigits = new Regex(@"[^\d]+");
+            return db.Facturas.Where(x => rxNonDigits.Replace(x.Numero, "") == invoiceNumber && x.QtyDescargasCC == 0).Count();
         }
     }
 }

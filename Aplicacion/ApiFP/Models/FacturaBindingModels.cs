@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using ApiFP.Infrastructure;
 
 namespace ApiFP.Models
 {
@@ -30,12 +31,25 @@ namespace ApiFP.Models
     {
         public Archivo Archivo { get; set; }
 
-        public bool ValidarSinArchivo()
+        public bool ValidateNoFile()
         {
             bool result = (this.SinArchivo == false) && (this.Archivo != null);
             result = result || (this.SinArchivo == true) && (this.Archivo == null);
 
             return result;
+        }
+
+        public bool ValidateMandatory()
+        {
+            bool result = Factura.ValidaCuit(this.CuitOrigen)
+                        && Factura.ValidaCuit(this.CuitDestino);
+            return result;
+        }
+
+        public bool validateDuplicate()
+        {
+
+            return true;
         }
     }
 

@@ -36,9 +36,8 @@ namespace ApiFP.Controllers
                 var apiKey = GetApiKey();
                 ApplicationDbContext db = new ApplicationDbContext();
                 CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
-
-                DataAccessService service = new DataAccessService();
-                facturaList = service.GetFacturasCC(cuitDestino, centroComputo.Id.ToString());
+                
+                facturaList = DataAccessService.GetFacturasCC(cuitDestino, centroComputo.Id.ToString());
             }
             else
             {
@@ -62,9 +61,8 @@ namespace ApiFP.Controllers
                     var apiKey = GetApiKey();
                     ApplicationDbContext db = new ApplicationDbContext();
                     CentroComputo centroComputo = db.CentrosDeComputo.FirstOrDefault(x => x.ApiKey == apiKey);
-
-                    DataAccessService service = new DataAccessService();
-                    facturaList = service.GetFacturasCC(cuitsDestino, centroComputo.Id.ToString());
+                    
+                    facturaList = DataAccessService.GetFacturasCC(cuitsDestino, centroComputo.Id.ToString());
                 }
                 else
                 {
