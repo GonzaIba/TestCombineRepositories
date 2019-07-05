@@ -193,11 +193,10 @@ namespace ApiFP.Services
             return detalleList.ToList();
         }
 
-        public static int GetDuplicates(string invoiceNumber)
+        public static int GetDuplicates(string invoiceNumber, string cuitOrigen)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            var rxNonDigits = new Regex(@"[^\d]+");
-            return db.Facturas.Where(x => rxNonDigits.Replace(x.Numero, "") == invoiceNumber && x.QtyDescargasCC == 0).Count();
+            ApplicationDbContext db = new ApplicationDbContext();            
+            return db.Facturas.Where(x => (x.CuitOrigen == cuitOrigen) && (x.Numero == invoiceNumber) && (x.QtyDescargasCC == 0)).Count();
         }
     }
 }
