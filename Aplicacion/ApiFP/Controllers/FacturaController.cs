@@ -34,10 +34,20 @@ namespace ApiFP.Controllers
 
                 LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
 
-                if (!createFacturaModel.ValidarSinArchivo())
+                if (!createFacturaModel.ValidateNoFile())
                 {
                     ModelState.AddModelError(string.Empty, "Error en la especificacion del parametro SinArchivo.");
                 }
+
+                if (!createFacturaModel.ValidateMandatory())
+                {
+                    ModelState.AddModelError(string.Empty, "Error, no han sido provistos todos los datos obligaotios");
+                }
+
+                if (DataAccessService.GetDuplicates(createFacturaModel.Numero) > 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Error, numero de factura duplicada.");
+                }                
 
                 if (!ModelState.IsValid)
                 {
@@ -96,9 +106,8 @@ namespace ApiFP.Controllers
         [Route("")]
         [HttpGet]
         public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
-        {
-            DataAccessService service = new DataAccessService();
-            return service.GetFacturas(User.Identity.GetUserId());
+        {            
+            return DataAccessService.GetFacturas(User.Identity.GetUserId());
         }
 
         [Authorize]
@@ -204,9 +213,8 @@ namespace ApiFP.Controllers
         [Route("{facturaId}")]
         [HttpGet]
         public async Task<GetFacturaBindingModel> GetFacturasById(int facturaId)
-        {
-            DataAccessService service = new DataAccessService();
-            var facturaList = service.GetFacturas(User.Identity.GetUserId(), facturaId);
+        {            
+            var facturaList = DataAccessService.GetFacturas(User.Identity.GetUserId(), facturaId);
 
             return facturaList[0];
         }
@@ -266,10 +274,9 @@ namespace ApiFP.Controllers
         [HttpGet]
         public async Task<GetCuitsBindingModel> GetCuitsByUser()
         {
-            GetCuitsBindingModel cuitlist = new GetCuitsBindingModel();
-            DataAccessService service = new DataAccessService();
-            cuitlist.CuitDestino = service.GetCuitDestino(User.Identity.GetUserId());
-            cuitlist.CuitOrigen = service.GetCuitOrigen(User.Identity.GetUserId());
+            GetCuitsBindingModel cuitlist = new GetCuitsBindingModel();            
+            cuitlist.CuitDestino = DataAccessService.GetCuitDestino(User.Identity.GetUserId());
+            cuitlist.CuitOrigen = DataAccessService.GetCuitOrigen(User.Identity.GetUserId());
 
             return cuitlist;
         }
@@ -279,9 +286,8 @@ namespace ApiFP.Controllers
         [HttpGet]
         public async Task<List<string>> GetDetalleByUser(string cuitOrigen)
         {
-            
-            DataAccessService service = new DataAccessService();
-            var listaDetalle = service.GetDetalleOrigen(User.Identity.GetUserId(), cuitOrigen);            
+                        
+            var listaDetalle = DataAccessService.GetDetalleOrigen(User.Identity.GetUserId(), cuitOrigen);            
 
             return listaDetalle;
         }
