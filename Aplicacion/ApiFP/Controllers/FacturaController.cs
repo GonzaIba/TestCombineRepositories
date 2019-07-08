@@ -32,6 +32,10 @@ namespace ApiFP.Controllers
             {
                 string userName = User.Identity.GetUserName();
 
+                var batchParam = ControllerContext.Request.GetQueryNameValuePairs().LastOrDefault(x => x.Key == "batch").Value;
+
+                
+
                 LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
 
                 if (!createFacturaModel.ValidateNoFile())
@@ -39,7 +43,7 @@ namespace ApiFP.Controllers
                     ModelState.AddModelError(string.Empty, "Error en la especificacion del parametro SinArchivo.");
                 }
 
-                if (!createFacturaModel.ValidateMandatory())
+                if ((batchParam != "Y") && (!createFacturaModel.ValidateMandatory()))
                 {
                     ModelState.AddModelError(string.Empty, "Error, no han sido provistos todos los datos obligaotios");
                 }
