@@ -111,6 +111,14 @@ namespace ApiFP.Controllers
         }
 
         [Authorize]
+        [Route("lastmonth")]
+        [HttpGet]
+        public async Task<List<GetFacturaBindingModel>> GetFacturasByUserLastMonth()
+        {
+            return DataAccessService.GetFacturasLastMonth(User.Identity.GetUserId());
+        }
+
+        [Authorize]
         [Route("")]
         [HttpPatch]
         public async Task<IHttpActionResult> UpdateFactura(UpdateFacturaBindingModel createFacturaModel)

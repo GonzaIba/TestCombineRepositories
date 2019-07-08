@@ -63,6 +63,38 @@ namespace ApiFP.Services
             return facturasList.ToList();
         }
 
+        public static List<GetFacturaBindingModel> GetFacturasLastMonth(string userId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var facturasList = db.Database.SqlQuery<GetFacturaBindingModel>(
+                "SELECT " +
+                    "fac.Id, " +
+                    "fac.Tipo, " +
+                    "fac.Numero, " +
+                    "fac.Importe, " +
+                    "fac.CuitOrigen, " +
+                    "fac.CuitDestino, " +
+                    "fac.Detalle, " +
+                    "fac.Servicio, " +
+                    "fac.IvaDiscriminado, " +
+                    "fac.Retenciones, " +
+                    "fac.Percepciones, " +
+                    "fac.ImpuestosNoGravados, " +
+                    "fac.SinArchivo, " +
+                    "fac.Confirmada, " +
+                    "ef.Nombre as EstadoFactura, " +
+                    "convert(varchar, fac.Fecha, 103) as Fecha, " +
+                    "arc.Id as ArchivoId " +
+                "From Facturas as fac " +
+                "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
+                "Left join EstadoFactura as ef on fac.EstadoFacturaFK = ef.Id " +
+                "Where fac.UserIdFK = @user " +
+                    "and FechaCreacion > dateadd(day, -30, getdate())", new SqlParameter("@user", userId));
+
+            return facturasList.ToList();
+        }
+
         public static List<GetFacturaCCBindingModel> GetFacturasCC(string cuitDestino, string centroComputoId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
