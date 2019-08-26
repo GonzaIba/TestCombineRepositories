@@ -16,6 +16,7 @@ namespace ApiFP.Business
         public string Retenciones { get; set; }
         public string Percepciones { get; set; }
         public string ImpuestosNoGravados { get; set; }
-        public string Fecha { get; set; } 
+        public string Fecha { get; set; }
+        public string DomicilioComercial { get; set; }
     }
 }

@@ -309,6 +309,10 @@
     <Compile Include="Migrations\201902141811476_AlterFacturaQtyDescargaCC.Designer.cs">
       <DependentUpon>201902141811476_AlterFacturaQtyDescargaCC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908261940300_AlterFacturaDomicilioFiscal.cs" />
+    <Compile Include="Migrations\201908261940300_AlterFacturaDomicilioFiscal.Designer.cs">
+      <DependentUpon>201908261940300_AlterFacturaDomicilioFiscal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
     <Compile Include="Models\FacturaBindingModels.cs" />
@@ -406,6 +410,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902141811476_AlterFacturaQtyDescargaCC.resx">
       <DependentUpon>201902141811476_AlterFacturaQtyDescargaCC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908261940300_AlterFacturaDomicilioFiscal.resx">
+      <DependentUpon>201908261940300_AlterFacturaDomicilioFiscal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
