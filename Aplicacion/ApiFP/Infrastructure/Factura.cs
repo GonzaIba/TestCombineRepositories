@@ -64,7 +64,7 @@ namespace ApiFP.Infrastructure
 
         public int QtyDescargasCC { get; set; }
 
-        public string DomicilioFiscal { get; set; }
+        public string DomicilioComercial { get; set; }
 
         public void Insert()
         {
@@ -119,8 +119,8 @@ namespace ApiFP.Infrastructure
                 this.Percepciones = datosFactura.Percepciones;
                 this.ImpuestosNoGravados = datosFactura.ImpuestosNoGravados;
                 this.ReadDate(datosFactura.Fecha);
+                this.DomicilioComercial = datosFactura.DomicilioComercial;
 
-                this.Update();
             }
             catch (Exception ex)
             {

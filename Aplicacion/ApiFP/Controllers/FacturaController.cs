@@ -74,7 +74,7 @@ namespace ApiFP.Controllers
                     UserIdFK = User.Identity.GetUserId(),
                     SinArchivo = createFacturaModel.SinArchivo,
                     EstadoFacturaFK = 1,
-                    DomicilioFiscal = createFacturaModel.DomicilioFiscal
+                    DomicilioComercial = createFacturaModel.DomicilioComercial
                 };
 
                 factura.ReadDate(createFacturaModel.Fecha);
@@ -160,7 +160,7 @@ namespace ApiFP.Controllers
                         factura.Retenciones = createFacturaModel.Retenciones;
                         factura.Percepciones = createFacturaModel.Percepciones;
                         factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
-                        factura.DomicilioFiscal = createFacturaModel.DomicilioFiscal;
+                        factura.DomicilioComercial = createFacturaModel.DomicilioComercial;
 
                         db.SaveChanges();
                     }
@@ -332,7 +332,8 @@ namespace ApiFP.Controllers
                         Retenciones = factura.Retenciones,
                         Percepciones = factura.Percepciones,
                         ImpuestosNoGravados = factura.ImpuestosNoGravados,
-                        Fecha = factura.Fecha.HasValue ? factura.Fecha.Value.ToString("d", new CultureInfo("es-ES", false)) : null
+                        Fecha = factura.Fecha.HasValue ? factura.Fecha.Value.ToString("d", new CultureInfo("es-ES", false)) : null,
+                        DomicilioComercial = factura.DomicilioComercial
                     };
                 }
             }

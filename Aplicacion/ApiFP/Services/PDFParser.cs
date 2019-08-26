@@ -26,6 +26,8 @@ namespace ApiFP.Services
         string caracteresOmitidos;
         List<string> comienzoDetalle_Palabras;
         string PALABRA_FIN_DETALLE;
+        string PALABRA_DOMICILIO_COMERCIAL;
+
         public PDFParser ()
         {
             comienzoDetalle_Palabras = new List<string>();
@@ -45,6 +47,8 @@ namespace ApiFP.Services
             PALABRA_CLAVE_FECHA = ConfigurationManager.AppSettings["PALABRA_CLAVE_FECHA"];
             PALABRA_FIN_DETALLE = ConfigurationManager.AppSettings["PALABRA_FIN_DETALLE"];
             caracteresOmitidos = ConfigurationManager.AppSettings["CARACTERES_OMITIDOS"];
+            PALABRA_DOMICILIO_COMERCIAL = ConfigurationManager.AppSettings["PALABRA_DOMICILIO_COMERCIAL"];
+
         }
         public static MemoryStream leerPdf (string nombreArchivo)
         {
@@ -204,6 +208,12 @@ namespace ApiFP.Services
                         }
                     }
                     continue; 
+                }
+
+                if (lineas[i].Contains(PALABRA_DOMICILIO_COMERCIAL))
+                {                    
+                    datosExtraidos.DomicilioComercial = (String.IsNullOrEmpty(datosExtraidos.DomicilioComercial)) ? lineas[i].Substring(PALABRA_DOMICILIO_COMERCIAL.Length) : datosExtraidos.DomicilioComercial;
+                    continue;
                 }
             }
 
