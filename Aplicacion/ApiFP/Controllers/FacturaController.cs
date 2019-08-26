@@ -73,7 +73,8 @@ namespace ApiFP.Controllers
                     ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
                     UserIdFK = User.Identity.GetUserId(),
                     SinArchivo = createFacturaModel.SinArchivo,
-                    EstadoFacturaFK = 1
+                    EstadoFacturaFK = 1,
+                    DomicilioFiscal = createFacturaModel.DomicilioFiscal
                 };
 
                 factura.ReadDate(createFacturaModel.Fecha);
@@ -159,6 +160,7 @@ namespace ApiFP.Controllers
                         factura.Retenciones = createFacturaModel.Retenciones;
                         factura.Percepciones = createFacturaModel.Percepciones;
                         factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
+                        factura.DomicilioFiscal = createFacturaModel.DomicilioFiscal;
 
                         db.SaveChanges();
                     }

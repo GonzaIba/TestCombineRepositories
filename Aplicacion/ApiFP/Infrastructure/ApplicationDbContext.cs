@@ -46,6 +46,8 @@ namespace ApiFP.Infrastructure
             modelBuilder.Entity<EstadoFactura>().ToTable("EstadoFactura");
             modelBuilder.Entity<CentroComputo>().ToTable("CentrosDeComputo");
             modelBuilder.Entity<DescargaFactura>().ToTable("DescargasFactura");
+
+            modelBuilder.Entity<Factura>().Property(p => p.DomicilioFiscal).HasColumnType("varchar").HasMaxLength(250);
         }
 
     }

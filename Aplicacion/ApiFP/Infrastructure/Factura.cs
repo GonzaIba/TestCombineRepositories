@@ -64,6 +64,8 @@ namespace ApiFP.Infrastructure
 
         public int QtyDescargasCC { get; set; }
 
+        public string DomicilioFiscal { get; set; }
+
         public void Insert()
         {
             ApplicationDbContext db = new ApplicationDbContext();

@@ -26,6 +26,7 @@ namespace ApiFP.Models
         public string ImpuestosNoGravados { get; set; }
         [Required]
         public bool? SinArchivo { get; set; }
+        public string DomicilioFiscal { get; set; }
     }
     public class CreateFacturaBindingModel : BaseFacturaBindingModel
     {
