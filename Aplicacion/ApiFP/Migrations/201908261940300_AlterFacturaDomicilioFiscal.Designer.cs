@@ -13,7 +13,7 @@ namespace ApiFP.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201908261444384_AlterFacturaDomicilioFiscal"; }
+            get { return "201908261940300_AlterFacturaDomicilioFiscal"; }
         }
         
         string IMigrationMetadata.Source

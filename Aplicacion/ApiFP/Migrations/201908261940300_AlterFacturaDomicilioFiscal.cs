@@ -7,12 +7,12 @@ namespace ApiFP.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.Facturas", "DomicilioFiscal", c => c.String(maxLength: 250, unicode: false));
+            AddColumn("dbo.Facturas", "DomicilioComercial", c => c.String(maxLength: 250, unicode: false));
         }
         
         public override void Down()
         {
-            DropColumn("dbo.Facturas", "DomicilioFiscal");
+            DropColumn("dbo.Facturas", "DomicilioComercial");
         }
     }
 }

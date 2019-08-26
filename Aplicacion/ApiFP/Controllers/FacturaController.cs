@@ -16,6 +16,11 @@ using System.Globalization;
 using System.Data.Entity;
 using ApiFP.Helpers;
 using Newtonsoft.Json;
+using System.IO;
+using System.Configuration;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace ApiFP.Controllers
 {
@@ -34,7 +39,7 @@ namespace ApiFP.Controllers
 
                 var batchParam = ControllerContext.Request.GetQueryNameValuePairs().LastOrDefault(x => x.Key == "batch").Value;
 
-                
+
 
                 LogHelper.GenerateInfo(userName + " request:" + JsonConvert.SerializeObject(createFacturaModel));
 
@@ -51,7 +56,7 @@ namespace ApiFP.Controllers
                 if (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen, createFacturaModel.Tipo) > 0)
                 {
                     ModelState.AddModelError(string.Empty, "Error, numero de factura duplicada.");
-                }                
+                }
 
                 if (!ModelState.IsValid)
                 {
@@ -103,7 +108,7 @@ namespace ApiFP.Controllers
                 LogHelper.GenerateLog(ex);
                 throw ex;
             }
-            
+
             return Ok();
         }
 
@@ -111,7 +116,7 @@ namespace ApiFP.Controllers
         [Route("")]
         [HttpGet]
         public async Task<List<GetFacturaBindingModel>> GetFacturasByUser()
-        {            
+        {
             return DataAccessService.GetFacturas(User.Identity.GetUserId());
         }
 
@@ -195,8 +200,8 @@ namespace ApiFP.Controllers
             }
 
             using (ApplicationDbContext db = new ApplicationDbContext())
-            {                
-                Factura factura = db.Facturas.Find(facturaId);                              
+            {
+                Factura factura = db.Facturas.Find(facturaId);
 
                 if ((factura != null) && (factura.UserIdFK == user))
                 {
@@ -227,7 +232,7 @@ namespace ApiFP.Controllers
         [Route("{facturaId}")]
         [HttpGet]
         public async Task<GetFacturaBindingModel> GetFacturasById(int facturaId)
-        {            
+        {
             var facturaList = DataAccessService.GetFacturas(User.Identity.GetUserId(), facturaId);
 
             return facturaList[0];
@@ -247,10 +252,10 @@ namespace ApiFP.Controllers
             string user = User.Identity.GetUserId();
 
             using (ApplicationDbContext db = new ApplicationDbContext())
-            {                
+            {
                 var facturas = db.Facturas.Where(x => confirmFacturaModel.Contains(x.Id) && x.UserIdFK == user);
 
-                if (facturas  != null)
+                if (facturas != null)
                 {
                     foreach (Factura factura in facturas)
                     {
@@ -288,7 +293,7 @@ namespace ApiFP.Controllers
         [HttpGet]
         public async Task<GetCuitsBindingModel> GetCuitsByUser()
         {
-            GetCuitsBindingModel cuitlist = new GetCuitsBindingModel();            
+            GetCuitsBindingModel cuitlist = new GetCuitsBindingModel();
             cuitlist.CuitDestino = DataAccessService.GetCuitDestino(User.Identity.GetUserId());
             cuitlist.CuitOrigen = DataAccessService.GetCuitOrigen(User.Identity.GetUserId());
 
@@ -300,8 +305,8 @@ namespace ApiFP.Controllers
         [HttpGet]
         public async Task<List<string>> GetDetalleByUser(string cuitOrigen)
         {
-                        
-            var listaDetalle = DataAccessService.GetDetalleOrigen(User.Identity.GetUserId(), cuitOrigen);            
+
+            var listaDetalle = DataAccessService.GetDetalleOrigen(User.Identity.GetUserId(), cuitOrigen);
 
             return listaDetalle;
         }
@@ -315,7 +320,7 @@ namespace ApiFP.Controllers
             var factura = new Infrastructure.Factura();
             GetFacturaBindingModel dto = null;
             try
-            {                
+            {
                 if (archivo.Extension.ToLower() == ".pdf")
                 {
                     factura.Parse(archivo.ContenidoBase64);
@@ -337,12 +342,58 @@ namespace ApiFP.Controllers
                     };
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
-            
+
             return dto;
+        }
+
+        [Authorize]
+        [Route("export-invoice")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> ExportFactura()
+        {
+            HttpResponseMessage result = new HttpResponseMessage();
+
+            try
+            {
+                // 5061,5062
+
+                HttpContent requestContent = Request.Content;
+               string invoicesId = requestContent.ReadAsStringAsync().Result;
+
+                var ids = invoicesId.Split(',').Select(n => int.Parse(n)).ToArray();
+                List<GetFacturaBindingModel> invoices = new List<GetFacturaBindingModel>();
+
+                foreach(int item in ids)
+                {
+                    invoices.Add(DataAccessService.GetFacturas(User.Identity.GetUserId(), item)[0]);
+                }
+
+
+                var sb = new StringBuilder();
+
+                var separador = ConfigurationManager.AppSettings["SEPARADOR_CSV"].ToString();
+
+                sb.AppendLine($"\"Tipo\"{separador}\"Numero\"{separador}\"Importe\"{separador}\"C. Origen\"{separador}\"C. Destino\"{separador}\"Fecha\"{separador}\"Detalle\"{separador}\"Domicilio\"{separador}\"Servicio\"{separador}\"Iva Discriminado\"{separador}\"Retenciones\"{separador}\"Percepciones\"{separador}\"Impuestos no gravados\"{separador}\"ID\"");                
+                foreach (var item in invoices)
+                {
+                    sb.AppendLine($"{item.Tipo}{separador}{item.Numero}{separador}{item.Importe}{separador}{item.CuitOrigen}{separador}{item.CuitDestino}{separador}{item.Fecha}{separador}{item.Detalle.Replace("\n", " ")}{separador}{item.DomicilioComercial}{separador}{item.Servicio}{separador}{item.IvaDiscriminado}{separador}{item.Retenciones}{separador}{item.Percepciones}{separador}{item.ImpuestosNoGravados}{separador}{item.Id}");
+                }
+
+                result.Content = new StringContent(sb.ToString());
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
+                result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment"); //attachment will force download
+                result.Content.Headers.ContentDisposition.FileName = "RecordExport.csv";
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result.StatusCode = HttpStatusCode.InternalServerError;
+                return result;
+            }
         }
     }
 }
