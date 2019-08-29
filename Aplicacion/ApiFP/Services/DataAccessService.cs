@@ -49,6 +49,8 @@ namespace ApiFP.Services
                     "fac.ImpuestosNoGravados," +
                     "fac.SinArchivo," +
                     "fac.Confirmada," +
+                    "fac.DomicilioComercial," +
+                    "convert(varchar, fac.FechaCreacion, 103) as FechaSubida," +
                     "convert(varchar, fac.Fecha, 103) as Fecha," +
                     "arc.Id as ArchivoId " +
                 "From Facturas as fac " +
@@ -83,6 +85,8 @@ namespace ApiFP.Services
                     "fac.ImpuestosNoGravados, " +
                     "fac.SinArchivo, " +
                     "fac.Confirmada, " +
+                    "fac.DomicilioComercial," +
+                    "convert(varchar, fac.FechaCreacion, 103) as FechaSubida," +
                     "ef.Nombre as EstadoFactura, " +
                     "convert(varchar, fac.Fecha, 103) as Fecha, " +
                     "arc.Id as ArchivoId " +

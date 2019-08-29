@@ -53,7 +53,11 @@ namespace ApiFP.Controllers
                     ModelState.AddModelError(string.Empty, "Error, no han sido provistos todos los datos obligaotios");
                 }
 
-                if (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen, createFacturaModel.Tipo) > 0)
+                if (
+                    (createFacturaModel.Numero != null && createFacturaModel.CuitOrigen != null && createFacturaModel.Tipo != null) 
+                    && 
+                    (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen, createFacturaModel.Tipo) > 0)
+                    )
                 {
                     ModelState.AddModelError(string.Empty, "Error, numero de factura duplicada.");
                 }

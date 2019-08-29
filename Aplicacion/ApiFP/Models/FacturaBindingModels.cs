@@ -60,6 +60,8 @@ namespace ApiFP.Models
         public Nullable<int> ArchivoId { get; set; }
         public bool Confirmada { get; set; }
         public string EstadoFactura { get; set; }
+        public string FechaSubida { get; set; }
+
     }
 
     public class UpdateFacturaBindingModel : BaseFacturaBindingModel
