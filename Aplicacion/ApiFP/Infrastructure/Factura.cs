@@ -104,6 +104,10 @@ namespace ApiFP.Infrastructure
         {
             PDFParser pdfParser = new PDFParser();
             Business.DatosFactura datosFactura;
+
+            var service = new AfipClientService();
+            var response = service.ConsultaInscripcionDummy("PROD");            
+
             try
             {
                 datosFactura = pdfParser.extraerCamposDePDF(new MemoryStream(Convert.FromBase64String(fileContent)));
@@ -126,7 +130,14 @@ namespace ApiFP.Infrastructure
             {
 
             }
+
+            if (!String.IsNullOrEmpty(this.CuitOrigen))
+            {
+                var response2 = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+            }
             
+
+
         }
 
         private static int CalcularDigitoCuit(string cuit)
