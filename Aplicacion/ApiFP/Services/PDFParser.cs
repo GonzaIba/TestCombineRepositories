@@ -119,9 +119,15 @@ namespace ApiFP.Services
         //y además como parsear esa línea para obtenerla. 
         private Business.DatosFactura extraerDatos (String[] lineas)
         {
+            Regex rx = new Regex(@"^[0-9]+$");
+            MatchCollection matches;
+            List<string> barCode = new List<string>();
+
             Business.DatosFactura datosExtraidos = new Business.DatosFactura();
             bool primerCuitEncontrado = false;
+
             for (int i = 0; i < lineas.Length; i++) {
+
                 if (lineas[i].Contains(PALABRA_CLAVE_TIPO)) {
                     if (++i < lineas.Length) {
                         string siguienteLinea = lineas[i].Trim();
@@ -132,7 +138,7 @@ namespace ApiFP.Services
 
                 if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !primerCuitEncontrado) {
                     string[] palabras = lineas[i].Split();
-                    datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
+                    //datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
                     primerCuitEncontrado = true;
                     continue;
                 }
@@ -214,6 +220,25 @@ namespace ApiFP.Services
                 {                    
                     datosExtraidos.DomicilioComercial = (String.IsNullOrEmpty(datosExtraidos.DomicilioComercial)) ? lineas[i].Substring(PALABRA_DOMICILIO_COMERCIAL.Length) : datosExtraidos.DomicilioComercial;
                     continue;
+                }
+
+                matches = rx.Matches(lineas[i]);
+                if (matches.Count > 0)
+                {
+                    foreach (Match item in matches)
+                    {
+                        if (item.Length == 42)
+                        {
+                            barCode.Add(item.ToString().Substring(0,11));
+                            barCode.Add(item.ToString().Substring(11, 3));
+                            barCode.Add(item.ToString().Substring(14, 5));
+                            barCode.Add(item.ToString().Substring(19, 14));
+                            barCode.Add(item.ToString().Substring(33, 8));
+                            barCode.Add(item.ToString().Substring(41, 1));
+
+                            datosExtraidos.Cuit_Origen = barCode[0];
+                        }
+                    }
                 }
             }
 

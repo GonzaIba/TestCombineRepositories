@@ -106,7 +106,7 @@ namespace ApiFP.Infrastructure
             Business.DatosFactura datosFactura;
 
             var service = new AfipClientService();
-            var response = service.ConsultaInscripcionDummy("PROD");            
+            //var response = service.ConsultaInscripcionDummy("PROD");            
 
             try
             {
@@ -131,10 +131,10 @@ namespace ApiFP.Infrastructure
 
             }
 
-            if (!String.IsNullOrEmpty(this.CuitOrigen))
-            {
-                var response2 = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
-            }
+            //if (!String.IsNullOrEmpty(this.CuitOrigen))
+            //{
+            //    var response2 = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+            //}
             
 
 
