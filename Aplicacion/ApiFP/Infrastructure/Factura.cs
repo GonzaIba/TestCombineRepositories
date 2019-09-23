@@ -131,11 +131,15 @@ namespace ApiFP.Infrastructure
             if (!String.IsNullOrEmpty(this.CuitOrigen))
             {
                 var service = new AfipClientService();
-                var response2 = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+                var responseConsulta = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+
+                if ((responseConsulta != null) && (responseConsulta.datosGenerales != null))
+                {
+                    this.DomicilioComercial = responseConsulta.datosGenerales.domicilioFiscal.direccion ?? "";
+                    this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.localidad ?? "";
+                    this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.descripcionProvincia ?? "";
+                }
             }
-
-
-
         }
 
         private static int CalcularDigitoCuit(string cuit)

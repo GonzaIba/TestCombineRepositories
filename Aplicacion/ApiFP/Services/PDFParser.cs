@@ -128,7 +128,7 @@ namespace ApiFP.Services
 
             for (int i = 0; i < lineas.Length; i++) {
 
-                if (lineas[i].Contains(PALABRA_CLAVE_TIPO)) {
+                if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO)) {
                     if (++i < lineas.Length) {
                         string siguienteLinea = lineas[i].Trim();
                         datosExtraidos.Tipo = siguienteLinea[siguienteLinea.Length - 1].ToString();
@@ -176,6 +176,15 @@ namespace ApiFP.Services
                     continue;
                 }
 
+                if (lineas[i].ToLower().Contains("número"))
+                {
+                    string[] palabras = lineas[i].Split();
+                    string[] datos = palabras[palabras.Length - 1].Split('-');
+
+                    datosExtraidos.Tipo = datos[0];                    
+                    datosExtraidos.Numero = datos[1] + "-" + datos[2];
+                }
+
                 if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total")) {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
@@ -200,7 +209,7 @@ namespace ApiFP.Services
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_FECHA)) {
+                if (lineas[i].Contains(PALABRA_CLAVE_FECHA) || lineas[i].ToLower().Contains("fecha:")) {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Fecha = palabras[palabras.Length - 1];
                     continue;
