@@ -176,7 +176,7 @@ namespace ApiFP.Services
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL)) {
+                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total")) {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
                     continue;
@@ -235,6 +235,17 @@ namespace ApiFP.Services
                             barCode.Add(item.ToString().Substring(19, 14));
                             barCode.Add(item.ToString().Substring(33, 8));
                             barCode.Add(item.ToString().Substring(41, 1));
+
+                            datosExtraidos.Cuit_Origen = barCode[0];
+                        }
+                        else if (item.Length == 40)
+                        {
+                            barCode.Add(item.ToString().Substring(0, 11));
+                            barCode.Add(item.ToString().Substring(11, 2));
+                            barCode.Add(item.ToString().Substring(13, 4));
+                            barCode.Add(item.ToString().Substring(17, 14));
+                            barCode.Add(item.ToString().Substring(31, 8));
+                            barCode.Add(item.ToString().Substring(39, 1));
 
                             datosExtraidos.Cuit_Origen = barCode[0];
                         }

@@ -103,10 +103,7 @@ namespace ApiFP.Infrastructure
         public void Parse(string fileContent)
         {
             PDFParser pdfParser = new PDFParser();
-            Business.DatosFactura datosFactura;
-
-            var service = new AfipClientService();
-            //var response = service.ConsultaInscripcionDummy("PROD");            
+            Business.DatosFactura datosFactura;                                 
 
             try
             {
@@ -131,11 +128,12 @@ namespace ApiFP.Infrastructure
 
             }
 
-            //if (!String.IsNullOrEmpty(this.CuitOrigen))
-            //{
-            //    var response2 = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
-            //}
-            
+            if (!String.IsNullOrEmpty(this.CuitOrigen))
+            {
+                var service = new AfipClientService();
+                var response2 = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+            }
+
 
 
         }
