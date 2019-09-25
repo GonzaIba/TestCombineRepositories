@@ -149,7 +149,7 @@ namespace ApiFP.Services
                     continue;
                 }
 
-
+                #region "NUMERO_FACTURA"
 
                 if (lineas[i].Contains(PALABRA_CLAVE_PUNTO_DE_VENTA)) {
                     string[] palabras = lineas[i].Split();
@@ -181,9 +181,18 @@ namespace ApiFP.Services
                     string[] palabras = lineas[i].Split();
                     string[] datos = palabras[palabras.Length - 1].Split('-');
 
-                    datosExtraidos.Tipo = datos[0];                    
+                    datosExtraidos.Tipo = datos[0];
                     datosExtraidos.Numero = datos[1] + "-" + datos[2];
                 }
+
+                if (lineas[i].ToLower().Contains("nº:"))
+                {
+                    string[] palabras = lineas[i].Split();
+                    
+                    datosExtraidos.Numero = palabras[palabras.Length - 1];
+                }
+
+                #endregion
 
                 if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total")) {
                     string[] palabras = lineas[i].Split();
