@@ -103,7 +103,8 @@ namespace ApiFP.Infrastructure
         public void Parse(string fileContent)
         {
             PDFParser pdfParser = new PDFParser();
-            Business.DatosFactura datosFactura;
+            Business.DatosFactura datosFactura;                                 
+
             try
             {
                 datosFactura = pdfParser.extraerCamposDePDF(new MemoryStream(Convert.FromBase64String(fileContent)));
@@ -126,7 +127,19 @@ namespace ApiFP.Infrastructure
             {
 
             }
-            
+
+            if (!String.IsNullOrEmpty(this.CuitOrigen))
+            {
+                var service = new AfipClientService();
+                var responseConsulta = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+
+                if ((responseConsulta != null) && (responseConsulta.datosGenerales != null))
+                {
+                    this.DomicilioComercial = responseConsulta.datosGenerales.domicilioFiscal.direccion ?? "";
+                    this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.localidad ?? "";
+                    this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.descripcionProvincia ?? "";
+                }
+            }
         }
 
         private static int CalcularDigitoCuit(string cuit)
