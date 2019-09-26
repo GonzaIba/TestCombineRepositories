@@ -134,6 +134,8 @@ public class LoginTicketService
                 RutaDelCertificadoFirmante = ConfigurationManager.AppSettings["CERTIFICATE_HOMO_PATH"];
             }
 
+            RutaDelCertificadoFirmante = System.Web.Hosting.HostingEnvironment.MapPath("~") + RutaDelCertificadoFirmante;
+
             X509Certificate2 certFirmante = CertificadosX509Lib.ObtieneCertificadoDesdeArchivo(RutaDelCertificadoFirmante);
             // Convierto el login ticket request a bytes, para firmar 
             Encoding EncodedMsg = Encoding.UTF8;
