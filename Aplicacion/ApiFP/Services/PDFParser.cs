@@ -119,31 +119,45 @@ namespace ApiFP.Services
         //y además como parsear esa línea para obtenerla. 
         private Business.DatosFactura extraerDatos (String[] lineas)
         {
-            Regex rx = new Regex(@"^[0-9]+$");
-            MatchCollection matches;
+            Regex rxCodigoBarra = new Regex(@"^\d{40,42}$");
+            MatchCollection matchesCodigoBarra = null;
             List<string> barCode = new List<string>();
+
+            List<Regex> rxNumeroFactura = new List<Regex>()
+            {
+                new Regex(@"^\d{4,5}-\d{8}"),
+                new Regex(@"^\d-\d{8}"),
+                new Regex(@"^\d{4,5} \d{8}"),
+                new Regex(@"[A,B,C]{1}-\d{4,5}-\d{8}")                
+            };
+            Match matchesNumeroFactura = null;
 
             Business.DatosFactura datosExtraidos = new Business.DatosFactura();
             bool primerCuitEncontrado = false;
 
-            for (int i = 0; i < lineas.Length; i++) {
+            for (int i = 0; i < lineas.Length; i++)
+            {
 
-                if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO)) {
-                    if (++i < lineas.Length) {
+                if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO))
+                {
+                    if (++i < lineas.Length)
+                    {
                         string siguienteLinea = lineas[i].Trim();
                         datosExtraidos.Tipo = siguienteLinea[siguienteLinea.Length - 1].ToString();
                     }
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !primerCuitEncontrado) {
+                if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !primerCuitEncontrado)
+                {
                     string[] palabras = lineas[i].Split();
                     //datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
                     primerCuitEncontrado = true;
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && primerCuitEncontrado) {
+                if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && primerCuitEncontrado)
+                {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Cuit_Destino = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
                     continue;
@@ -151,15 +165,19 @@ namespace ApiFP.Services
 
                 #region "NUMERO_FACTURA"
 
-                if (lineas[i].Contains(PALABRA_CLAVE_PUNTO_DE_VENTA)) {
+                if (lineas[i].Contains(PALABRA_CLAVE_PUNTO_DE_VENTA))
+                {
                     string[] palabras = lineas[i].Split();
-                    if (datosExtraidos.Tipo != null) {
+                    if (datosExtraidos.Tipo != null)
+                    {
                         int numeroConvertido; //No se utiliza, solo se declara para poder usar la implementacion de Int32.Tryparse()    
                         string sucursalVenta = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_PUNTO_DE_VENTA.Split()[PALABRA_CLAVE_PUNTO_DE_VENTA.Split().Length - 1]);
                         string comprobante = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_COMPROBANTE);
                         datosExtraidos.Numero = sucursalVenta + comprobante;
-                        if (!Int32.TryParse(datosExtraidos.Numero, out numeroConvertido)) {
-                            if (++i < lineas.Length) {
+                        if (!Int32.TryParse(datosExtraidos.Numero, out numeroConvertido))
+                        {
+                            if (++i < lineas.Length)
+                            {
                                 datosExtraidos.Numero = lineas[i].Trim();
                             }
                         }
@@ -176,101 +194,158 @@ namespace ApiFP.Services
                     continue;
                 }
 
-                if (lineas[i].ToLower().Contains("número"))
+                if (String.IsNullOrEmpty(datosExtraidos.Numero))
                 {
-                    string[] palabras = lineas[i].Split();
-                    string[] datos = palabras[palabras.Length - 1].Split('-');
-
-                    datosExtraidos.Tipo = datos[0];
-                    datosExtraidos.Numero = datos[1] + "-" + datos[2];
+                    foreach(var exp in rxNumeroFactura.Select((value, idx) => new { value, idx }))
+                    {
+                        matchesNumeroFactura = exp.value.Match(lineas[i].Trim());
+                        if(matchesNumeroFactura.Success)
+                        {
+                            switch (exp.idx)
+                            {
+                                case 0:
+                                case 1:                                
+                                    datosExtraidos.Numero = matchesNumeroFactura.Value;                                    
+                                    break;
+                                case 2:
+                                    datosExtraidos.Numero = matchesNumeroFactura.Value.Replace(" ", "-");
+                                    break;
+                                case 3:
+                                    var palabras = matchesNumeroFactura.Value.Split('-');
+                                    datosExtraidos.Tipo = palabras[0];
+                                    datosExtraidos.Numero = palabras[1] + "-" + palabras[2];
+                                    break;
+                            }
+                        }
+                    }
                 }
 
-                if (lineas[i].ToLower().Contains("nº:"))
+                if (String.IsNullOrEmpty(datosExtraidos.Numero))
                 {
-                    string[] palabras = lineas[i].Split();
-                    
-                    datosExtraidos.Numero = palabras[palabras.Length - 1];
-                }
+                    if (lineas[i].ToLower().Contains("número"))
+                    {
+                        string[] palabras = lineas[i].Split();
+                        string[] datos = palabras[palabras.Length - 1].Split('-');
 
+                        datosExtraidos.Tipo = datos[0];
+                        datosExtraidos.Numero = datos[1] + "-" + datos[2];
+                    }
+                }
+                if (String.IsNullOrEmpty(datosExtraidos.Numero))
+                {
+                    if (lineas[i].ToLower().Contains("nº:") || lineas[i].ToLower().Contains("nº"))
+                    {
+                        string[] palabras = lineas[i].Split();
+
+                        datosExtraidos.Numero = palabras[palabras.Length - 1];
+                    }
+                }
                 #endregion
 
-                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total")) {
+                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total"))
+                {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_IVA)) {
+                if (lineas[i].Contains(PALABRA_CLAVE_IVA))
+                {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.IvaDescriminado = palabras[palabras.Length - 1];
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_GRAVADO)) {
+                if (lineas[i].Contains(PALABRA_CLAVE_GRAVADO))
+                {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.ImpuestosNoGravados = palabras[palabras.Length - 1];
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_PERCEPCION)) {
+                if (lineas[i].Contains(PALABRA_CLAVE_PERCEPCION))
+                {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Percepciones = palabras[palabras.Length - 1];
                     continue;
                 }
 
-                if (lineas[i].Contains(PALABRA_CLAVE_FECHA) || lineas[i].ToLower().Contains("fecha:")) {
+                if (lineas[i].Contains(PALABRA_CLAVE_FECHA) || lineas[i].ToLower().Contains("fecha:"))
+                {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Fecha = palabras[palabras.Length - 1];
                     continue;
                 }
 
-                if (empiezaDetalle(lineas[i])) { //TODO: POner palabra qe inciia
+                if (empiezaDetalle(lineas[i]))
+                { //TODO: POner palabra qe inciia
                     string separador = ConfigurationManager.AppSettings["SEPARADOR_DETALLE"];
-                    for (i++; !lineas[i].Contains(PALABRA_FIN_DETALLE); i++) {
-                        if (tieneInformacionValida(lineas[i])) {  //TODO: poner que filtre lineas con cosas raras y palabras especificas. 
+                    for (i++; !lineas[i].Contains(PALABRA_FIN_DETALLE); i++)
+                    {
+                        if (tieneInformacionValida(lineas[i]))
+                        {  //TODO: poner que filtre lineas con cosas raras y palabras especificas. 
                             datosExtraidos.Detalle += filtrarNumerosAlFinal(lineas[i]) + separador;
                         }
                     }
-                    continue; 
+                    continue;
                 }
 
                 if (lineas[i].Contains(PALABRA_DOMICILIO_COMERCIAL))
-                {                    
+                {
                     datosExtraidos.DomicilioComercial = (String.IsNullOrEmpty(datosExtraidos.DomicilioComercial)) ? lineas[i].Substring(PALABRA_DOMICILIO_COMERCIAL.Length) : datosExtraidos.DomicilioComercial;
                     continue;
                 }
 
-                matches = rx.Matches(lineas[i]);
-                if (matches.Count > 0)
+                if (matchesCodigoBarra == null)
                 {
-                    foreach (Match item in matches)
+                    matchesCodigoBarra = rxCodigoBarra.Matches(lineas[i]);
+                    if (matchesCodigoBarra.Count > 0)
                     {
-                        if (item.Length == 42)
+                        foreach (Match item in matchesCodigoBarra)
                         {
-                            barCode.Add(item.ToString().Substring(0,11));
-                            barCode.Add(item.ToString().Substring(11, 3));
-                            barCode.Add(item.ToString().Substring(14, 5));
-                            barCode.Add(item.ToString().Substring(19, 14));
-                            barCode.Add(item.ToString().Substring(33, 8));
-                            barCode.Add(item.ToString().Substring(41, 1));
+                            if (item.Length == 42)
+                            {
+                                barCode.Add(item.ToString().Substring(0, 11));
+                                barCode.Add(item.ToString().Substring(11, 3));
+                                barCode.Add(item.ToString().Substring(14, 5));
+                                barCode.Add(item.ToString().Substring(19, 14));
+                                barCode.Add(item.ToString().Substring(33, 8));
+                                barCode.Add(item.ToString().Substring(41, 1));
 
-                            datosExtraidos.Cuit_Origen = barCode[0];
-                        }
-                        else if (item.Length == 40)
-                        {
-                            barCode.Add(item.ToString().Substring(0, 11));
-                            barCode.Add(item.ToString().Substring(11, 2));
-                            barCode.Add(item.ToString().Substring(13, 4));
-                            barCode.Add(item.ToString().Substring(17, 14));
-                            barCode.Add(item.ToString().Substring(31, 8));
-                            barCode.Add(item.ToString().Substring(39, 1));
+                                datosExtraidos.Cuit_Origen = barCode[0];
+                            }
+                            else if (item.Length == 40)
+                            {
+                                barCode.Add(item.ToString().Substring(0, 11));
+                                barCode.Add(item.ToString().Substring(11, 2));
+                                barCode.Add(item.ToString().Substring(13, 4));
+                                barCode.Add(item.ToString().Substring(17, 14));
+                                barCode.Add(item.ToString().Substring(31, 8));
+                                barCode.Add(item.ToString().Substring(39, 1));
 
-                            datosExtraidos.Cuit_Origen = barCode[0];
+                                datosExtraidos.Cuit_Origen = barCode[0];
+                            }
                         }
                     }
                 }
             }
 
+            if (!String.IsNullOrEmpty(datosExtraidos.Tipo))
+            {
+                switch (datosExtraidos.Tipo)
+                {
+                    case "1":
+                    case "2":
+                    case "3":
+                        datosExtraidos.Tipo = datosExtraidos.Tipo.Replace("1", "A");
+                        datosExtraidos.Tipo = datosExtraidos.Tipo.Replace("2", "B");
+                        datosExtraidos.Tipo = datosExtraidos.Tipo.Replace("3", "C");
+                        break;
+                    default:
+                        datosExtraidos.Tipo = "";
+                        break;
+                }
+            }
             return datosExtraidos;
         }
 

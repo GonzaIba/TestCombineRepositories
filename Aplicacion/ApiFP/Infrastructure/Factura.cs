@@ -131,13 +131,19 @@ namespace ApiFP.Infrastructure
             if (!String.IsNullOrEmpty(this.CuitOrigen))
             {
                 var service = new AfipClientService();
-                var responseConsulta = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
-
-                if ((responseConsulta != null) && (responseConsulta.datosGenerales != null))
+                try
                 {
-                    this.DomicilioComercial = responseConsulta.datosGenerales.domicilioFiscal.direccion ?? "";
-                    this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.localidad ?? "";
-                    this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.descripcionProvincia ?? "";
+                    var responseConsulta = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+
+                    if ((responseConsulta != null) && (responseConsulta.datosGenerales != null))
+                    {
+                        this.DomicilioComercial = responseConsulta.datosGenerales.domicilioFiscal.direccion ?? "";
+                        this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.localidad ?? "";
+                        this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.descripcionProvincia ?? "";
+                    }
+                }catch(Exception ex)
+                {
+
                 }
             }
         }
