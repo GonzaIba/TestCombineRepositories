@@ -132,6 +132,14 @@ namespace ApiFP.Services
             };
             Match matchesNumeroFactura = null;
 
+            List<Regex> rxCuit = new List<Regex>()
+            {
+                new Regex(@"^\d{2}-\d{8}-\d{1}"),
+                new Regex(@"^\d{11}"),
+                new Regex(@"\d{2}-\d{8}-\d{1}")
+            };
+            Match matchCuit = null;
+
             List<string> tipoLista = new List<string>()
             {
                 "A","B","C"
@@ -172,13 +180,45 @@ namespace ApiFP.Services
                 }
                 #endregion
 
-                if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !primerCuitEncontrado)
+                #region "CUIT_ORIGEN"                
+                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
                 {
-                    string[] palabras = lineas[i].Split();
-                    //datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
-                    primerCuitEncontrado = true;
-                    continue;
+                    if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !primerCuitEncontrado)
+                    {
+                        string[] palabras = lineas[i].Split();
+                        datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "");
+                        primerCuitEncontrado = true;
+                        continue;
+                    }
+
+                    if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
+                    {
+                        foreach (var exp in rxCuit.Select((value, idx) => new { value, idx }))
+                        {
+                            matchCuit = exp.value.Match(lineas[i].Trim());
+                            if (matchCuit.Success)
+                            {
+                                switch (exp.idx)
+                                {                                    
+                                    case 0:
+                                        datosExtraidos.Cuit_Origen = matchCuit.Value.Replace("-", "");
+                                        break;
+                                    case 1:
+                                    case 2:
+                                        datosExtraidos.Cuit_Origen = matchCuit.Value;
+                                        break;
+                                        /*
+                                    case 2:
+                                        var palabras = lineas[i].Split();
+                                        datosExtraidos.Cuit_Origen = palabras[palabras.Length - 1].Trim();
+                                        break;
+                                        */
+                                }
+                            }
+                        }
+                    }
                 }
+                #endregion
 
                 if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && primerCuitEncontrado)
                 {
