@@ -132,21 +132,45 @@ namespace ApiFP.Services
             };
             Match matchesNumeroFactura = null;
 
+            List<string> tipoLista = new List<string>()
+            {
+                "A","B","C"
+            };
+
             Business.DatosFactura datosExtraidos = new Business.DatosFactura();
             bool primerCuitEncontrado = false;
 
             for (int i = 0; i < lineas.Length; i++)
             {
-
-                if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO))
+                #region "TIPO"
+                if (String.IsNullOrEmpty(datosExtraidos.Tipo))
                 {
-                    if (++i < lineas.Length)
+                    if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO))
                     {
-                        string siguienteLinea = lineas[i].Trim();
-                        datosExtraidos.Tipo = siguienteLinea[siguienteLinea.Length - 1].ToString();
+                        if (++i < lineas.Length)
+                        {
+                            string siguienteLinea = lineas[i].Trim();
+                            datosExtraidos.Tipo = siguienteLinea[siguienteLinea.Length - 1].ToString();
+                        }
+                        continue;
                     }
-                    continue;
+
+                    if (i <= 5)
+                    {
+                        if (tipoLista.Contains(lineas[i].Trim()))
+                        {
+                            datosExtraidos.Tipo = lineas[i].Trim();
+                        }
+
+                        if (lineas[i].ToLower().StartsWith("factura "))
+                        {
+                            var palabras = lineas[i].Split();
+                            datosExtraidos.Tipo = palabras[palabras.Length - 1].Trim();
+                        }
+
+                    }
                 }
+                #endregion
 
                 if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !primerCuitEncontrado)
                 {
@@ -334,6 +358,11 @@ namespace ApiFP.Services
             {
                 switch (datosExtraidos.Tipo)
                 {
+
+                    case "A":
+                    case "B":
+                    case "C":
+                        break;
                     case "1":
                     case "2":
                     case "3":

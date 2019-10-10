@@ -6,80 +6,83 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\Desarrollo\PortalProveedores\Repo_PortalProveedores_BE\Aplicacion\ApiFP\bin\Release\Publish</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\Desarrollo\PortalProveedores\Repo_PP_BE\Aplicacion\ApiFP\bin\Release\Publish</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/HelpPage/HelpPage.css">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:22</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/Api.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:19</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ApiGroup.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:19</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/CollectionModelDescription.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:19</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ComplexTypeModelDescription.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:19</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/DictionaryModelDescription.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:19</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/EnumTypeModelDescription.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/HelpPageApiModel.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ImageSample.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/InvalidSample.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/KeyValuePairModelDescription.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ModelDescriptionLink.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/Parameters.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/Samples.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/SimpleTypeModelDescription.cshtml">
-      <publishTime>01/06/2019 23:35:26</publishTime>
+      <publishTime>12/28/2018 11:35:18</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/TextSample.cshtml">
-      <publishTime>01/06/2019 23:35:27</publishTime>
+      <publishTime>12/28/2018 11:35:17</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/Index.cshtml">
-      <publishTime>01/06/2019 23:35:27</publishTime>
+      <publishTime>01/07/2019 15:23:56</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Help/ResourceModel.cshtml">
-      <publishTime>01/06/2019 23:35:27</publishTime>
+      <publishTime>12/28/2018 11:35:17</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Shared/_Layout.cshtml">
-      <publishTime>01/06/2019 23:35:27</publishTime>
+      <publishTime>12/28/2018 11:35:17</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/Web.config">
-      <publishTime>01/06/2019 23:35:27</publishTime>
+      <publishTime>12/28/2018 11:35:17</publishTime>
     </File>
     <File Include="Areas/HelpPage/Views/_ViewStart.cshtml">
-      <publishTime>01/06/2019 23:35:27</publishTime>
+      <publishTime>12/28/2018 11:35:17</publishTime>
     </File>
     <File Include="bin/ApiFP.dll">
-      <publishTime>04/01/2019 11:20:54</publishTime>
+      <publishTime>10/10/2019 12:47:41</publishTime>
     </File>
     <File Include="bin/ApiFP.pdb">
-      <publishTime>04/01/2019 11:20:54</publishTime>
+      <publishTime>10/10/2019 12:47:41</publishTime>
+    </File>
+    <File Include="bin/ApiFP.XmlSerializers.dll">
+      <publishTime>10/10/2019 12:47:43</publishTime>
     </File>
     <File Include="bin/EncryptionLibrary.dll">
-      <publishTime>05/30/2018 14:35:01</publishTime>
+      <publishTime>09/26/2019 11:50:51</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>02/25/2014 01:34:42</publishTime>
@@ -139,7 +142,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/22/2018 18:40:38</publishTime>
     </File>
     <File Include="bin/log4net.config">
-      <publishTime>02/10/2019 19:26:51</publishTime>
+      <publishTime>02/06/2019 17:38:38</publishTime>
     </File>
     <File Include="bin/log4net.dll">
       <publishTime>03/08/2017 19:26:22</publishTime>
@@ -376,16 +379,88 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/05/2014 14:58:06</publishTime>
     </File>
     <File Include="ConfirmAccount.html">
-      <publishTime>02/17/2019 17:20:17</publishTime>
+      <publishTime>03/25/2019 11:11:51</publishTime>
     </File>
     <File Include="Global.asax">
-      <publishTime>12/11/2018 02:39:35</publishTime>
+      <publishTime>12/14/2018 14:20:35</publishTime>
     </File>
     <File Include="log4net.config">
-      <publishTime>02/10/2019 19:26:51</publishTime>
+      <publishTime>02/06/2019 17:38:38</publishTime>
+    </File>
+    <File Include="Web References/Wsaa/Reference.map">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsci/dummyReturn.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsci/personaReturn.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsci/Reference.map">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/CbteTipoResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/ConceptoTipoResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/DocTipoResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/DummyResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECAEAGetResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECAEAResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECAEASinMovConsResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECAEASinMovResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECAEResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECompConsultaResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FECotizacionResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FEPaisResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FEPtoVentaResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FERecuperaLastCbteResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FERegXReqResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/FETributoResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/IvaTipoResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/MonedaResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/OpcionalTipoResponse.datasource">
+      <publishTime>09/26/2019 11:50:51</publishTime>
+    </File>
+    <File Include="Web References/Wsfe/Reference.map">
+      <publishTime>09/26/2019 11:50:51</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/01/2019 11:20:59</publishTime>
+      <publishTime>10/10/2019 12:47:44</publishTime>
     </File>
   </ItemGroup>
 </Project>
