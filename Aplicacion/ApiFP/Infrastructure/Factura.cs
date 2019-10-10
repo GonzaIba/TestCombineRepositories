@@ -109,18 +109,18 @@ namespace ApiFP.Infrastructure
             {
                 datosFactura = pdfParser.extraerCamposDePDF(new MemoryStream(Convert.FromBase64String(fileContent)));
 
-                this.CuitOrigen = datosFactura.Cuit_Origen;
-                this.CuitDestino = datosFactura.Cuit_Destino;
-                this.Detalle = datosFactura.Detalle;
-                this.Tipo = datosFactura.Tipo;
-                this.Numero = datosFactura.Numero;
-                this.Importe = datosFactura.Importe;
-                this.IvaDiscriminado = datosFactura.IvaDescriminado;
-                this.Retenciones = datosFactura.Retenciones;
-                this.Percepciones = datosFactura.Percepciones;
-                this.ImpuestosNoGravados = datosFactura.ImpuestosNoGravados;
-                this.ReadDate(datosFactura.Fecha);
-                this.DomicilioComercial = datosFactura.DomicilioComercial;
+                this.CuitOrigen = (datosFactura.Cuit_Origen == null) ? "" : datosFactura.Cuit_Origen;
+                this.CuitDestino = (datosFactura.Cuit_Destino == null) ? "" : datosFactura.Cuit_Destino;
+                this.Detalle = (datosFactura.Detalle == null) ? "" : datosFactura.Detalle;
+                this.Tipo = (datosFactura.Tipo == null) ? "" : datosFactura.Tipo;
+                this.Numero = (datosFactura.Numero == null) ? "" : datosFactura.Numero;
+                this.Importe = (datosFactura.Importe == null) ? "" : datosFactura.Importe;
+                this.IvaDiscriminado = (datosFactura.IvaDescriminado == null) ? "" : datosFactura.IvaDescriminado;
+                this.Retenciones = (datosFactura.Retenciones == null) ? "" : datosFactura.Retenciones;
+                this.Percepciones = (datosFactura.Percepciones == null) ? "" : datosFactura.Percepciones;
+                this.ImpuestosNoGravados = (datosFactura.ImpuestosNoGravados == null) ? "" : datosFactura.ImpuestosNoGravados;
+                this.ReadDate((datosFactura.Fecha == null) ? "" : datosFactura.Fecha);
+                this.DomicilioComercial = (datosFactura.DomicilioComercial == null) ? "" : datosFactura.DomicilioComercial;
 
             }
             catch (Exception ex)
