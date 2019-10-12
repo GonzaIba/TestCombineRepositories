@@ -128,7 +128,8 @@ namespace ApiFP.Services
                 new Regex(@"^\d{4,5}-\d{8}"),
                 new Regex(@"^\d-\d{8}"),
                 new Regex(@"^\d{4,5} \d{8}"),
-                new Regex(@"[A,B,C]{1}-\d{4,5}-\d{8}")                
+                new Regex(@"[A,B,C]{1}-\d{4,5}-\d{8}"),
+                new Regex(@"\d{4,5}-\d{8}"),
             };
             Match matchesNumeroFactura = null;
 
@@ -268,7 +269,8 @@ namespace ApiFP.Services
                             switch (exp.idx)
                             {
                                 case 0:
-                                case 1:                                
+                                case 1:
+                                case 4:
                                     datosExtraidos.Numero = matchesNumeroFactura.Value;                                    
                                     break;
                                 case 2:
