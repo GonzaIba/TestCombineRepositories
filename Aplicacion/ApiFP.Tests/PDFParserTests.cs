@@ -34,6 +34,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "C");
             Assert.IsTrue(factura.CuitOrigen == "20082082531");
             Assert.IsTrue(factura.Importe == "2000.00");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -45,6 +46,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "20260497627");
             Assert.IsTrue(factura.Importe == "1800.00");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -56,6 +58,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "C");
             Assert.IsTrue(factura.CuitOrigen == "20288620718");
             Assert.IsTrue(factura.Importe == "850.00");
+            Assert.IsTrue(factura.CuitDestino == "33557848709");
         }
 
         [TestMethod]
@@ -67,6 +70,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "C");
             Assert.IsTrue(factura.CuitOrigen == "23084320269");
             Assert.IsTrue(factura.Importe == "4109.00");
+            Assert.IsTrue(factura.CuitDestino == "30708221542");
         }
 
         [TestMethod]
@@ -78,6 +82,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "30711203660");
             Assert.IsTrue(factura.Importe == "3464.00");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -89,6 +94,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "30715576909");
             Assert.IsTrue(factura.Importe == "1250.00");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -100,6 +106,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "20329565980");
             Assert.IsTrue(factura.Importe == "377.00");
+            Assert.IsTrue(factura.CuitDestino == "30715237306");
         }
 
         [TestMethod]
@@ -110,7 +117,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Numero == "0002-00028001");
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "30714687650");
-            Assert.IsTrue(factura.Importe == "2781.00");
+            Assert.IsTrue(factura.Importe == "2781.79");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -121,7 +129,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Numero == "0003-00000104");
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "20300376879");
-            Assert.IsTrue(factura.Importe == "1844.00");
+            Assert.IsTrue(factura.Importe == "2231.24");
+            Assert.IsTrue(factura.CuitDestino == "30716248794");
         }
 
         [TestMethod]
@@ -133,6 +142,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "30715079107");
             Assert.IsTrue(factura.Importe == "9075.00");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -144,6 +154,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "30715259601");
             Assert.IsTrue(factura.Importe == "3427.00");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
 
         [TestMethod]
@@ -165,6 +176,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "A");
             Assert.IsTrue(factura.CuitOrigen == "20225898082");
             Assert.IsTrue(factura.Importe == "18293.51");
+            Assert.IsTrue(factura.CuitDestino == "20329565980");
         }
     }
 }

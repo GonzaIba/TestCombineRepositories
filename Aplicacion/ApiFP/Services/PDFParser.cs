@@ -221,15 +221,17 @@ namespace ApiFP.Services
                 }
                 #endregion
 
+                #region "CUIT_DESTINO"
+                
                 if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && primerCuitEncontrado)
                 {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Cuit_Destino = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
                     continue;
                 }
+                #endregion
 
                 #region "NUMERO_FACTURA"
-
                 if (lineas[i].Contains(PALABRA_CLAVE_PUNTO_DE_VENTA))
                 {
                     string[] palabras = lineas[i].Split();
@@ -313,6 +315,12 @@ namespace ApiFP.Services
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
 
+                    if (String.IsNullOrEmpty(datosExtraidos.Importe) && (lineas[i].Trim() == "Importe Total:"))
+                    {
+                        datosExtraidos.Importe = lineas[i - 1];                        
+                    }
+
+
                     var ds = (datosExtraidos.Importe.Length > 3) ? datosExtraidos.Importe.Substring(datosExtraidos.Importe.Length - 3, 1) : null;
 
                     if (!String.IsNullOrEmpty(ds) && ((ds == ".") || (ds == ",")))
@@ -322,6 +330,7 @@ namespace ApiFP.Services
                         datosExtraidos.Importe = importe;
                     }
 
+                    datosExtraidos.Importe = datosExtraidos.Importe.Replace("$", "").Trim();
                     continue;
                 }
 
