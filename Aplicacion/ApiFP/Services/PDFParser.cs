@@ -31,13 +31,6 @@ namespace ApiFP.Services
 
         public PDFParser()
         {
-            comienzoDetalle_Palabras = new List<string>();
-            char separador = ConfigurationManager.AppSettings["SEPARADOR_INICIO_DETALLE"][0];
-            string palabrasInicioDetalle = ConfigurationManager.AppSettings["INICIO_DETALLE"];
-            foreach (String s in palabrasInicioDetalle.Split(separador))
-            {
-                comienzoDetalle_Palabras.Add(s);
-            }
             PALABRA_CLAVE_CUIT = ConfigurationManager.AppSettings["PALABRA_CLAVE_CUIT"];
             PALABRA_CLAVE_TIPO = ConfigurationManager.AppSettings["PALABRA_CLAVE_TIPO"];
             PALABRA_CLAVE_PUNTO_DE_VENTA = ConfigurationManager.AppSettings["PALABRA_CLAVE_PUNTO_DE_VENTA"];
@@ -94,33 +87,6 @@ namespace ApiFP.Services
             return "";
         }
 
-        private bool tieneInformacionValida(string linea)
-        {
-            string patron_numeros = ConfigurationManager.AppSettings["DETALLE_REGEX_PATTERN"];
-            string palabrasAOmitir = ConfigurationManager.AppSettings["DETALLE_OMITIR_PALABRAS"];
-            Regex rgx1 = new Regex(patron_numeros);
-            Regex rgx2 = new Regex(palabrasAOmitir);
-            return !(rgx1.IsMatch(linea) || rgx2.IsMatch(linea));
-        }
-
-        private bool empiezaDetalle(string linea)
-        {
-            foreach (String palabra in comienzoDetalle_Palabras)
-            {
-                string pattern = palabra + "$";
-                Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
-                if (rgx.IsMatch(linea))
-                    return true;
-            }
-            return false;
-        }
-
-        private string filtrarNumerosAlFinal(string linea)
-        {
-            string patron = ConfigurationManager.AppSettings["NUMEROS_AL_FINAL_PATTERN"];
-            return Regex.Replace(linea, patron, "");
-        }
-
         //Se especifican las líneas donde esta la información que debe guardarse 
         //y además como parsear esa línea para obtenerla. 
         private Business.DatosFactura extraerDatos(String[] lineas)
@@ -139,7 +105,8 @@ namespace ApiFP.Services
                     new ParserItemCuit(),
                     new ParserItemNumeroFactura(),
                     new ParserItemImporteTotal(),
-                    new ParserItemDomicilioComercial()
+                    new ParserItemDomicilioComercial(),
+                    new ParserItemDetalle()
                 };
                 foreach (ParserItem parser in parserList)
                 {
@@ -171,19 +138,6 @@ namespace ApiFP.Services
                 {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Fecha = palabras[palabras.Length - 1];
-                    continue;
-                }
-
-                if (empiezaDetalle(lineas[i]))
-                { //TODO: POner palabra qe inciia
-                    string separador = ConfigurationManager.AppSettings["SEPARADOR_DETALLE"];
-                    for (i++; !lineas[i].Contains(PALABRA_FIN_DETALLE); i++)
-                    {
-                        if (tieneInformacionValida(lineas[i]))
-                        {  //TODO: poner que filtre lineas con cosas raras y palabras especificas. 
-                            datosExtraidos.Detalle += filtrarNumerosAlFinal(lineas[i]) + separador;
-                        }
-                    }
                     continue;
                 }
 
@@ -222,6 +176,20 @@ namespace ApiFP.Services
             }
 
             return datosExtraidos;
+        }
+
+        public String[] extraerConEstrategiaPDF(MemoryStream aPdfStream)
+        {
+            PdfReader pdfReader = new PdfReader(aPdfStream);
+            
+            ITextExtractionStrategy strategy = new LocationTextExtractionStrategy();            
+
+            string textoActual = PdfTextExtractor.GetTextFromPage(pdfReader, 1, strategy);
+            textoActual = Encoding.UTF8.GetString(ASCIIEncoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(textoActual)));
+            String[] lineas = textoActual.Split(Environment.NewLine.ToCharArray());            
+
+            pdfReader.Close();
+            return lineas;
         }
     }
 }
