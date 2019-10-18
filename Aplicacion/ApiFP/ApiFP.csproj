@@ -337,6 +337,12 @@
     <Compile Include="Services\Afip\TokenHandler.cs" />
     <Compile Include="Services\EmailSendGridApiService.cs" />
     <Compile Include="Services\DataAccessService.cs" />
+    <Compile Include="Services\Parser\ParserItem.cs" />
+    <Compile Include="Services\Parser\ParserItemCuit.cs" />
+    <Compile Include="Services\Parser\ParserItemDomicilioComercial.cs" />
+    <Compile Include="Services\Parser\ParserItemImporteTotal.cs" />
+    <Compile Include="Services\Parser\ParserItemTipo.cs" />
+    <Compile Include="Services\Parser\ParserItemNumeroFactura.cs" />
     <Compile Include="Services\Storage\CloudStorageService.cs" />
     <Compile Include="Services\Storage\FileSystemStorageService.cs" />
     <Compile Include="Services\Storage\StorageService.cs" />
