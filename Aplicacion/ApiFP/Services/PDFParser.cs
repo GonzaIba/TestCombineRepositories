@@ -28,12 +28,13 @@ namespace ApiFP.Services
         string PALABRA_FIN_DETALLE;
         string PALABRA_DOMICILIO_COMERCIAL;
 
-        public PDFParser ()
+        public PDFParser()
         {
             comienzoDetalle_Palabras = new List<string>();
             char separador = ConfigurationManager.AppSettings["SEPARADOR_INICIO_DETALLE"][0];
             string palabrasInicioDetalle = ConfigurationManager.AppSettings["INICIO_DETALLE"];
-            foreach(String s in palabrasInicioDetalle.Split(separador)) {
+            foreach (String s in palabrasInicioDetalle.Split(separador))
+            {
                 comienzoDetalle_Palabras.Add(s);
             }
             PALABRA_CLAVE_CUIT = ConfigurationManager.AppSettings["PALABRA_CLAVE_CUIT"];
@@ -50,7 +51,7 @@ namespace ApiFP.Services
             PALABRA_DOMICILIO_COMERCIAL = ConfigurationManager.AppSettings["PALABRA_DOMICILIO_COMERCIAL"];
 
         }
-        public static MemoryStream leerPdf (string nombreArchivo)
+        public static MemoryStream leerPdf(string nombreArchivo)
         {
             return new MemoryStream(File.ReadAllBytes(nombreArchivo));
         }
@@ -59,7 +60,7 @@ namespace ApiFP.Services
         //Luego lo convierte en texto, y lo separa por líneas. 
         //Por último llama a la función extraerDatos para rellenar el objeto DatosFactura      
         //Se suponen que las facturas ocupan una sola página
-        public Business.DatosFactura extraerCamposDePDF (MemoryStream aPdfStream)
+        public Business.DatosFactura extraerCamposDePDF(MemoryStream aPdfStream)
         {
             PdfReader pdfReader = new PdfReader(aPdfStream);
             Business.DatosFactura datosExtraidos = new Business.DatosFactura();
@@ -75,11 +76,14 @@ namespace ApiFP.Services
         }
 
 
-        private string encontrarSiguientePalabra (string[] palabras, string palabra)
+        private string encontrarSiguientePalabra(string[] palabras, string palabra)
         {
-            for (int j = 0; j < palabras.Length; j++) {
-                if (palabras[j].Contains(palabra)) {
-                    do {
+            for (int j = 0; j < palabras.Length; j++)
+            {
+                if (palabras[j].Contains(palabra))
+                {
+                    do
+                    {
                         if (palabras.Length <= ++j)
                             return "";
                     } while (caracteresOmitidos.IndexOf(palabras[j]) >= 0);
@@ -89,7 +93,7 @@ namespace ApiFP.Services
             return "";
         }
 
-        private bool tieneInformacionValida (string linea)
+        private bool tieneInformacionValida(string linea)
         {
             string patron_numeros = ConfigurationManager.AppSettings["DETALLE_REGEX_PATTERN"];
             string palabrasAOmitir = ConfigurationManager.AppSettings["DETALLE_OMITIR_PALABRAS"];
@@ -98,9 +102,10 @@ namespace ApiFP.Services
             return !(rgx1.IsMatch(linea) || rgx2.IsMatch(linea));
         }
 
-        private bool empiezaDetalle (string linea)
+        private bool empiezaDetalle(string linea)
         {
-            foreach(String palabra in comienzoDetalle_Palabras) {
+            foreach (String palabra in comienzoDetalle_Palabras)
+            {
                 string pattern = palabra + "$";
                 Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
                 if (rgx.IsMatch(linea))
@@ -109,7 +114,7 @@ namespace ApiFP.Services
             return false;
         }
 
-        private string filtrarNumerosAlFinal (string linea )
+        private string filtrarNumerosAlFinal(string linea)
         {
             string patron = ConfigurationManager.AppSettings["NUMEROS_AL_FINAL_PATTERN"];
             return Regex.Replace(linea, patron, "");
@@ -117,7 +122,7 @@ namespace ApiFP.Services
 
         //Se especifican las líneas donde esta la información que debe guardarse 
         //y además como parsear esa línea para obtenerla. 
-        private Business.DatosFactura extraerDatos (String[] lineas)
+        private Business.DatosFactura extraerDatos(String[] lineas)
         {
             Regex rxCodigoBarra = new Regex(@"^\d{40,42}$");
             MatchCollection matchesCodigoBarra = null;
@@ -200,7 +205,7 @@ namespace ApiFP.Services
                             if (matchCuit.Success)
                             {
                                 switch (exp.idx)
-                                {                                    
+                                {
                                     case 0:
                                         datosExtraidos.Cuit_Origen = matchCuit.Value.Replace("-", "");
                                         break;
@@ -215,6 +220,7 @@ namespace ApiFP.Services
                                         break;
                                         */
                                 }
+                                primerCuitEncontrado = !String.IsNullOrEmpty(datosExtraidos.Cuit_Origen);
                             }
                         }
                     }
@@ -222,12 +228,24 @@ namespace ApiFP.Services
                 #endregion
 
                 #region "CUIT_DESTINO"
-                
-                if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && primerCuitEncontrado)
+                if (primerCuitEncontrado)
                 {
-                    string[] palabras = lineas[i].Split();
-                    datosExtraidos.Cuit_Destino = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
-                    continue;
+                    if (lineas[i].Contains(PALABRA_CLAVE_CUIT))
+                    {
+                        if (String.IsNullOrEmpty(datosExtraidos.Cuit_Destino))
+                        {
+                            string[] palabras = lineas[i].Split();
+                            datosExtraidos.Cuit_Destino = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT);
+
+                            if (lineas[i].Contains("Nombre: Documento / CUIT: "))
+                            {
+                                var line = lineas[i - 1].Split();
+                                datosExtraidos.Cuit_Destino = line[line.Length-1];
+                            }
+                        }
+                        datosExtraidos.Cuit_Destino = datosExtraidos.Cuit_Destino.Replace("-", "");
+                        continue;
+                    }
                 }
                 #endregion
 
@@ -263,17 +281,17 @@ namespace ApiFP.Services
 
                 if (String.IsNullOrEmpty(datosExtraidos.Numero))
                 {
-                    foreach(var exp in rxNumeroFactura.Select((value, idx) => new { value, idx }))
+                    foreach (var exp in rxNumeroFactura.Select((value, idx) => new { value, idx }))
                     {
                         matchesNumeroFactura = exp.value.Match(lineas[i].Trim());
-                        if(matchesNumeroFactura.Success)
+                        if (matchesNumeroFactura.Success)
                         {
                             switch (exp.idx)
                             {
                                 case 0:
                                 case 1:
                                 case 4:
-                                    datosExtraidos.Numero = matchesNumeroFactura.Value;                                    
+                                    datosExtraidos.Numero = matchesNumeroFactura.Value;
                                     break;
                                 case 2:
                                     datosExtraidos.Numero = matchesNumeroFactura.Value.Replace(" ", "-");
@@ -317,7 +335,7 @@ namespace ApiFP.Services
 
                     if (String.IsNullOrEmpty(datosExtraidos.Importe) && (lineas[i].Trim() == "Importe Total:"))
                     {
-                        datosExtraidos.Importe = lineas[i - 1];                        
+                        datosExtraidos.Importe = lineas[i - 1];
                     }
 
 
@@ -438,7 +456,5 @@ namespace ApiFP.Services
             }
             return datosExtraidos;
         }
-
-
     }
 }
