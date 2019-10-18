@@ -312,6 +312,16 @@ namespace ApiFP.Services
                 {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
+
+                    var ds = (datosExtraidos.Importe.Length > 3) ? datosExtraidos.Importe.Substring(datosExtraidos.Importe.Length - 3, 1) : null;
+
+                    if (!String.IsNullOrEmpty(ds) && ((ds == ".") || (ds == ",")))
+                    {
+                        var importe = datosExtraidos.Importe.Replace(".", "").Replace(",", "");
+                        importe = importe.Insert(importe.Length - 2, ".");
+                        datosExtraidos.Importe = importe;
+                    }
+
                     continue;
                 }
 
