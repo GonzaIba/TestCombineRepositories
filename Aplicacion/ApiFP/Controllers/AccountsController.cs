@@ -179,9 +179,44 @@ namespace ApiFP.Controllers
         [Route("rubros")]
         public IHttpActionResult GetRubros()
         {
-            ApplicationDbContext db = new ApplicationDbContext();            
+            ApplicationDbContext db = new ApplicationDbContext();
             return Ok(db.Rubros.ToList());
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("profile")]
+        public async Task<ApplicationUser> GetProfile()
+        {
+            string userId = User.Identity.GetUserId();
+            var user = await this.AppUserManager.FindByIdAsync(userId);
+            user.PasswordHash = "";
+            user.SecurityStamp = "";
+            return user;
+
+        }
+
+        [Authorize]
+        [HttpPatch]
+        [Route("profile")]
+        public async Task<ApplicationUser> UpdateProfile(ApplicationUser userProfile)
+        {
+            string userId = User.Identity.GetUserId();
+
+            if (userId == userProfile.Id)
+            {
+                var user = await this.AppUserManager.FindByIdAsync(userId);
+                user.LastName = userProfile.LastName;
+                user.FirstName = userProfile.LastName;
+                user.Cuit = userProfile.Cuit;
+                user.BusinessName = userProfile.BusinessName;
+                this.AppUserManager.Update(user);
+                user.PasswordHash = "";
+                user.SecurityStamp = "";
+                return user;
+            }
+
+            return null;
+        }
     }
 }
