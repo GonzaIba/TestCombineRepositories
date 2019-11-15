@@ -12,6 +12,7 @@ using System.Security.Claims;
 using ApiFP.Models;
 using System.Net;
 using System.Configuration;
+using Newtonsoft.Json.Linq;
 
 namespace ApiFP.Controllers
 {
@@ -214,6 +215,51 @@ namespace ApiFP.Controllers
                 user.PasswordHash = "";
                 user.SecurityStamp = "";
                 return user;
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("password-recover")]
+        public async Task<ApplicationUser> RecoverPassword([FromBody] string userEmail)
+        {
+            var user = this.AppUserManager.FindByEmail(userEmail);
+            if (user != null)
+            {
+                var token = this.AppUserManager.GeneratePasswordResetToken(user.Id);
+
+                Random rnd = new Random();
+                string newPass = rnd.Next(10000000, 99999999).ToString();
+
+                var result = this.AppUserManager.ResetPassword(user.Id, token, newPass);                
+                if (result.Succeeded)
+                {
+                    await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación de cuenta portal proveedores", "La nueva contraseña de su cuenta es:" + newPass);
+                }
+
+                //var callbackUrlBuilder = new UriBuilder(ConfigurationManager.AppSettings["URL_RECOVER_PASSWORD"]);
+                //var query = HttpUtility.ParseQueryString(callbackUrlBuilder.Query);
+                //query["userId"] = user.Id;
+                //query["token"] = token;
+                //callbackUrlBuilder.Query = query.ToString();
+                //var callbackUrl = callbackUrlBuilder.ToString();                
+            }
+
+            return null;
+        }
+
+        [AllowAnonymous]
+        [HttpPatch]
+        [Route("password-recover")]
+        public async Task<ApplicationUser> UpdatePassword([FromBody] JObject data)
+        {
+            var user = this.AppUserManager.FindByEmail(data["userEmail"].ToString());
+            if (user != null)
+            {
+                var token = this.AppUserManager.GeneratePasswordResetToken(user.Id);
+                var result = this.AppUserManager.ResetPassword(user.Id, token, data["newPassword"].ToString());                                
             }
 
             return null;
