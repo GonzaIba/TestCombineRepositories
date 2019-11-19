@@ -73,13 +73,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/28/2018 11:35:17</publishTime>
     </File>
     <File Include="bin/ApiFP.dll">
-      <publishTime>10/10/2019 12:47:41</publishTime>
+      <publishTime>11/15/2019 10:41:22</publishTime>
     </File>
     <File Include="bin/ApiFP.pdb">
-      <publishTime>10/10/2019 12:47:41</publishTime>
+      <publishTime>11/15/2019 10:41:22</publishTime>
     </File>
     <File Include="bin/ApiFP.XmlSerializers.dll">
-      <publishTime>10/10/2019 12:47:43</publishTime>
+      <publishTime>11/15/2019 10:41:24</publishTime>
     </File>
     <File Include="bin/EncryptionLibrary.dll">
       <publishTime>09/26/2019 11:50:51</publishTime>

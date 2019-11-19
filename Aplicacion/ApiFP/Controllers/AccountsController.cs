@@ -187,35 +187,49 @@ namespace ApiFP.Controllers
         [Authorize]
         [HttpGet]
         [Route("profile")]
-        public async Task<ApplicationUser> GetProfile()
+        public async Task<CreateUserBindingModel> GetProfile()
         {
             string userId = User.Identity.GetUserId();
             var user = await this.AppUserManager.FindByIdAsync(userId);
-            user.PasswordHash = "";
-            user.SecurityStamp = "";
-            return user;
 
+            var userDto = new CreateUserBindingModel()
+            {                
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Cuit = user.Cuit,
+                BusinessName = user.BusinessName,
+                Profile = user.Profile,
+                Category = user.Category,
+                RubroOperativo = user.RubroOperativoFK,
+                RubroOperativoDescripcion = user.RubroOperativoDescripcion,
+                RubroExpensas = user.RubroExpensasFK,
+                RubroExpensasDescripcion = user.RubroExpensasDescripcion                
+            };
+
+            return userDto;
         }
 
         [Authorize]
         [HttpPatch]
         [Route("profile")]
-        public async Task<ApplicationUser> UpdateProfile(ApplicationUser userProfile)
+        public async Task<CreateUserBindingModel> UpdateProfile(CreateUserBindingModel userProfile)
         {
             string userId = User.Identity.GetUserId();
+            var user = await this.AppUserManager.FindByIdAsync(userId);
 
-            if (userId == userProfile.Id)
-            {
-                var user = await this.AppUserManager.FindByIdAsync(userId);
-                user.LastName = userProfile.LastName;
-                user.FirstName = userProfile.LastName;
-                user.Cuit = userProfile.Cuit;
-                user.BusinessName = userProfile.BusinessName;
-                this.AppUserManager.Update(user);
-                user.PasswordHash = "";
-                user.SecurityStamp = "";
-                return user;
-            }
+            user.FirstName = userProfile.FirstName;
+            user.LastName = userProfile.LastName;
+            user.Cuit = userProfile.Cuit;
+            user.BusinessName = userProfile.BusinessName;
+            user.Profile = userProfile.Profile;
+            user.Category = userProfile.Category;
+            user.RubroOperativoFK = userProfile.RubroOperativo;
+            user.RubroOperativoDescripcion = userProfile.RubroOperativoDescripcion;
+            user.RubroExpensasFK = userProfile.RubroExpensas;
+            user.RubroExpensasDescripcion = userProfile.RubroExpensasDescripcion;
+
+            this.AppUserManager.Update(user);            
 
             return null;
         }
