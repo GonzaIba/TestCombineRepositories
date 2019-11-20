@@ -77,8 +77,7 @@ namespace ApiFP.Controllers
                 LastName = createUserModel.LastName,
                 Cuit = createUserModel.Cuit,
                 BusinessName = createUserModel.BusinessName,
-                Profile = createUserModel.Profile,
-                Category = createUserModel.Category,
+                Profile = createUserModel.Profile,                
                 RubroOperativoFK = createUserModel.RubroOperativo,
                 RubroOperativoDescripcion = createUserModel.RubroOperativoDescripcion,
                 RubroExpensasFK = createUserModel.RubroExpensas,
@@ -200,8 +199,7 @@ namespace ApiFP.Controllers
                 LastName = user.LastName,
                 Cuit = user.Cuit,
                 BusinessName = user.BusinessName,
-                Profile = user.Profile,
-                Category = user.Category,
+                Profile = user.Profile,                
                 RubroOperativo = user.RubroOperativoFK,
                 RubroOperativoDescripcion = user.RubroOperativoDescripcion,
                 RubroExpensas = user.RubroExpensasFK,
@@ -223,8 +221,7 @@ namespace ApiFP.Controllers
             user.LastName = userProfile.LastName;
             user.Cuit = userProfile.Cuit;
             user.BusinessName = userProfile.BusinessName;
-            user.Profile = userProfile.Profile;
-            user.Category = userProfile.Category;
+            user.Profile = userProfile.Profile;            
             user.RubroOperativoFK = userProfile.RubroOperativo;
             user.RubroOperativoDescripcion = userProfile.RubroOperativoDescripcion;
             user.RubroExpensasFK = userProfile.RubroExpensas;

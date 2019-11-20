@@ -23,8 +23,6 @@ namespace ApiFP.Infrastructure
         public string BusinessName { get; set; }
         
         public string Profile { get; set; }
-        
-        public string Category { get; set; }
 
         public Rubro RubroOperativo { get; set; }
 

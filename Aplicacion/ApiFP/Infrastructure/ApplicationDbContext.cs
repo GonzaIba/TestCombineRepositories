@@ -38,8 +38,7 @@ namespace ApiFP.Infrastructure
             modelBuilder.Entity<ApplicationUser>().Property(p => p.LastName).IsRequired().HasColumnType("varchar").HasMaxLength(100);
             modelBuilder.Entity<ApplicationUser>().Property(p => p.Cuit).IsRequired().HasColumnType("varchar").HasMaxLength(50);
             modelBuilder.Entity<ApplicationUser>().Property(p => p.BusinessName).IsRequired().HasColumnType("varchar").HasMaxLength(100);
-            modelBuilder.Entity<ApplicationUser>().Property(p => p.Profile).IsRequired().HasColumnType("varchar").HasMaxLength(50);
-            modelBuilder.Entity<ApplicationUser>().Property(p => p.Category).IsRequired().HasColumnType("varchar").HasMaxLength(50);            
+            modelBuilder.Entity<ApplicationUser>().Property(p => p.Profile).IsRequired().HasColumnType("varchar").HasMaxLength(50);            
 
             modelBuilder.Entity<Rubro>().ToTable("Rubros");
             modelBuilder.Entity<Archivo>().ToTable("Archivos");

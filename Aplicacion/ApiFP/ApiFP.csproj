@@ -314,6 +314,10 @@
     <Compile Include="Migrations\201908261940300_AlterFacturaDomicilioFiscal.Designer.cs">
       <DependentUpon>201908261940300_AlterFacturaDomicilioFiscal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911200331439_RemoveCategory.cs" />
+    <Compile Include="Migrations\201911200331439_RemoveCategory.Designer.cs">
+      <DependentUpon>201911200331439_RemoveCategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
     <Compile Include="Models\FacturaBindingModels.cs" />
@@ -531,6 +535,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908261940300_AlterFacturaDomicilioFiscal.resx">
       <DependentUpon>201908261940300_AlterFacturaDomicilioFiscal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911200331439_RemoveCategory.resx">
+      <DependentUpon>201911200331439_RemoveCategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
