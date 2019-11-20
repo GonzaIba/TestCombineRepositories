@@ -1,5 +1,5 @@
-﻿<html class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths no-cssscrollbar"
-      lang="es">
+<html class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths no-cssscrollbar"
+    lang="es">
 
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8">
@@ -84,6 +84,7 @@
             <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="3kpe16OYIODdA5Xh8kMp75fB7rRNKJ5ZpXm960F6wvQzziLsMfxDFprWyfKrnpT4B2QHThcjxU698nBbZBs5bo49mCey0z8G8lOdbA5PeTgA/FM03727OfgyAdsVG1qtfbYUYDUX1pp82NrW/aLnOq5bWjsZEK280YeQwsycjns=" class="fill">
         </div>
         <!-- Pre-loader start -->
+
         <!-- Pre-loader end -->
 
         <section class="login-block">
@@ -143,6 +144,25 @@
         <p>Muchas gracias</p>
     </div>
     <!-- Warning Section Ends -->
+
+    <script type="text/javascript">
+        $(function() {
+            setUpValidation();
+            validateAllInputsAfterSubmit();
+        });
+    </script>
+
+    <script>
+        $(function() {
+            $('#login').disableAutoFill({
+                html5FormValidate: true
+                passwordField: '.password'
+            });
+        });
+    </script>
+
+
+
 </body>
 
 </html>

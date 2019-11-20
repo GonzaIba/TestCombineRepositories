@@ -13,6 +13,7 @@ using ApiFP.Models;
 using System.Net;
 using System.Configuration;
 using Newtonsoft.Json.Linq;
+using ApiFP.Helpers;
 
 namespace ApiFP.Controllers
 {
@@ -193,7 +194,7 @@ namespace ApiFP.Controllers
             var user = await this.AppUserManager.FindByIdAsync(userId);
 
             var userDto = new CreateUserBindingModel()
-            {                
+            {
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -204,7 +205,7 @@ namespace ApiFP.Controllers
                 RubroOperativo = user.RubroOperativoFK,
                 RubroOperativoDescripcion = user.RubroOperativoDescripcion,
                 RubroExpensas = user.RubroExpensasFK,
-                RubroExpensasDescripcion = user.RubroExpensasDescripcion                
+                RubroExpensasDescripcion = user.RubroExpensasDescripcion
             };
 
             return userDto;
@@ -229,7 +230,7 @@ namespace ApiFP.Controllers
             user.RubroExpensasFK = userProfile.RubroExpensas;
             user.RubroExpensasDescripcion = userProfile.RubroExpensasDescripcion;
 
-            this.AppUserManager.Update(user);            
+            this.AppUserManager.Update(user);
 
             return null;
         }
@@ -237,46 +238,68 @@ namespace ApiFP.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("password-recover")]
-        public async Task<ApplicationUser> RecoverPassword([FromBody] string userEmail)
+        public async Task<ApplicationUser> RecoverPassword(JObject account)
         {
-            var user = this.AppUserManager.FindByEmail(userEmail);
+            // obtener token de cambio
+            // crear html para email
+            // crear url con token y usuario encriptado
+            // enviar email
+
+            var user = this.AppUserManager.FindByEmail(account["email"].ToString());
             if (user != null)
             {
                 var token = this.AppUserManager.GeneratePasswordResetToken(user.Id);
 
-                Random rnd = new Random();
-                string newPass = rnd.Next(10000000, 99999999).ToString();
+                var callbackUrl = new Uri(Url.Link("RecoverAccountRoute", new { userId = EncryptHelper.Encript(user.Id), token = token }));
 
-                var result = this.AppUserManager.ResetPassword(user.Id, token, newPass);                
-                if (result.Succeeded)
-                {
-                    await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación de cuenta portal proveedores", "La nueva contraseña de su cuenta es:" + newPass);
-                }
+                var emailBody = "Para la recuperación de su cuenta de portal proveedores haga click <a href=\"" + callbackUrl + "\">aquí</a>.</br></br> Si usted no ha solicitad recuperar su cuenta por favor desestime este correo.";
 
-                //var callbackUrlBuilder = new UriBuilder(ConfigurationManager.AppSettings["URL_RECOVER_PASSWORD"]);
-                //var query = HttpUtility.ParseQueryString(callbackUrlBuilder.Query);
-                //query["userId"] = user.Id;
-                //query["token"] = token;
-                //callbackUrlBuilder.Query = query.ToString();
-                //var callbackUrl = callbackUrlBuilder.ToString();                
+                await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación de cuenta portal proveedores", emailBody);
+              
             }
-
             return null;
         }
 
         [AllowAnonymous]
-        [HttpPatch]
-        [Route("password-recover")]
-        public async Task<ApplicationUser> UpdatePassword([FromBody] JObject data)
+        [HttpGet]
+        [Route("password-recover", Name = "RecoverAccountRoute")]
+        public async Task<Object> UpdatePassword(string userId = "", string token = "")
         {
-            var user = this.AppUserManager.FindByEmail(data["userEmail"].ToString());
-            if (user != null)
-            {
-                var token = this.AppUserManager.GeneratePasswordResetToken(user.Id);
-                var result = this.AppUserManager.ResetPassword(user.Id, token, data["newPassword"].ToString());                                
-            }
 
-            return null;
+            // validar userId
+            // crear password nuevo
+            // crear body html
+            // enviar email con password
+            // redireccionar a pagina de notificación de envio de mail con password
+
+            var response = Request.CreateResponse(HttpStatusCode.Moved);
+
+            if (!String.IsNullOrEmpty(userId))
+            {
+                var user = this.AppUserManager.FindById(EncryptHelper.Decript(userId));
+
+                if (user != null)
+                {
+                    Random rnd = new Random();
+                    string newPass = rnd.Next(10000000, 99999999).ToString();
+
+                    var result = this.AppUserManager.ResetPassword(user.Id, token, newPass);
+
+
+                    if (result.Succeeded)
+                    {
+                        var emailBody = "La nueva constraseña asignada para su cuenta de portal proveedores es: " + newPass + "</br></br>";
+
+                        await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación exitosa de cuenta portal proveedores", emailBody);
+                        
+                        response.Headers.Location = new Uri(ConfigurationManager.AppSettings["URL_RECOVERED_ACCOUNT"]);
+                        return response;
+                    }
+                }
+            }
+            
+            response.Headers.Location = new Uri(ConfigurationManager.AppSettings["URL_ERROR"]);
+            return response;
         }
     }
 }
