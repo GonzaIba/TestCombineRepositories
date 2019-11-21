@@ -30,8 +30,7 @@ namespace ApiFP.Models
         public string BusinessName { get; set; }
         [Required]
         public string Profile { get; set; }
-        [Required]
-        public string Category { get; set; }
+
         [Required]
         public int RubroOperativo { get; set; }
 

@@ -199,7 +199,7 @@ namespace ApiFP.Controllers
                 LastName = user.LastName,
                 Cuit = user.Cuit,
                 BusinessName = user.BusinessName,
-                Profile = user.Profile,                
+                Profile = user.Profile,
                 RubroOperativo = user.RubroOperativoFK,
                 RubroOperativoDescripcion = user.RubroOperativoDescripcion,
                 RubroExpensas = user.RubroExpensasFK,
@@ -215,20 +215,34 @@ namespace ApiFP.Controllers
         public async Task<CreateUserBindingModel> UpdateProfile(CreateUserBindingModel userProfile)
         {
             string userId = User.Identity.GetUserId();
-            var user = await this.AppUserManager.FindByIdAsync(userId);
+            var userReq = await this.AppUserManager.FindByIdAsync(userId);
+            var userPro = await this.AppUserManager.FindByEmailAsync(userProfile.Email);
 
-            user.FirstName = userProfile.FirstName;
-            user.LastName = userProfile.LastName;
-            user.Cuit = userProfile.Cuit;
-            user.BusinessName = userProfile.BusinessName;
-            user.Profile = userProfile.Profile;            
-            user.RubroOperativoFK = userProfile.RubroOperativo;
-            user.RubroOperativoDescripcion = userProfile.RubroOperativoDescripcion;
-            user.RubroExpensasFK = userProfile.RubroExpensas;
-            user.RubroExpensasDescripcion = userProfile.RubroExpensasDescripcion;
+            if (userReq.Id == userPro.Id)
+            {
+                userReq.FirstName = userProfile.FirstName;
+                userReq.LastName = userProfile.LastName;
+                userReq.Cuit = userProfile.Cuit;
+                userReq.BusinessName = userProfile.BusinessName;
+                userReq.Profile = userProfile.Profile;
+                userReq.RubroOperativoFK = userProfile.RubroOperativo;
+                userReq.RubroOperativoDescripcion = userProfile.RubroOperativoDescripcion;
+                userReq.RubroExpensasFK = userProfile.RubroExpensas;
+                userReq.RubroExpensasDescripcion = userProfile.RubroExpensasDescripcion;
 
-            this.AppUserManager.Update(user);
+                this.AppUserManager.Update(userReq);
 
+                if (!String.IsNullOrEmpty(userProfile.Password) && (userProfile.Password == userProfile.ConfirmPassword))
+                {
+                    var token = this.AppUserManager.GeneratePasswordResetToken(userReq.Id);
+                    var result = this.AppUserManager.ResetPassword(userReq.Id, token, userProfile.Password);
+
+                    if (result.Succeeded)
+                    {
+
+                    }
+                }
+            }
             return null;
         }
 
@@ -252,7 +266,7 @@ namespace ApiFP.Controllers
                 var emailBody = "Para la recuperación de su cuenta de portal proveedores haga click <a href=\"" + callbackUrl + "\">aquí</a>.</br></br> Si usted no ha solicitad recuperar su cuenta por favor desestime este correo.";
 
                 await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación de cuenta portal proveedores", emailBody);
-              
+
             }
             return null;
         }
@@ -288,13 +302,13 @@ namespace ApiFP.Controllers
                         var emailBody = "La nueva constraseña asignada para su cuenta de portal proveedores es: " + newPass + "</br></br>";
 
                         await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación exitosa de cuenta portal proveedores", emailBody);
-                        
+
                         response.Headers.Location = new Uri(ConfigurationManager.AppSettings["URL_RECOVERED_ACCOUNT"]);
                         return response;
                     }
                 }
             }
-            
+
             response.Headers.Location = new Uri(ConfigurationManager.AppSettings["URL_ERROR"]);
             return response;
         }
