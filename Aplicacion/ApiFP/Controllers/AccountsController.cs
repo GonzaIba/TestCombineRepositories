@@ -77,7 +77,7 @@ namespace ApiFP.Controllers
                 LastName = createUserModel.LastName,
                 Cuit = createUserModel.Cuit,
                 BusinessName = createUserModel.BusinessName,
-                Profile = createUserModel.Profile,                
+                Profile = createUserModel.Profile,
                 RubroOperativoFK = createUserModel.RubroOperativo,
                 RubroOperativoDescripcion = createUserModel.RubroOperativoDescripcion,
                 RubroExpensasFK = createUserModel.RubroExpensas,

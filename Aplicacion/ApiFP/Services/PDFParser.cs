@@ -95,11 +95,9 @@ namespace ApiFP.Services
             MatchCollection matchesCodigoBarra = null;
             List<string> barCode = new List<string>();
 
-            Business.DatosFactura datosExtraidos = new Business.DatosFactura();            
+            Business.DatosFactura datosExtraidos = new Business.DatosFactura();
 
-            for (int i = 0; i < lineas.Length; i++)
-            {
-                List<ParserItem> parserList = new List<ParserItem>()
+            List<ParserItem> parserList = new List<ParserItem>()
                 {
                     new ParserItemTipo(),
                     new ParserItemCuit(),
@@ -108,11 +106,13 @@ namespace ApiFP.Services
                     new ParserItemDomicilioComercial(),
                     new ParserItemDetalle()
                 };
-                foreach (ParserItem parser in parserList)
-                {
-                    parser.Parse(datosExtraidos, lineas);
-                }
+            foreach (ParserItem parser in parserList)
+            {
+                parser.Parse(datosExtraidos, lineas);
+            }
 
+            for (int i = 0; i < lineas.Length; i++)
+            {
                 if (lineas[i].Contains(PALABRA_CLAVE_IVA))
                 {
                     string[] palabras = lineas[i].Split();
