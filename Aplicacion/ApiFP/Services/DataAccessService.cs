@@ -225,11 +225,7 @@ namespace ApiFP.Services
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
-            var cuitList = db.Database.SqlQuery<string>(
-                    "select distinct top 5 CuitDestino " +
-                    "From Facturas as fac " +
-                    "Where(fac.CuitDestino is not null) and  (fac.CuitDestino like '@partialCuit%')", new SqlParameter("@partialCuit", partialCuit));
-
+            var cuitList = db.Facturas.Where(x => x.CuitDestino.StartsWith(partialCuit)).Select(x => x.CuitDestino);
             return cuitList.ToList();
         }
 
