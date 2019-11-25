@@ -291,6 +291,13 @@ namespace ApiFP.Controllers
             return Ok();
         }
 
+        [Authorize]
+        [Route("cuit/{partialCuit}")]
+        [HttpGet]
+        public async Task<List<string>> GetCuits([FromUri] string partialCuit)
+        {
+             return DataAccessService.GetCuitList(partialCuit);            
+        }
 
         [Authorize]
         [Route("cuit")]

@@ -21,17 +21,6 @@ namespace ApiFP.Services
         public static List<GetFacturaBindingModel> GetFacturas(string userId, int? facturaId = null)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            //var facturas = db.Facturas.Where(x => x.UserIdFK == user).ToList();
-            /*
-            var facturasList = (from facturas in db.Facturas
-                                join archivos in db.Archivos on facturas.Id equals archivos.FacturaIdFK                            
-                                where facturas.UserIdFK == user
-                                select new
-                                  {
-                                    facturas,
-                                    ArchivoId = archivos.Id
-                                }).ToList();
-*/
 
             var facturasList = db.Database.SqlQuery<GetFacturaBindingModel>(
                 "SELECT " +
@@ -52,9 +41,11 @@ namespace ApiFP.Services
                     "fac.DomicilioComercial," +
                     "convert(varchar, fac.FechaCreacion, 103) as FechaSubida," +
                     "convert(varchar, fac.Fecha, 103) as Fecha," +
+                    "ef.Nombre as EstadoFactura, " +
                     "arc.Id as ArchivoId " +
                 "From Facturas as fac " +
                 "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
+                "Left join EstadoFactura as ef on fac.EstadoFacturaFK = ef.Id " +
                 "Where fac.UserIdFK = @user and fac.EstadoFacturaFK <> 3", new SqlParameter("@user", userId)); //.ToList();
 
             if (facturaId != null)
@@ -228,6 +219,18 @@ namespace ApiFP.Services
                         "and fac.CuitOrigen = @cuitOrigen", new SqlParameter("@user", userId), new SqlParameter("@cuitOrigen", cuitOrigen)); //.ToList();
 
             return detalleList.ToList();
+        }
+
+        public static List<string> GetCuitList(string partialCuit)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+
+            var cuitList = db.Database.SqlQuery<string>(
+                    "select distinct top 5 CuitDestino " +
+                    "From Facturas as fac " +
+                    "Where(fac.CuitDestino is not null) and  (fac.CuitDestino like '@partialCuit%')", new SqlParameter("@partialCuit", partialCuit));
+
+            return cuitList.ToList();
         }
 
         public static int GetDuplicates(string invoiceNumber, string cuitOrigen, string tipo)
