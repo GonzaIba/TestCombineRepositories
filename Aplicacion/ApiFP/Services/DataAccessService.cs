@@ -225,7 +225,7 @@ namespace ApiFP.Services
         {
             ApplicationDbContext db = new ApplicationDbContext();
 
-            var cuitList = db.Facturas.Where(x => x.CuitDestino.StartsWith(partialCuit)).Select(x => x.CuitDestino);
+            var cuitList = db.Facturas.Where(x => x.CuitDestino.StartsWith(partialCuit)).Select(x => x.CuitDestino).Distinct().Take(5);
             return cuitList.ToList();
         }
 
