@@ -21,6 +21,7 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using OfficeOpenXml;
 
 namespace ApiFP.Controllers
 {
@@ -364,6 +365,74 @@ namespace ApiFP.Controllers
         [Authorize]
         [Route("export-invoice")]
         [HttpPost]
+
+        public async Task ExportFacturas()
+        {
+            HttpContent requestContent = Request.Content;
+            string invoicesId = requestContent.ReadAsStringAsync().Result;
+
+            var ids = invoicesId.Split(',').Select(n => int.Parse(n)).ToArray();
+            List<GetFacturaBindingModel> invoices = new List<GetFacturaBindingModel>();
+
+            foreach (int item in ids)
+            {
+                invoices.Add(DataAccessService.GetFacturas(User.Identity.GetUserId(), item)[0]);
+            }
+
+            ExcelPackage ExcelPkg = new ExcelPackage();
+            ExcelWorksheet workSheet = ExcelPkg.Workbook.Worksheets.Add("Sheet1");
+            
+            // Header of the Excel sheet 
+            workSheet.Cells[1, 1].Value = "Tipo";
+            workSheet.Cells[1, 2].Value = "Numero";
+            workSheet.Cells[1, 3].Value = "Importe";
+            workSheet.Cells[1, 4].Value = "C. Origen";
+            workSheet.Cells[1, 5].Value = "C. Destino";
+            workSheet.Cells[1, 6].Value = "Fecha";
+            workSheet.Cells[1, 7].Value = "Detalle";
+            workSheet.Cells[1, 8].Value = "Domicilio";
+            workSheet.Cells[1, 9].Value = "Iva Discriminado";
+            workSheet.Cells[1, 10].Value = "Retenciones";
+            workSheet.Cells[1, 11].Value = "Servicio";
+            workSheet.Cells[1, 12].Value = "Percepciones";
+            workSheet.Cells[1, 13].Value = "Impuestos no gravados";
+            workSheet.Cells[1, 14].Value = "ID";
+
+            int idx = 2;
+
+            foreach (var item in invoices)
+            {
+                workSheet.Cells[idx, 1].Value = item.Tipo;
+                workSheet.Cells[idx, 2].Value = item.Numero;
+                workSheet.Cells[idx, 3].Value = item.Importe;
+                workSheet.Cells[idx, 4].Value = item.CuitOrigen;
+                workSheet.Cells[idx, 5].Value = item.CuitDestino;
+                workSheet.Cells[idx, 6].Value = item.Fecha;
+                workSheet.Cells[idx, 7].Value = item.Detalle.Replace("\n", " ");
+                workSheet.Cells[idx, 8].Value = item.DomicilioComercial;
+                workSheet.Cells[idx, 9].Value = item.IvaDiscriminado;
+                workSheet.Cells[idx, 10].Value = item.Retenciones;
+                workSheet.Cells[idx, 11].Value = item.Servicio;
+                workSheet.Cells[idx, 12].Value = item.Percepciones;
+                workSheet.Cells[idx, 13].Value = item.ImpuestosNoGravados;
+                workSheet.Cells[idx, 14].Value = item.Id;
+
+                idx += 1;
+            }
+
+            MemoryStream ms = new MemoryStream();
+            ExcelPkg.SaveAs(ms);
+            byte[] ba = ms.GetBuffer();
+            HttpContext.Current.Response.ClearContent();
+            HttpContext.Current.Response.AddHeader("Content-Disposition", "attachement; filename=RecordExport.xlsx");
+            HttpContext.Current.Response.AddHeader("Content-Length", ba.Length.ToString());
+            HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            HttpContext.Current.Response.BinaryWrite(ba);
+            HttpContext.Current.Response.Flush();
+            HttpContext.Current.Response.End();
+
+        }
+
         public async Task<HttpResponseMessage> ExportFactura()
         {
             HttpResponseMessage result = new HttpResponseMessage();
