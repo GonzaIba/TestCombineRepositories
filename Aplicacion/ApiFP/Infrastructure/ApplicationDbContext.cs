@@ -17,7 +17,8 @@ namespace ApiFP.Infrastructure
         public DbSet<EstadoFactura> EstadoFactura { get; set; }
         public DbSet<CentroComputo> CentrosDeComputo { get; set; }
         public DbSet<DescargaFactura> DescargasFactura { get; set; }
-        
+        public DbSet<Empresa> Empresas { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -45,8 +46,10 @@ namespace ApiFP.Infrastructure
             modelBuilder.Entity<EstadoFactura>().ToTable("EstadoFactura");
             modelBuilder.Entity<CentroComputo>().ToTable("CentrosDeComputo");
             modelBuilder.Entity<DescargaFactura>().ToTable("DescargasFactura");
+            modelBuilder.Entity<Empresa>().ToTable("Empresas");
 
             modelBuilder.Entity<Factura>().Property(p => p.DomicilioComercial).HasColumnType("varchar").HasMaxLength(250);
+            
         }
 
     }

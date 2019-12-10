@@ -254,6 +254,7 @@
     <Compile Include="Infrastructure\CentroComputo.cs" />
     <Compile Include="Infrastructure\EstadoFactura.cs" />
     <Compile Include="Infrastructure\DescargaFactura.cs" />
+    <Compile Include="Infrastructure\Empresa.cs" />
     <Compile Include="Infrastructure\Rubro.cs" />
     <Compile Include="Infrastructure\Factura.cs" />
     <Compile Include="Infrastructure\ApplicationUser.cs" />
@@ -321,6 +322,10 @@
     <Compile Include="Migrations\201911200331439_RemoveCategory.cs" />
     <Compile Include="Migrations\201911200331439_RemoveCategory.Designer.cs">
       <DependentUpon>201911200331439_RemoveCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912101630318_AddEmpresa.cs" />
+    <Compile Include="Migrations\201912101630318_AddEmpresa.Designer.cs">
+      <DependentUpon>201912101630318_AddEmpresa.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ArchivosBindingModels.cs" />
@@ -542,6 +547,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911200331439_RemoveCategory.resx">
       <DependentUpon>201911200331439_RemoveCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912101630318_AddEmpresa.resx">
+      <DependentUpon>201912101630318_AddEmpresa.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
