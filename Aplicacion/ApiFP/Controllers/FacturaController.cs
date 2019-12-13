@@ -22,6 +22,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using OfficeOpenXml;
+using EncryptionLibrary;
 
 namespace ApiFP.Controllers
 {
@@ -415,7 +416,7 @@ namespace ApiFP.Controllers
                 workSheet.Cells[idx, 11].Value = item.Servicio;
                 workSheet.Cells[idx, 12].Value = item.Percepciones;
                 workSheet.Cells[idx, 13].Value = item.ImpuestosNoGravados;
-                workSheet.Cells[idx, 14].Value = item.Id;
+                workSheet.Cells[idx, 14].Value = clsEncriptar.Encriptar(DateTime.Now.ToString() + "|" +  item.Id.ToString(), ConfigurationManager.AppSettings["PASS_ENCRYPTER"]) ;
 
                 idx += 1;
             }
