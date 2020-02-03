@@ -91,7 +91,29 @@ namespace ApiFP.Services.Parser
                             }
                         }
                         datosExtraidos.Cuit_Destino = datosExtraidos.Cuit_Destino.Replace("-", "").Replace("/", "");
-                        continue;
+                        //continue;
+
+                        if (String.IsNullOrEmpty(datosExtraidos.Cuit_Destino))
+                        {
+                            foreach (var exp in _rxCuit.Select((value, idx) => new { value, idx }))
+                            {
+                                _matchCuit = exp.value.Match(lineas[i].Trim());
+                                if (_matchCuit.Success)
+                                {
+                                    switch (exp.idx)
+                                    {
+                                        case 0:
+                                        case 2:
+                                        case 3:
+                                            datosExtraidos.Cuit_Destino = _matchCuit.Value.Replace("-", "").Replace("/", "");
+                                            break;
+                                        case 1:
+                                            datosExtraidos.Cuit_Destino = _matchCuit.Value;
+                                            break;    
+                                    }                                    
+                                }
+                            }
+                        }
                     }
                 }
                 #endregion
