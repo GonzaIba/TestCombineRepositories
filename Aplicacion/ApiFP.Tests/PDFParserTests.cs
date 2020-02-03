@@ -194,10 +194,21 @@ namespace ApiFP.Tests
             factura.Parse(_facturas["16"]);
             Assert.IsTrue(factura.Numero == "0009-00048830");
             Assert.IsTrue(factura.Tipo == "B");
-            //Assert.IsTrue(factura.CuitOrigen == "33714975299");
-            Assert.IsTrue(factura.CuitOrigen == "");
+            Assert.IsTrue(factura.CuitOrigen == "33714975299");
             Assert.IsTrue(factura.Importe == "850.00");
             Assert.IsTrue(factura.CuitDestino == "30534418856");
+        }
+
+        [TestMethod]
+        public void Parse17()
+        {
+            var factura = new Infrastructure.Factura();
+            factura.Parse(_facturas["17"]);
+            Assert.IsTrue(factura.Numero == "0013-00111091"); 
+            Assert.IsTrue(factura.Tipo == "B");
+            Assert.IsTrue(factura.CuitOrigen == "30714990973");
+            Assert.IsTrue(factura.Importe == "2540.57");
+            Assert.IsTrue(factura.CuitDestino == "11111111113");
         }
 
         [TestMethod]

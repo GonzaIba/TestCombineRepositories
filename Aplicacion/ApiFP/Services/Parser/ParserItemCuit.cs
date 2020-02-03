@@ -37,8 +37,18 @@ namespace ApiFP.Services.Parser
                 {
                     if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !_primerCuitEncontrado)
                     {
+                        bool esFormato16 = lineas[i].Contains("I.V.A.   : CF - CUIT");
+
                         string[] palabras = lineas[i].Split();
-                        datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "").Replace("/", "");
+                        if (!esFormato16)
+                        {
+                            datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "").Replace("/", "");                            
+                        }
+                        else
+                        {
+                            datosExtraidos.Cuit_Destino = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "").Replace("/", "");
+                        }
+
                         _primerCuitEncontrado = true;
                         continue;
                     }

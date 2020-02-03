@@ -167,7 +167,6 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(17, 14));
                                 barCode.Add(item.ToString().Substring(31, 8));
                                 barCode.Add(item.ToString().Substring(39, 1));
-
                                 datosExtraidos.Cuit_Origen = barCode[0];
                             }
                         }
