@@ -23,7 +23,8 @@ namespace ApiFP.Services.Parser
             {
                 new Regex(@"^\d{2}-\d{8}-\d{1}"),
                 new Regex(@"^\d{11}"),
-                new Regex(@"\d{2}-\d{8}-\d{1}")
+                new Regex(@"\d{2}-\d{8}-\d{1}"),
+                new Regex(@"\d{2}-\d{8}/\d{1}")
             };            
         }
 
@@ -37,7 +38,7 @@ namespace ApiFP.Services.Parser
                     if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !_primerCuitEncontrado)
                     {
                         string[] palabras = lineas[i].Split();
-                        datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "");
+                        datosExtraidos.Cuit_Origen = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "").Replace("/", "");
                         _primerCuitEncontrado = true;
                         continue;
                     }
@@ -52,10 +53,11 @@ namespace ApiFP.Services.Parser
                                 switch (exp.idx)
                                 {
                                     case 0:
-                                        datosExtraidos.Cuit_Origen = _matchCuit.Value.Replace("-", "");
-                                        break;
-                                    case 1:
                                     case 2:
+                                    case 3:
+                                        datosExtraidos.Cuit_Origen = _matchCuit.Value.Replace("-", "").Replace("/", "");
+                                        break;
+                                    case 1:                                    
                                         datosExtraidos.Cuit_Origen = _matchCuit.Value;
                                         break;
                                         /*
@@ -88,7 +90,7 @@ namespace ApiFP.Services.Parser
                                 datosExtraidos.Cuit_Destino = line[line.Length - 1];
                             }
                         }
-                        datosExtraidos.Cuit_Destino = datosExtraidos.Cuit_Destino.Replace("-", "");
+                        datosExtraidos.Cuit_Destino = datosExtraidos.Cuit_Destino.Replace("-", "").Replace("/", "");
                         continue;
                     }
                 }

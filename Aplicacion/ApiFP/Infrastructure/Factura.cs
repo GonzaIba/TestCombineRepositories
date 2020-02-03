@@ -130,47 +130,53 @@ namespace ApiFP.Infrastructure
 
             if (!String.IsNullOrEmpty(this.CuitOrigen))
             {
-
-                // buscar cuit en base de datos si existe
-                ApplicationDbContext db = new ApplicationDbContext();
-                var empresa = db.Empresas.Where(x => x.Cuit == this.CuitOrigen).FirstOrDefault();
-                //si no existe buscar en afip
-
-                // guardar nuevo cuit en base de datos
-                if (empresa == null)
+                try
                 {
+                    // buscar cuit en base de datos si existe
+                    ApplicationDbContext db = new ApplicationDbContext();
+                    var empresa = db.Empresas.Where(x => x.Cuit == this.CuitOrigen).FirstOrDefault();
+                    //si no existe buscar en afip
 
-                    var service = new AfipClientService();
-                    try
+                    // guardar nuevo cuit en base de datos
+                    if (empresa == null)
                     {
-                        var responseConsulta = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
 
-                        if ((responseConsulta != null) && (responseConsulta.datosGenerales != null))
+                        var service = new AfipClientService();
+                        try
                         {
-                            this.DomicilioComercial = responseConsulta.datosGenerales.domicilioFiscal.direccion ?? "";
-                            this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.localidad ?? "";
-                            this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.descripcionProvincia ?? "";
+                            var responseConsulta = service.ConsultaInscripcion(this.CuitOrigen, "PROD");
+
+                            if ((responseConsulta != null) && (responseConsulta.datosGenerales != null))
+                            {
+                                this.DomicilioComercial = responseConsulta.datosGenerales.domicilioFiscal.direccion ?? "";
+                                this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.localidad ?? "";
+                                this.DomicilioComercial += " " + responseConsulta.datosGenerales.domicilioFiscal.descripcionProvincia ?? "";
 
 
-                            // insrtar nuevo registro de empresa
+                                // insrtar nuevo registro de empresa
 
-                            empresa = new Empresa();
-                            empresa.Cuit = this.CuitOrigen;
-                            empresa.DomicilioComercial = this.DomicilioComercial;
-                            empresa.Nombre = responseConsulta.datosGenerales.razonSocial ?? responseConsulta.datosGenerales.nombre + " " + responseConsulta.datosGenerales.apellido;
-                            empresa.Insert();
+                                empresa = new Empresa();
+                                empresa.Cuit = this.CuitOrigen;
+                                empresa.DomicilioComercial = this.DomicilioComercial;
+                                empresa.Nombre = responseConsulta.datosGenerales.razonSocial ?? responseConsulta.datosGenerales.nombre + " " + responseConsulta.datosGenerales.apellido;
+                                empresa.Insert();
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
 
                         }
+
                     }
-                    catch (Exception ex)
+                    else
                     {
-
+                        this.DomicilioComercial = empresa.DomicilioComercial;
                     }
-
                 }
-                else
+                catch (Exception ex)
                 {
-                    this.DomicilioComercial = empresa.DomicilioComercial;
+
                 }
             }
         }
