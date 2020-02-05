@@ -20,12 +20,8 @@ namespace ApiFP.Services.Parser
             this._palabrasClave = new List<string>
             {
                 "fecha",
-                "fecha de emisi",
                 "fecha emisi",
-                "fecha de emisión",
-                "fecha:",
-                "fecha :",
-                "fecha : "
+                "fecha de emisi"
             };
 
             this._rxFecha = new List<Regex>
@@ -43,14 +39,22 @@ namespace ApiFP.Services.Parser
                 {
                     if (lineas[i].Contains(PALABRA_CLAVE_FECHA) || _palabrasClave.Any(p => lineas[i].ToLower().Contains(p)))
                     {
-                        string[] palabras = lineas[i].Split();
-                        int indiceFecha = ObtenerIndiceFecha(palabras);
+                        if (lineas[i].Any(Char.IsWhiteSpace))
+                        {
+                            string[] palabras = lineas[i].Split();
+                            int indiceFecha = ObtenerIndiceFecha(palabras);
 
-                        datosExtraidos.Fecha = indiceFecha.Equals(-1)
-                            ? EsFecha(lineas[i - 1]) ? lineas[i - 1] : String.Empty
-                            : palabras[indiceFecha];
+                            datosExtraidos.Fecha = indiceFecha.Equals(-1)
+                                ? EsFecha(lineas[i - 1]) ? lineas[i - 1] : String.Empty
+                                : palabras[indiceFecha];
 
-                        break;
+                            break;
+                        }
+                        else
+                        {
+                            int indiceFecha = lineas.First().IndexOf(':') + 1;
+                            datosExtraidos.Fecha = lineas.First().Substring(indiceFecha);
+                        }
                     }
 
                     if (EsFecha(lineas[i]))
@@ -69,6 +73,7 @@ namespace ApiFP.Services.Parser
         private int ObtenerIndiceFecha(string[] textos)
         {
             int indiceFecha = -1;
+
             for(int i = 0; i < textos.Length; i++)
             {
                 if (EsFecha(textos[i]))
