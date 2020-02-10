@@ -13,7 +13,7 @@ namespace ApiFP.Services.Parser
 
         public ParserItem()
         {
-            caracteresOmitidos = ConfigurationManager.AppSettings["CARACTERES_OMITIDOS"];        
+            caracteresOmitidos = ConfigurationManager.AppSettings["CARACTERES_OMITIDOS"];            
         }
 
         public abstract void Parse(Business.DatosFactura datosExtraidos, String[] lineas);
@@ -35,13 +35,13 @@ namespace ApiFP.Services.Parser
             return "";
         }
 
-        protected string filtrarNumerosAlFinal(string linea)
+        protected string FiltrarNumerosAlFinal(string linea)
         {
             string patron = ConfigurationManager.AppSettings["NUMEROS_AL_FINAL_PATTERN"];
             return Regex.Replace(linea, patron, "");
         }
 
-        protected bool tieneInformacionValida(string linea)
+        protected virtual bool TieneInformacionValida(string linea)
         {
             string patron_numeros = ConfigurationManager.AppSettings["DETALLE_REGEX_PATTERN"];
             string palabrasAOmitir = ConfigurationManager.AppSettings["DETALLE_OMITIR_PALABRAS"];
