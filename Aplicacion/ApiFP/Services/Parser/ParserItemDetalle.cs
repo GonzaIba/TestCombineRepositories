@@ -22,21 +22,38 @@ namespace ApiFP.Services.Parser
             palabrasFinDetalle = new List<string>
             {
                 "otros tributos",
-                "importe"
+                "importe",
+                "iva 2.5",
+                "subtotal",
+                "son pesos",
+                "cuota",
+                "total",
+                "3071171928406000400000000000000",
+                "periodo facturado",
+                "pagada el"
             };
 
             patrones = new List<string>
             {
                 @"\$\s*",
                 @"[\d,]+[\.][\d]{2}",
-                @"\([0-9][0-9]%\)"
+                @"(\()?[0-9][0-9]([\.][\d]{2})?%(\))?",
+                @"[\d]+,[\d]{2}",
+                @"%",
+                @"\(\)"
             };
             
             expressions = new List<Regex>
             { 
-                new Regex(@"U. medida$", options),      //Facturas 1,2,3,4,13
-                new Regex(@"^IVA$", options),           //Facturas 1,2,3,4,13
-                new Regex(@"Cantidad Descripcion P. Unitario", options)     //Facturas 5 y 6
+                new Regex(@"U. medida$", options),      //Facturas 1, 2, 3, 4 y 13
+                new Regex(@"^IVA$", options),           //Facturas 1, 2, 3, 4 y 13
+                new Regex(@"Cantidad Descripcion P. Unitario", options),     //Facturas 5 y 6
+                new Regex(@"Cód. Artículo Observaciones", options),   //Facturas 7, 8, 11
+                new Regex(@"Descripción Cantidad Importe", options),     //Factura 9
+                new Regex(@"Cantidad Código", options),      //Factura 10
+                new Regex(@"Codigo Producto", options),      //Factura 12
+                new Regex(@"CANT. DESCRIPCION", options),     //Facturas 14, 15, 16 y 17
+                new Regex(@"tidad        Descripción", options)     //Facturas 18 y 19
             };
         }
 
@@ -52,11 +69,8 @@ namespace ApiFP.Services.Parser
                     while (!EsFinDetalle(lineas[i]))
                     {
                         datosExtraidos.Detalle += TieneInformacionValida(lineas[i])
-                            ? tipoDetalle == 0 || tipoDetalle == 1
-                                    ? FiltrarNumerosAlFinal(lineas[i]) + " "
-                                    : tipoDetalle.Equals(2)
-                                        ? FiltrarCaracteres(lineas[i]) + " "
-                                        : String.Empty
+                            ? tipoDetalle < 2
+                                    ? FiltrarNumerosAlFinal(lineas[i]) + " " : FiltrarCaracteres(lineas[i]) + " "
                             : String.Empty;
 
                         i++;
