@@ -104,7 +104,8 @@ namespace ApiFP.Services
                     new ParserItemNumeroFactura(),
                     new ParserItemImporteTotal(),
                     new ParserItemDomicilioComercial(),
-                    new ParserItemDetalle()
+                    new ParserItemDetalle(),
+                    new ParserItemFecha()
                 };
             foreach (ParserItem parser in parserList)
             {
@@ -131,13 +132,6 @@ namespace ApiFP.Services
                 {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Percepciones = palabras[palabras.Length - 1];
-                    continue;
-                }
-
-                if (lineas[i].Contains(PALABRA_CLAVE_FECHA) || lineas[i].ToLower().Contains("fecha:"))
-                {
-                    string[] palabras = lineas[i].Split();
-                    datosExtraidos.Fecha = palabras[palabras.Length - 1];
                     continue;
                 }
 

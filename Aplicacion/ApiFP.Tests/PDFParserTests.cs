@@ -2,13 +2,16 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Diagnostics;
 
 namespace ApiFP.Tests
 {
     [TestClass]
     public partial class PDFParserTests
     {
-   
+        CultureInfo culture = new CultureInfo("es-ES");
+
         [TestMethod]
         public void Parse01()
         {
@@ -19,6 +22,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "20082082531");
             Assert.IsTrue(factura.Importe == "2000.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("26/12/2018", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -31,6 +36,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "20260497627");
             Assert.IsTrue(factura.Importe == "1800.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("31/03/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -43,6 +50,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "20288620718");
             Assert.IsTrue(factura.Importe == "850.00");
             Assert.IsTrue(factura.CuitDestino == "33557848709");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("07/03/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -55,6 +64,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "23084320269");
             Assert.IsTrue(factura.Importe == "4109.00");
             Assert.IsTrue(factura.CuitDestino == "30708221542");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("08/01/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -67,6 +78,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30711203660");
             Assert.IsTrue(factura.Importe == "3464.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("14/06/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -79,6 +92,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30715576909");
             Assert.IsTrue(factura.Importe == "1250.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("05/11/2018", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -91,6 +106,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "20329565980");
             Assert.IsTrue(factura.Importe == "377.00");
             Assert.IsTrue(factura.CuitDestino == "30715237306");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("04/05/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -103,6 +120,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30714687650");
             Assert.IsTrue(factura.Importe == "2781.79");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("01/02/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -115,6 +134,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "20300376879");
             Assert.IsTrue(factura.Importe == "2231.24");
             Assert.IsTrue(factura.CuitDestino == "30716248794");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("05/06/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -127,6 +148,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30715079107");
             Assert.IsTrue(factura.Importe == "9075.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("13/06/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -139,17 +162,9 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30715259601");
             Assert.IsTrue(factura.Importe == "3427.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
-        }
-
-        [TestMethod]
-        public void ParseNoFactura()
-        {
-            var factura = new Infrastructure.Factura();
-            factura.Parse(_facturas["NO_FACTURA"]);
-            Assert.IsTrue(factura.Numero == "");
-            Assert.IsTrue(factura.Tipo == "");
-            Assert.IsTrue(factura.CuitOrigen == "");
-        }
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("25/06/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }        
 
         [TestMethod]
         public void Parse12()
@@ -161,6 +176,22 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "20225898082");
             Assert.IsTrue(factura.Importe == "18293.51");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("24/01/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void Parse13()
+        {
+            var factura = new Infrastructure.Factura();
+            factura.Parse(_facturas["13"]);
+            Assert.IsTrue(factura.Numero == "00002-00000233");
+            Assert.IsTrue(factura.Tipo == "C");
+            Assert.IsTrue(factura.CuitOrigen == "27264211358");
+            Assert.IsTrue(factura.Importe == "1700.00");
+            Assert.IsTrue(factura.CuitDestino == "20251069116");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("04/02/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -173,6 +204,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30711719284");
             Assert.IsTrue(factura.Importe == "950.00");
             Assert.IsTrue(factura.CuitDestino == "11111111113");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("21/01/2020", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -185,6 +218,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30711738572");
             Assert.IsTrue(factura.Importe == "858.00");
             Assert.IsTrue(factura.CuitDestino == "11111111113");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("03/09/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -197,6 +232,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "33714975299");
             Assert.IsTrue(factura.Importe == "850.00");
             Assert.IsTrue(factura.CuitDestino == "30534418856");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("07/01/2020", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -209,6 +246,8 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30714990973");
             Assert.IsTrue(factura.Importe == "2540.57");
             Assert.IsTrue(factura.CuitDestino == "11111111113");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("21/01/2020", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
         [TestMethod]
@@ -221,6 +260,32 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.CuitOrigen == "30583701040");
             //Assert.IsTrue(factura.Importe == "2204.00");
             Assert.IsTrue(factura.CuitDestino == "30715149555");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("21/11/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void Parse19()
+        {
+            var factura = new Infrastructure.Factura();
+            factura.Parse(_facturas["19"]);
+            Assert.IsTrue(factura.Numero == "0006-00453229");
+            Assert.IsTrue(factura.Tipo == "B");
+            Assert.IsTrue(factura.CuitOrigen == "30583701040");
+            //Assert.IsTrue(factura.Importe == "675.00");
+            Assert.IsTrue(factura.CuitDestino == "30663850446");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("13/11/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void ParseNoFactura()
+        {
+            var factura = new Infrastructure.Factura();
+            factura.Parse(_facturas["NO_FACTURA"]);
+            Assert.IsTrue(factura.Numero == "");
+            Assert.IsTrue(factura.Tipo == "");
+            Assert.IsTrue(factura.CuitOrigen == "");
         }
     }
 }
