@@ -42,9 +42,9 @@ namespace ApiFP.Services.Parser
                 @"%",
                 @"\(\)"
             };
-            
+
             expressions = new List<Regex>
-            { 
+            {
                 new Regex(@"U. medida$", options),      //Facturas 1, 2, 3, 4 y 13
                 new Regex(@"^IVA$", options),           //Facturas 1, 2, 3, 4 y 13
                 new Regex(@"Cantidad Descripcion P. Unitario", options),     //Facturas 5 y 6
@@ -60,30 +60,29 @@ namespace ApiFP.Services.Parser
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
         {
             for (int i = 0; i < lineas.Length; i++)
-            {
+            {                
                 int tipoDetalle = ObtenerTipoDetalle(lineas[i]);
 
                 if (!tipoDetalle.Equals(-1))
                 {
                     i++;
-                    while (!EsFinDetalle(lineas[i]))
+                    while ((i < lineas.Length) && !EsFinDetalle(lineas[i]))
                     {
                         datosExtraidos.Detalle += TieneInformacionValida(lineas[i])
                             ? tipoDetalle < 2
                                     ? FiltrarNumerosAlFinal(lineas[i]) + " " : FiltrarCaracteres(lineas[i]) + " "
                             : String.Empty;
-
                         i++;
                     }
-                }                
+                }
             }
         }
 
         protected override bool TieneInformacionValida(string linea)
         {
             bool resultado = false;
-            
-            if(base.TieneInformacionValida(linea))
+
+            if (base.TieneInformacionValida(linea))
             {
                 resultado = true;
             }
@@ -117,7 +116,7 @@ namespace ApiFP.Services.Parser
 
         private string FiltrarCaracteres(string linea)
         {
-            foreach(string patron in patrones)
+            foreach (string patron in patrones)
             {
                 linea = Regex.Replace(linea, patron, String.Empty, options);
             }

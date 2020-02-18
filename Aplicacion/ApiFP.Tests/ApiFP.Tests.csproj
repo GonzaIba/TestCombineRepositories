@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="PDFParserStrategyTests.cs" />
     <Compile Include="PDFParserFiles.cs" />
+    <Compile Include="PDFParserSistemasAdministrativosTests.cs" />
     <Compile Include="PDFParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
