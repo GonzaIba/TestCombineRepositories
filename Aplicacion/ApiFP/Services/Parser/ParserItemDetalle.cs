@@ -30,7 +30,7 @@ namespace ApiFP.Services.Parser
                 "total",
                 "3071171928406000400000000000000",
                 "periodo facturado",
-                "pagada el"
+                "pagada el"                
             };
 
             patrones = new List<string>
@@ -66,7 +66,7 @@ namespace ApiFP.Services.Parser
                 if (!tipoDetalle.Equals(-1))
                 {
                     i++;
-                    while ((i < lineas.Length) && !EsFinDetalle(lineas[i]))
+                    while ((i < lineas.Length) && !(EsFinDetalle(lineas[i]) || lineas[i].Contains("\0")))
                     {
                         datosExtraidos.Detalle += TieneInformacionValida(lineas[i])
                             ? tipoDetalle < 2
