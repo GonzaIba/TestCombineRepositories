@@ -56,6 +56,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PDFParserServiciosTests.cs" />
     <Compile Include="PDFParserStrategyTests.cs" />
     <Compile Include="PDFParserFiles.cs" />
     <Compile Include="PDFParserSistemasAdministrativosTests.cs" />
@@ -64,6 +65,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="FacturasEjemplo\307146-rosmino.pdf" />
+    <None Include="FacturasEjemplo\Edenor.pdf" />
+    <None Include="FacturasEjemplo\edesur.pdf" />
+    <None Include="FacturasEjemplo\fiber187.pdf" />
+    <None Include="FacturasEjemplo\fiber254.pdf" />
+    <None Include="FacturasEjemplo\PERSONAL.pdf" />
+    <None Include="FacturasEjemplo\SE01_aysa.pdf" />
+    <None Include="FacturasEjemplo\SE02_metrogas.pdf" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
