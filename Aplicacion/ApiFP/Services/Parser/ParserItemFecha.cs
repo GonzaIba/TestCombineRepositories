@@ -9,30 +9,26 @@ namespace ApiFP.Services.Parser
 {
     public class ParserItemFecha : ParserItem
     {
-        private string PALABRA_CLAVE_FECHA;
-        private List<string> _palabrasClave;
-        private List<Regex> _rxFecha;
-        private Match _matchFecha;
+        private Regex patronFecha;
 
         public ParserItemFecha()
         {
-            PALABRA_CLAVE_FECHA = ConfigurationManager.AppSettings["PALABRA_CLAVE_FECHA"];
-            this._palabrasClave = new List<string>
-            {
-                "fecha",
-                "fecha emisi",
-                "fecha de emisi"
-            };
-
-            this._rxFecha = new List<Regex>
-            {
-                new Regex(@"\d{2}/\d{2}/\d{4}"),
-                new Regex(@"\d{2}/\d{2}/\d{2}")
-            };
+            this.patronFecha = new Regex(@"\d{2}/\d{2}/\d{2,4}");
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
         {
+            if (String.IsNullOrEmpty(datosExtraidos.Fecha))
+            {
+                int indiceFecha = lineas.Select((valor, indice) => new { valor, indice }).Where(par => EsFecha(par.valor)).Select(par => par.indice).FirstOrDefault();
+                var matchFecha = patronFecha.Match(lineas[indiceFecha]);
+                datosExtraidos.Fecha = matchFecha.Value;
+            }            
+        }
+
+        private bool EsFecha(string texto) => patronFecha.IsMatch(texto);
+    }
+}     {
             for (int i = 0; i < lineas.Length; i++)
             {
                 if (String.IsNullOrEmpty(datosExtraidos.Fecha))
