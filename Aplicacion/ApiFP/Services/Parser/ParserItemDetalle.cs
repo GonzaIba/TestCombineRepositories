@@ -9,32 +9,45 @@ namespace ApiFP.Services.Parser
 {
     public class ParserItemDetalle : ParserItem
     {
-        private List<Regex> expressions;
-        private List<string> palabrasFinDetalle;
+        private List<Regex> expresionesInicioDetalle;
+        private List<Regex> expresionesFinDetalle;
         private List<string> patrones;
-        private Match _match;
-        private RegexOptions options;
+        private RegexOptions opciones;
 
         public ParserItemDetalle()
         {
-            options = RegexOptions.IgnoreCase;
+            opciones = RegexOptions.IgnoreCase;
 
-            palabrasFinDetalle = new List<string>
+            expresionesFinDetalle = new List<Regex>
             {
-                "otros tributos",
-                "importe",
-                "iva 2.5",
-                "subtotal",
-                "son pesos",
-                "cuota",
-                "total",
-                "3071171928406000400000000000000",
-                "periodo facturado",
-                "pagada el"                
+                new Regex(@"Otros Tributos", opciones),
+                new Regex(@"Importe", opciones),
+                new Regex(@"IVA 2.5", opciones),
+                new Regex(@"Subtotal", opciones),
+                new Regex(@"son pesos", opciones),
+                new Regex(@"Cuota", opciones),
+                new Regex(@"Total", opciones),
+                new Regex(@"3071171928406000400000000000000", opciones),
+                new Regex(@"Periodo facturado", opciones),
+                new Regex(@"Pagada el", opciones)
+            };
+
+            expresionesInicioDetalle = new List<Regex>
+            {
+                new Regex(@"U. medida$", opciones),      //Facturas 1, 2, 3, 4 y 13
+                new Regex(@"^IVA$", opciones),           //Facturas 1, 2, 3, 4 y 13
+                new Regex(@"Cantidad Descripcion P. Unitario", opciones),     //Facturas 5 y 6
+                new Regex(@"Cód. Artículo Observaciones", opciones),   //Facturas 7, 8, 11
+                new Regex(@"Descripción Cantidad Importe", opciones),     //Factura 9
+                new Regex(@"Cantidad Código", opciones),      //Factura 10
+                new Regex(@"Codigo Producto", opciones),      //Factura 12
+                new Regex(@"CANT. DESCRIPCION", opciones),     //Facturas 14, 15, 16 y 17
+                new Regex(@"tidad        Descripción", opciones)     //Facturas 18 y 19
             };
 
             patrones = new List<string>
             {
+                @"(( [0-9]+ ?\%)?( [0-9]+,[0-9]+)){2,}$",
                 @"\$\s*",
                 @"[\d,]+[\.][\d]{2}",
                 @"(\()?[0-9][0-9]([\.][\d]{2})?%(\))?",
@@ -42,86 +55,21 @@ namespace ApiFP.Services.Parser
                 @"%",
                 @"\(\)"
             };
-
-            expressions = new List<Regex>
-            {
-                new Regex(@"U. medida$", options),      //Facturas 1, 2, 3, 4 y 13
-                new Regex(@"^IVA$", options),           //Facturas 1, 2, 3, 4 y 13
-                new Regex(@"Cantidad Descripcion P. Unitario", options),     //Facturas 5 y 6
-                new Regex(@"Cód. Artículo Observaciones", options),   //Facturas 7, 8, 11
-                new Regex(@"Descripción Cantidad Importe", options),     //Factura 9
-                new Regex(@"Cantidad Código", options),      //Factura 10
-                new Regex(@"Codigo Producto", options),      //Factura 12
-                new Regex(@"CANT. DESCRIPCION", options),     //Facturas 14, 15, 16 y 17
-                new Regex(@"tidad        Descripción", options)     //Facturas 18 y 19
-            };
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
         {
-            for (int i = 0; i < lineas.Length; i++)
-            {                
-                int tipoDetalle = ObtenerTipoDetalle(lineas[i]);
+            if (String.IsNullOrEmpty(datosExtraidos.Detalle))
+            {
+                int indiceInicioDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => expresionesInicioDetalle.Any(e => e.IsMatch(par.valor))).Select(par => par.indice).FirstOrDefault() + 1;
+                int indiceFinDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => expresionesFinDetalle.Any(e => e.IsMatch(par.valor)) && par.indice > indiceInicioDetalle).Select(par => par.indice).FirstOrDefault();
 
-                if (!tipoDetalle.Equals(-1))
+                if (indiceInicioDetalle > 0 && indiceFinDetalle > indiceInicioDetalle)
                 {
-                    i++;
-                    while ((i < lineas.Length) && !(EsFinDetalle(lineas[i]) || lineas[i].Contains("\0")))
-                    {
-                        datosExtraidos.Detalle += TieneInformacionValida(lineas[i])
-                            ? tipoDetalle < 2
-                                    ? FiltrarNumerosAlFinal(lineas[i]) + " " : FiltrarCaracteres(lineas[i]) + " "
-                            : String.Empty;
-                        i++;
-                    }
+                    for (int i = indiceInicioDetalle; i < indiceFinDetalle; i++)
+                        datosExtraidos.Detalle += TieneInformacionValida(lineas[i]) ? FiltrarPatrones(lineas[i], this.patrones) + " " : String.Empty;
                 }
             }
-        }
-
-        protected override bool TieneInformacionValida(string linea)
-        {
-            bool resultado = false;
-
-            if (base.TieneInformacionValida(linea))
-            {
-                resultado = true;
-            }
-
-            return resultado;
-        }
-
-        private int ObtenerTipoDetalle(string linea)
-        {
-            //bool resultado = palabrasInicioDetalle.Any(p => linea.ToLower().Contains(p));
-            int indiceDetalle = -1;
-
-            foreach (var expression in expressions.Select((value, idx) => new { value, idx }))
-            {
-                this._match = expression.value.Match(linea);
-
-                if (_match.Success)
-                {
-                    indiceDetalle = expression.idx;
-                    break;
-                }
-            }
-
-            return indiceDetalle;
-        }
-
-        private bool EsFinDetalle(string linea)
-        {
-            return palabrasFinDetalle.Any(p => linea.ToLower().Contains(p));
-        }
-
-        private string FiltrarCaracteres(string linea)
-        {
-            foreach (string patron in patrones)
-            {
-                linea = Regex.Replace(linea, patron, String.Empty, options);
-            }
-
-            return linea;
         }
     }
 }
