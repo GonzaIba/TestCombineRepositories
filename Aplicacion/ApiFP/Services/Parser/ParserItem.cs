@@ -28,7 +28,7 @@ namespace ApiFP.Services.Parser
                     {
                         if (palabras.Length <= ++j)
                             return "";
-                    } while (caracteresOmitidos.IndexOf(palabras[j]) >= 0);
+                    } while (caracteresOmitidos.IndexOf(palabras[j]) >= 0 || palabras[j].Contains("Nº"));
                     return palabras[j];
                 }
             }

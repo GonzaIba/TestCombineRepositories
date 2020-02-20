@@ -9,18 +9,20 @@ namespace ApiFP.Services.Parser
 {
     public class ParserItemImporteTotal : ParserItem
     {
-        string PALABRA_CLAVE_IMPORTE_TOTAL;        
+        string PALABRA_CLAVE_IMPORTE_TOTAL;
+        private Regex rgxNumeroDecimal;
 
         public ParserItemImporteTotal()
         {
             PALABRA_CLAVE_IMPORTE_TOTAL = ConfigurationManager.AppSettings["PALABRA_CLAVE_IMPORTE_TOTAL"];
+            rgxNumeroDecimal = new Regex(@"\d+\.\d{2}");
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
         {
             for (int i = 0; i < lineas.Length; i++)
             {
-                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total"))
+                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total") && !lineas[i].ToLower().Contains("recargo"))
                 {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
@@ -40,7 +42,10 @@ namespace ApiFP.Services.Parser
                     }
 
                     datosExtraidos.Importe = datosExtraidos.Importe.Replace("$", "").Trim();
-                    continue;
+                    //continue;
+                    //break;
+                    if (rgxNumeroDecimal.IsMatch(datosExtraidos.Importe))
+                        return;
                 }
 
             }

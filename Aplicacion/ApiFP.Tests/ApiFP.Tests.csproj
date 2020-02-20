@@ -70,9 +70,9 @@
     <None Include="FacturasEjemplo\edesur.pdf" />
     <None Include="FacturasEjemplo\fiber187.pdf" />
     <None Include="FacturasEjemplo\fiber254.pdf" />
-    <None Include="FacturasEjemplo\PERSONAL.pdf" />
     <None Include="FacturasEjemplo\SE01_aysa.pdf" />
     <None Include="FacturasEjemplo\SE02_metrogas.pdf" />
+    <None Include="FacturasEjemplo\SE03_personal.pdf" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
