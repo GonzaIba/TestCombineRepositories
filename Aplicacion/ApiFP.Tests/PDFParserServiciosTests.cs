@@ -71,5 +71,45 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Fecha == DateTime.Parse("10/12/2019", culture));
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
+
+        [TestMethod]
+        public void Parse04()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\SE04_edenor.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "0014-07891518");
+            Assert.IsTrue(factura.Tipo == "A");
+            //Assert.IsTrue(factura.CuitOrigen == "30639453738");
+            Assert.IsTrue(factura.Importe == "13958.32");
+            Assert.IsTrue(factura.CuitDestino == "30707831142");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("20/11/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void Parse05()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\SE05_edesur.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "0201-05213990");
+            Assert.IsTrue(factura.Tipo == "B");
+            //Assert.IsTrue(factura.CuitOrigen == "30639453738");
+            Assert.IsTrue(factura.Importe == "1377.78");
+            Assert.IsTrue(factura.CuitDestino == "20164979025");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("27/11/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
     }
 }

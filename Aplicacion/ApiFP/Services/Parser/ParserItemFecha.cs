@@ -20,7 +20,7 @@ namespace ApiFP.Services.Parser
         {
             if (String.IsNullOrEmpty(datosExtraidos.Fecha))
             {
-                int indiceFecha = lineas.Select((valor, indice) => new { valor, indice }).Where(par => EsFecha(par.valor)).Select(par => par.indice).FirstOrDefault();
+                int indiceFecha = lineas.Select((valor, indice) => new { valor, indice }).Where(par => EsFecha(par.valor) && !par.valor.ToLower().Contains("inicio") && !par.valor.ToLower().Contains("venc") && !par.valor.ToLower().Contains("per")).Select(par => par.indice).FirstOrDefault();
                 var matchFecha = patronFecha.Match(lineas[indiceFecha]);
                 datosExtraidos.Fecha = matchFecha.Value;
             }            

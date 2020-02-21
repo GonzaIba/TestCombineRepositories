@@ -22,7 +22,9 @@ namespace ApiFP.Services.Parser
         {
             for (int i = 0; i < lineas.Length; i++)
             {
-                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total") && !lineas[i].ToLower().Contains("recargo"))
+                if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total") &&
+                    !(lineas[i].ToLower().Contains("recargo") || lineas[i].ToLower().Contains("sub") ||
+                    lineas[i].ToLower().Contains("iva")))
                 {
                     string[] palabras = lineas[i].Split();
                     datosExtraidos.Importe = palabras[palabras.Length - 1];
