@@ -13,7 +13,7 @@ namespace ApiFP.Services.Parser
 
         public ParserItemFecha()
         {
-            this.patronFecha = new Regex(@"\d{2}/\d{2}/\d{2,4}");
+            this.patronFecha = new Regex(@"\d{2}[/|-]\d{2}[/|-]\d{2,4}");
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)

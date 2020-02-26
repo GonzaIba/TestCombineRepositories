@@ -13,6 +13,8 @@ namespace ApiFP.Services.Parser
         private List<string> _tipoLista;
         private List<string> _tipoListaCodigo;
 
+        private List<Regex> rgxCodigoFactura;
+
         public ParserItemTipo()
         {
             PALABRA_CLAVE_TIPO = ConfigurationManager.AppSettings["PALABRA_CLAVE_TIPO"];
@@ -25,6 +27,12 @@ namespace ApiFP.Services.Parser
             _tipoListaCodigo = new List<string>()
             {
                 "código n° 06", "Código N 06","Código N 6","Codigo N 06"
+            };
+
+            rgxCodigoFactura = new List<Regex>
+            {
+                new Regex(@""),
+                new Regex(@"")
             };
         }
 
@@ -42,6 +50,16 @@ namespace ApiFP.Services.Parser
                     //        return;
                     //    }
                     //}
+
+                    if (lineas[i].ToLower().Contains("cod") || lineas[i].ToLower().Contains("cód"))
+                    {
+                        String codigo = lineas[i].Split().Last();
+                        if (codigo == "01")
+                            datosExtraidos.Tipo = "A";
+                        else if (codigo == "06")
+                            datosExtraidos.Tipo = "B";
+                        continue;
+                    }
                     
                     if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO))
                     {

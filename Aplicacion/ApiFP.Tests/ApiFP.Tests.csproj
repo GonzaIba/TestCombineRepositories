@@ -65,14 +65,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="FacturasEjemplo\307146-rosmino.pdf" />
-    <None Include="FacturasEjemplo\Edenor.pdf" />
-    <None Include="FacturasEjemplo\edesur.pdf" />
-    <None Include="FacturasEjemplo\fiber187.pdf" />
-    <None Include="FacturasEjemplo\fiber254.pdf" />
     <None Include="FacturasEjemplo\SE01_aysa.pdf" />
     <None Include="FacturasEjemplo\SE02_metrogas.pdf" />
     <None Include="FacturasEjemplo\SE03_personal.pdf" />
+    <None Include="FacturasEjemplo\SE04_edenor.pdf" />
+    <None Include="FacturasEjemplo\SE05_edesur.pdf" />
+    <None Include="FacturasEjemplo\SE06_fiber187.pdf" />
+    <None Include="FacturasEjemplo\SE07_fiber254.pdf" />
+    <None Include="FacturasEjemplo\SE08_307146-rosmino.pdf" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +81,7 @@
       <Name>ApiFP</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

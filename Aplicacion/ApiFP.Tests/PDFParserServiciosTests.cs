@@ -105,10 +105,70 @@ namespace ApiFP.Tests
             factura.Parse(file);
             Assert.IsTrue(factura.Numero == "0201-05213990");
             Assert.IsTrue(factura.Tipo == "B");
-            //Assert.IsTrue(factura.CuitOrigen == "30639453738");
+            Assert.IsTrue(factura.CuitOrigen == "30639453738");
             Assert.IsTrue(factura.Importe == "1377.78");
             Assert.IsTrue(factura.CuitDestino == "20164979025");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("27/11/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void Parse06()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\SE06_fiber187.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "8340-03361897");
+            Assert.IsTrue(factura.Tipo == "A");
+            Assert.IsTrue(factura.CuitOrigen == "30639453738");
+            Assert.IsTrue(factura.Importe == "10443.41");
+            Assert.IsTrue(factura.CuitDestino == "30707831142");
+            //Assert.IsTrue(factura.Fecha == DateTime.Parse("14/12/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void Parse07()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\SE07_fiber254.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "8340-03378254");
+            Assert.IsTrue(factura.Tipo == "A");
+            Assert.IsTrue(factura.CuitOrigen == "30639453738");
+            Assert.IsTrue(factura.Importe == "5543.02");
+            Assert.IsTrue(factura.CuitDestino == "30707831142");
+            //Assert.IsTrue(factura.Fecha == DateTime.Parse("14/12/2019", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+
+        [TestMethod]
+        public void Parse08()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\SE08_307146-rosmino.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "8340-03361897");
+            Assert.IsTrue(factura.Tipo == "A");
+            Assert.IsTrue(factura.CuitOrigen == "30639453738");
+            Assert.IsTrue(factura.Importe == "10443.41");
+            Assert.IsTrue(factura.CuitDestino == "30707831142");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("14/12/2019", culture));
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
     }
