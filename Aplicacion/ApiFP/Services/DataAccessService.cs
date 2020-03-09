@@ -46,7 +46,8 @@ namespace ApiFP.Services
                 "From Facturas as fac " +
                 "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
                 "Left join EstadoFactura as ef on fac.EstadoFacturaFK = ef.Id " +
-                "Where fac.UserIdFK = @user and fac.EstadoFacturaFK <> 3", new SqlParameter("@user", userId)); //.ToList();
+                "Where fac.UserIdFK = @user and fac.EstadoFacturaFK <> 3 " +
+                "Order by fac.FechaCreacion desc", new SqlParameter("@user", userId)); //.ToList();
 
             if (facturaId != null)
             {
@@ -86,7 +87,7 @@ namespace ApiFP.Services
                 "Left join EstadoFactura as ef on fac.EstadoFacturaFK = ef.Id " +
                 "Where fac.UserIdFK = @user " +
                     "and FechaCreacion > dateadd(day, -30, getdate()) " +
-                    "Order by EstadoFactura, fac.FechaCreacion desc", new SqlParameter("@user", userId));
+                    "Order by fac.FechaCreacion desc, EstadoFactura", new SqlParameter("@user", userId));
 
             return facturasList.ToList();
         }
