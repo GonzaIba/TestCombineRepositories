@@ -26,7 +26,10 @@ namespace ApiFP.Services.Parser
                 new Regex(@"^\d{4,5} \d{8}"),
                 new Regex(@"[A,B,C]{1}-\d{4,5}-\d{8}"),
                 new Regex(@"\d{4,5}-\d{8}"),
-                new Regex(@"[A,B,C]{1}\d{4,5}-\d{8}")
+                new Regex(@"[A,B,C]{1}\d{4,5}-\d{8}"),
+                new Regex(@"\d{4} - \d{8}"),
+                new Regex(@"\d{4}[A|B|C]\d{8}"),
+                new Regex(@"[A|B|C]\s\d{4}-\d{8}")
             };            
         }
 
@@ -62,6 +65,17 @@ namespace ApiFP.Services.Parser
                                     datosExtraidos.Numero = caracteres.Substring(1);
                                     //datosExtraidos.Tipo = palabras[0];
                                     //datosExtraidos.Numero = palabras[1] + "-" + palabras[2];
+                                    break;
+                                case 6:
+                                    datosExtraidos.Numero = _matchesNumeroFactura.Value.Replace(" ", "");
+                                    break;
+                                case 7:
+                                    datosExtraidos.Numero = _matchesNumeroFactura.Value.Replace("A", "-").Replace("B", "-").Replace("C", "-");
+                                    break;
+                                case 8:
+                                    String numero = _matchesNumeroFactura.Value;
+                                    datosExtraidos.Tipo = numero[0].ToString();
+                                    datosExtraidos.Numero = numero.Remove(0, 2);
                                     break;
                             }
                         }

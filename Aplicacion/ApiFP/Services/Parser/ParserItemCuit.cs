@@ -22,7 +22,7 @@ namespace ApiFP.Services.Parser
             _rxCuit = new List<Regex>()
             {
                 new Regex(@"^\d{2}-\d{8}-\d{1}"),
-                new Regex(@"^[2|3]\d{10}"),
+                new Regex(@"^[1|2|3]\d{10}"),
                 new Regex(@"\d{2}-\d{8}-\d{1}"),
                 new Regex(@"\d{2}-\d{8}/\d{1}"),
                 new Regex(@":[2|3]\d{10}")
@@ -38,21 +38,24 @@ namespace ApiFP.Services.Parser
                 {
                     if (lineas[i].Contains(PALABRA_CLAVE_CUIT) && !_primerCuitEncontrado)
                     {
-                        bool esFormato16 = lineas[i].Contains("I.V.A.   : CF - CUIT");
+                        bool esCUITDestino = (lineas[i].Contains("I.V.A.   : CF - CUIT")) ||
+                            (lineas[i - 2].ToLower().Contains("situación iva:")) ||
+                            (lineas[i + 1].ToLower().Contains("evolución"));
 
                         string[] palabras = lineas[i].Split();
                         String cuit = encontrarSiguientePalabra(palabras, PALABRA_CLAVE_CUIT).Replace("-", "").Replace("/", "");
 
-                        if (!esFormato16)
-                            datosExtraidos.Cuit_Origen = cuit;
-                        else
-                            datosExtraidos.Cuit_Destino = cuit;
+                        if (_rxCuit[1].IsMatch(cuit))
+                        {
+                            if (!esCUITDestino)
+                                datosExtraidos.Cuit_Origen = cuit;
+                            else
+                                datosExtraidos.Cuit_Destino = cuit;
 
-                        _primerCuitEncontrado = true;
-                        continue;
+                            _primerCuitEncontrado = true;
+                            continue;
+                        }
                     }
-
-
 
                     if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
                     {
@@ -74,12 +77,6 @@ namespace ApiFP.Services.Parser
                                     case 4:
                                         datosExtraidos.Cuit_Origen = _matchCuit.Value.Replace(":", "");
                                         break;
-                                        /*
-                                    case 2:
-                                        var palabras = lineas[i].Split();
-                                        datosExtraidos.Cuit_Origen = palabras[palabras.Length - 1].Trim();
-                                        break;
-                                        */
                                 }
                                 _primerCuitEncontrado = !String.IsNullOrEmpty(datosExtraidos.Cuit_Origen);
                             }
@@ -107,8 +104,9 @@ namespace ApiFP.Services.Parser
                             }
                         }
                         datosExtraidos.Cuit_Destino = datosExtraidos.Cuit_Destino.Replace("-", "").Replace("/", "");
-                        //continue;
 
+                        if (String.IsNullOrEmpty(datosExtraidos.Cuit_Destino) == false)
+                            return;
                     }
 
                     if (String.IsNullOrEmpty(datosExtraidos.Cuit_Destino))
@@ -131,14 +129,11 @@ namespace ApiFP.Services.Parser
                                     case 4:
                                         datosExtraidos.Cuit_Destino = _matchCuit.Value.Replace(":", "");
                                         break;
-                                        /*
-                                    case 2:
-                                        var palabras = lineas[i].Split();
-                                        datosExtraidos.Cuit_Origen = palabras[palabras.Length - 1].Trim();
-                                        break;
-                                        */
                                 }
-                                return;
+                                if (datosExtraidos.Cuit_Origen == datosExtraidos.Cuit_Destino)
+                                    datosExtraidos.Cuit_Destino = String.Empty;
+                                else
+                                    return;
                             }
                         }
                     }

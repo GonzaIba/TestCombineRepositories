@@ -11,6 +11,7 @@ namespace ApiFP.Services.Parser
     {
         string PALABRA_CLAVE_IMPORTE_TOTAL;
         private List<Regex> _rgxImporte;
+        private Regex rgxDetalleImpuestos;
 
         public ParserItemImporteTotal()
         {
@@ -21,6 +22,8 @@ namespace ApiFP.Services.Parser
                 new Regex(@"\A\d+\.\d{3},\d{2}\Z"),
                 new Regex(@"\A\d+,\d{3}\.\d{2}\Z")
             };
+
+            rgxDetalleImpuestos = new Regex(@"subtotal.*iva.*total\Z");
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
@@ -29,6 +32,18 @@ namespace ApiFP.Services.Parser
             {
                 if (String.IsNullOrEmpty(datosExtraidos.Importe))
                 {
+
+                    //if (lineas[i].ToLower().Contains("subtotal iva total"))
+                    //{
+                        
+                    //}
+
+                    if (rgxDetalleImpuestos.IsMatch(lineas[i].ToLower()))
+                    {
+                        String[] palabras = lineas[++i].Split();
+                        datosExtraidos.Importe = DarFormato(palabras.Last().Replace("$", ""));
+                        continue;
+                    }
 
                     if (lineas[i].Contains(PALABRA_CLAVE_IMPORTE_TOTAL) || lineas[i].ToLower().Contains("total") &&
                     !(lineas[i].ToLower().Contains("recargo") || lineas[i].ToLower().Contains("sub") ||
