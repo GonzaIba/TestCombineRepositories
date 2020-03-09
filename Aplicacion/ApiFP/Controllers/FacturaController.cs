@@ -56,7 +56,7 @@ namespace ApiFP.Controllers
                 }
 
                 if (
-                    (createFacturaModel.Numero != null && createFacturaModel.CuitOrigen != null && createFacturaModel.Tipo != null) 
+                    (!String.IsNullOrEmpty(createFacturaModel.Numero) && !String.IsNullOrEmpty(createFacturaModel.CuitOrigen) && !String.IsNullOrEmpty(createFacturaModel.Tipo)) 
                     && 
                     (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen, createFacturaModel.Tipo) > 0)
                     )
@@ -84,11 +84,13 @@ namespace ApiFP.Controllers
                     ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
                     UserIdFK = User.Identity.GetUserId(),
                     SinArchivo = createFacturaModel.SinArchivo,
-                    EstadoFacturaFK = 1,
+                    //EstadoFacturaFK = 1,
                     DomicilioComercial = createFacturaModel.DomicilioComercial
                 };
-
                 factura.ReadDate(createFacturaModel.Fecha);
+
+                factura.EstadoFacturaFK = factura.ConfirmacionValida() ? 1 : 4;
+
                 //if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
 
                 factura.Insert();
@@ -172,6 +174,7 @@ namespace ApiFP.Controllers
                         factura.Percepciones = createFacturaModel.Percepciones;
                         factura.ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados;
                         factura.DomicilioComercial = createFacturaModel.DomicilioComercial;
+                        factura.EstadoFacturaFK = factura.ConfirmacionValida() ? 1 : 4;
 
                         db.SaveChanges();
                     }
