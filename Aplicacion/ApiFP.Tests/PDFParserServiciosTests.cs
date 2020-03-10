@@ -69,7 +69,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "527.78");
             //Assert.IsTrue(factura.CuitDestino == "20315762694"); //No sale en la factura
             Assert.IsTrue(factura.Fecha == DateTime.Parse("10/12/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
 
         [TestMethod]
@@ -89,7 +89,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "13958.32");
             Assert.IsTrue(factura.CuitDestino == "30707831142");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("20/11/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "10443.41");
             Assert.IsTrue(factura.CuitDestino == "30707831142");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("14/12/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
 
         [TestMethod]
@@ -149,7 +149,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "5543.02");
             Assert.IsTrue(factura.CuitDestino == "30707831142");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("14/12/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
 
         [TestMethod]
@@ -169,7 +169,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "560.00");
             Assert.IsTrue(factura.CuitDestino == "30707831142");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("27/11/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
     }
 }
