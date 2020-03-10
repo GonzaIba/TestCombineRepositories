@@ -14,8 +14,6 @@ namespace ApiFP.Services.Parser
         private List<string> patrones;
         private RegexOptions opciones;
 
-        private List<string> lineasDetalle;
-
         enum FacturasServicios
         {
             aysa,
@@ -62,16 +60,16 @@ namespace ApiFP.Services.Parser
 
             patrones = new List<string>
             {
+                @"\d+\.\d{3},\d{2}",
                 @"(( [0-9]+ ?\%)?( [0-9]+,[0-9]+)){2,}$",
                 @"\$\s*",
-                @"[\d,]+[\.][\d]{2}",
+                @"[\d,]+[\.][\d]{2,}",
                 @"(\()?[0-9][0-9]([\.][\d]{2})?%(\))?",
-                @"[\d]+,[\d]{2}",
+                @"[\d]+,[\d]{2,}",
                 @"%",
-                @"\(\)"
+                @"\(\)",
+                @"\.{2,}"
             };
-
-            lineasDetalle = new List<string>();
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
@@ -98,7 +96,7 @@ namespace ApiFP.Services.Parser
                             break;
                         case (int)FacturasServicios.metrogas:
                             indiceInicioDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("cargo fijo")).Select(par => par.indice).FirstOrDefault();
-                            indiceFinDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("total liquidacion") && par.indice > indiceInicioDetalle).Select(par => par.indice).FirstOrDefault();
+                            indiceFinDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("total liquidacion") && par.indice > indiceInicioDetalle).Select(par => par.indice).FirstOrDefault() - 1;
                             break;
                         case (int)FacturasServicios.personal:
                             indiceInicioDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("unitario total")).Select(par => par.indice).FirstOrDefault() + 1;
@@ -113,7 +111,7 @@ namespace ApiFP.Services.Parser
                             indiceFinDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("total a pagar") && par.indice > indiceInicioDetalle).Select(par => par.indice).FirstOrDefault() - 1;
                             break;
                         case (int)FacturasServicios.fibertel:
-                            indiceInicioDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("número de ref")).Select(par => par.indice).FirstOrDefault();
+                            indiceInicioDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("número de ref")).Select(par => par.indice).FirstOrDefault() + 1;
                             indiceFinDetalle = lineas.Select((valor, indice) => new { valor, indice }).Where(par => par.valor.ToLower().Contains("tel. gratuito") && par.indice > indiceInicioDetalle).Select(par => par.indice).FirstOrDefault();
                             break;
                     }

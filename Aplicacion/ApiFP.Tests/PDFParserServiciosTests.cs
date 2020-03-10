@@ -29,7 +29,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "749.18");
             //Assert.IsTrue(factura.CuitDestino == "20315762694"); //No sale en la factura
             Assert.IsTrue(factura.Fecha == DateTime.Parse("30/11/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
         
         [TestMethod]
@@ -49,7 +49,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "759.17");
             Assert.IsTrue(factura.CuitDestino == "11142248600");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("01/11/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "1377.78");
             Assert.IsTrue(factura.CuitDestino == "20164979025");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("27/11/2019", culture));
-            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho pero con lineas duplicadas + 1 linea incorrecta
         }
 
         [TestMethod]
