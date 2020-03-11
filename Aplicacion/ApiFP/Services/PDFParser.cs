@@ -91,7 +91,7 @@ namespace ApiFP.Services
         //y además como parsear esa línea para obtenerla. 
         private Business.DatosFactura extraerDatos(String[] lineas)
         {
-            Regex rxCodigoBarra = new Regex(@"^\d{40,42}$");
+            Regex rxCodigoBarra = new Regex(@"^\d{40,50}$");
             MatchCollection matchesCodigoBarra = null;
             List<string> barCode = new List<string>();
 
@@ -135,11 +135,12 @@ namespace ApiFP.Services
                     continue;
                 }
 
-                if (matchesCodigoBarra == null)
+                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
                 {
                     matchesCodigoBarra = rxCodigoBarra.Matches(lineas[i]);
                     if (matchesCodigoBarra.Count > 0)
                     {
+                        barCode.Clear();
                         foreach (Match item in matchesCodigoBarra)
                         {
                             if (item.Length == 42)
@@ -151,7 +152,9 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(33, 8));
                                 barCode.Add(item.ToString().Substring(41, 1));
 
-                                datosExtraidos.Cuit_Origen = barCode[0];
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
                             }
                             else if (item.Length == 40)
                             {
@@ -161,7 +164,36 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(17, 14));
                                 barCode.Add(item.ToString().Substring(31, 8));
                                 barCode.Add(item.ToString().Substring(39, 1));
-                                datosExtraidos.Cuit_Origen = barCode[0];
+
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
+                            }
+                            else if (item.Length == 46)
+                            {
+                                barCode.Add(item.ToString().Substring(0, 11));
+                                barCode.Add(item.ToString().Substring(11, 2));
+                                barCode.Add(item.ToString().Substring(13, 4));
+                                barCode.Add(item.ToString().Substring(17, 14));
+                                barCode.Add(item.ToString().Substring(31, 8));
+                                barCode.Add(item.ToString().Substring(39, 1));
+
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
+                            }
+                            else if (item.Length == 50)
+                            {
+                                barCode.Add(item.ToString().Substring(0, 11));
+                                barCode.Add(item.ToString().Substring(11, 2));
+                                barCode.Add(item.ToString().Substring(13, 4));
+                                barCode.Add(item.ToString().Substring(17, 14));
+                                barCode.Add(item.ToString().Substring(31, 8));
+                                barCode.Add(item.ToString().Substring(39, 1));
+
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
                             }
                         }
                     }

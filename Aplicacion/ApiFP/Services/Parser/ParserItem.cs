@@ -13,7 +13,7 @@ namespace ApiFP.Services.Parser
 
         public ParserItem()
         {
-            caracteresOmitidos = ConfigurationManager.AppSettings["CARACTERES_OMITIDOS"];            
+            caracteresOmitidos = ConfigurationManager.AppSettings["CARACTERES_OMITIDOS"];
         }
 
         public abstract void Parse(Business.DatosFactura datosExtraidos, String[] lineas);
@@ -28,17 +28,21 @@ namespace ApiFP.Services.Parser
                     {
                         if (palabras.Length <= ++j)
                             return "";
-                    } while (caracteresOmitidos.IndexOf(palabras[j]) >= 0);
+                    } while (caracteresOmitidos.IndexOf(palabras[j]) >= 0 || palabras[j].Contains("Nº"));
                     return palabras[j];
                 }
             }
             return "";
         }
 
-        protected string FiltrarNumerosAlFinal(string linea)
+        protected virtual string FiltrarPatrones(string linea, List<string> patrones = null)
         {
-            string patron = ConfigurationManager.AppSettings["NUMEROS_AL_FINAL_PATTERN"];
-            return Regex.Replace(linea, patron, "");
+            foreach (string patron in patrones)
+            {
+                linea = Regex.Replace(linea, patron, String.Empty, RegexOptions.IgnoreCase);
+            }
+
+            return linea;
         }
 
         protected virtual bool TieneInformacionValida(string linea)

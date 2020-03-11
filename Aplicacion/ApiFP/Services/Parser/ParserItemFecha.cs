@@ -9,103 +9,59 @@ namespace ApiFP.Services.Parser
 {
     public class ParserItemFecha : ParserItem
     {
-        private string PALABRA_CLAVE_FECHA;
-        private List<string> _palabrasClave;
-        private List<Regex> _rxFecha;
-        private Match _matchFecha;
+        private Regex patronFecha;
+
+        private List<String> palabrasNoAceptadas;
 
         public ParserItemFecha()
         {
-            PALABRA_CLAVE_FECHA = ConfigurationManager.AppSettings["PALABRA_CLAVE_FECHA"];
-            this._palabrasClave = new List<string>
-            {
-                "fecha",
-                "fecha emisi",
-                "fecha de emisi"
-            };
+            this.patronFecha = new Regex(@"\d{2}[/|-]\d{2}[/|-]\d{2,4}");
 
-            this._rxFecha = new List<Regex>
+            palabrasNoAceptadas = new List<string>
             {
-                new Regex(@"\d{2}/\d{2}/\d{4}"),
-                new Regex(@"\d{2}/\d{2}/\d{2}")
+                "inicio",
+                "venc",
+                "vto",
+                "per"
             };
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
         {
-            for (int i = 0; i < lineas.Length; i++)
+            if (String.IsNullOrEmpty(datosExtraidos.Fecha))
             {
-                if (String.IsNullOrEmpty(datosExtraidos.Fecha))
+                bool esFacFiber = false;
+
+                for (int i = 0; i < 12; ++i)
+                    if (lineas[i].ToLower().Contains("telecom argentina s.a."))
+                        esFacFiber = true;
+
+                int indiceFecha = 0;
+                
+                if (esFacFiber)
                 {
-                    if (lineas[i].Contains(PALABRA_CLAVE_FECHA) || _palabrasClave.Any(p => lineas[i].ToLower().Contains(p)))
-                    {
-                        if (lineas[i].Any(Char.IsWhiteSpace))
-                        {
-                            string[] palabras = lineas[i].Split();
-                            int indiceFecha = ObtenerIndiceFecha(palabras);
-
-                            datosExtraidos.Fecha = indiceFecha.Equals(-1)
-                                ? EsFecha(lineas[i - 1]) ? lineas[i - 1] : String.Empty
-                                : palabras[indiceFecha];
-
-                            break;
-                        }
-                        else
-                        {
-                            int indiceFecha = lineas.First().IndexOf(':') + 1;
-                            datosExtraidos.Fecha = lineas.First().Substring(indiceFecha);
-                        }
-                    }
-
-                    if (EsFecha(lineas[i]))
-                    {
-                        datosExtraidos.Fecha = _matchFecha.Value;
-                        break;
-                    }
+                    indiceFecha = lineas.Select((valor, indice) => new { valor, indice }).Where(par => EsFecha(par.valor) && par.valor.ToLower().Contains("fecha")).Select(par => par.indice).FirstOrDefault();
                 }
-            }
-        }
-        /// <summary>
-        /// Obtiene el índice del string que concuerda con el formato de fecha.
-        /// Si no hay ninguna coincidencia, retorna -1.
-        /// </summary>
-        /// <returns>Índice de fecha en el arreglo de strings.</returns>
-        private int ObtenerIndiceFecha(string[] textos)
-        {
-            int indiceFecha = -1;
-
-            for(int i = 0; i < textos.Length; i++)
-            {
-                if (EsFecha(textos[i]))
+                else
                 {
-                    indiceFecha = i;
-                    break;
+                    indiceFecha = lineas.Select((valor, indice) => new { valor, indice }).Where(par => EsFecha(par.valor) && checkearLinea(par.valor.ToLower())).Select(par => par.indice).FirstOrDefault();
                 }
-            }
 
-            return indiceFecha;
+                var matchFecha = patronFecha.Match(lineas[indiceFecha]);
+                datosExtraidos.Fecha = matchFecha.Value;
+            }            
         }
 
-        /// <summary>
-        /// Verifica que la cadena de texto corresponda a un formato de fecha válido.
-        /// </summary>
-        /// <param name="texto"></param>
-        /// <returns></returns>
-        private bool EsFecha(string texto)
+        private bool EsFecha(string texto) => patronFecha.IsMatch(texto);
+
+        private bool checkearLinea(String linea)
         {
-            bool resultado = false;
-
-            for (int i = 0; i < _rxFecha.Count; i++)
+            foreach(var s in palabrasNoAceptadas)
             {
-                _matchFecha = _rxFecha[i].Match(texto);
-                if (_matchFecha.Success)
-                {
-                    resultado = true;
-                    break;
-                }
+                if (linea.Contains(s))
+                    return false;
             }
-
-            return resultado;
+            return true;
         }
     }
 }

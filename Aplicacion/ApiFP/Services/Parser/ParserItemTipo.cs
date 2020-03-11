@@ -11,6 +11,9 @@ namespace ApiFP.Services.Parser
     {
         string PALABRA_CLAVE_TIPO;
         private List<string> _tipoLista;
+        private List<string> _tipoListaCodigo;
+
+        private List<Regex> rgxCodigoFactura;
 
         public ParserItemTipo()
         {
@@ -20,6 +23,17 @@ namespace ApiFP.Services.Parser
             {
                 "A","B","C"
             };
+
+            _tipoListaCodigo = new List<string>()
+            {
+                "código n° 06", "Código N 06","Código N 6","Codigo N 06"
+            };
+
+            rgxCodigoFactura = new List<Regex>
+            {
+                new Regex(@""),
+                new Regex(@"")
+            };
         }
 
         override public void Parse(Business.DatosFactura datosExtraidos, String[] lineas)
@@ -28,6 +42,25 @@ namespace ApiFP.Services.Parser
             {
                 if (String.IsNullOrEmpty(datosExtraidos.Tipo))
                 {
+                    //foreach (var s in _tipoListaCodigo)
+                    //{
+                    //    if (lineas[i].ToLower().Contains(s.ToLower()))
+                    //    {
+                    //        datosExtraidos.Tipo = "B";
+                    //        return;
+                    //    }
+                    //}
+
+                    if (lineas[i].ToLower().Contains("cod") || lineas[i].ToLower().Contains("cód"))
+                    {
+                        String codigo = lineas[i].Split().Last();
+                        if (codigo == "01")
+                            datosExtraidos.Tipo = "A";
+                        else if (codigo == "06")
+                            datosExtraidos.Tipo = "B";
+                        continue;
+                    }
+                    
                     if (lineas[i].ToLower().Contains(PALABRA_CLAVE_TIPO))
                     {
                         if (++i < lineas.Length)
