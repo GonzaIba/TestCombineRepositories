@@ -152,7 +152,9 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(33, 8));
                                 barCode.Add(item.ToString().Substring(41, 1));
 
-                                datosExtraidos.Cuit_Origen = barCode[0];
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
                             }
                             else if (item.Length == 40)
                             {
@@ -162,7 +164,10 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(17, 14));
                                 barCode.Add(item.ToString().Substring(31, 8));
                                 barCode.Add(item.ToString().Substring(39, 1));
-                                datosExtraidos.Cuit_Origen = barCode[0];
+
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
                             }
                             else if (item.Length == 46)
                             {
@@ -172,7 +177,10 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(17, 14));
                                 barCode.Add(item.ToString().Substring(31, 8));
                                 barCode.Add(item.ToString().Substring(39, 1));
-                                datosExtraidos.Cuit_Origen = barCode[0];
+
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
                             }
                             else if (item.Length == 50)
                             {
@@ -182,7 +190,10 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(17, 14));
                                 barCode.Add(item.ToString().Substring(31, 8));
                                 barCode.Add(item.ToString().Substring(39, 1));
-                                datosExtraidos.Cuit_Origen = barCode[0];
+
+                                String rst = barCode[0];
+                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                    datosExtraidos.Cuit_Origen = rst;
                             }
                         }
                     }

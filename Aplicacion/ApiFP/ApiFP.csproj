@@ -249,6 +249,7 @@
     </Compile>
     <Compile Include="Helpers\EncryptHelper.cs" />
     <Compile Include="Helpers\LogHelper.cs" />
+    <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Infrastructure\ApplicationDbContext.cs" />
     <Compile Include="Infrastructure\Archivo.cs" />
     <Compile Include="Infrastructure\CentroComputo.cs" />

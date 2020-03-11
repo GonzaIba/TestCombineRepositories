@@ -67,7 +67,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "B");
             Assert.IsTrue(factura.CuitOrigen == "30639453738");
             Assert.IsTrue(factura.Importe == "527.78");
-            //Assert.IsTrue(factura.CuitDestino == "20315762694"); //No sale en la factura
+            Assert.IsTrue(factura.CuitDestino == ""); //No sale en la factura
             Assert.IsTrue(factura.Fecha == DateTime.Parse("10/12/2019", culture));
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}"); //Hecho
         }
@@ -85,7 +85,7 @@ namespace ApiFP.Tests
             factura.Parse(file);
             Assert.IsTrue(factura.Numero == "0014-07891518");
             Assert.IsTrue(factura.Tipo == "A");
-            Assert.IsTrue(factura.CuitOrigen == "63500392427"); //No sale en la factura, lo obtiene del codigo de barras
+            Assert.IsTrue(factura.CuitOrigen == ""); //No sale en la factura
             Assert.IsTrue(factura.Importe == "13958.32");
             Assert.IsTrue(factura.CuitDestino == "30707831142");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("20/11/2019", culture));
@@ -105,7 +105,7 @@ namespace ApiFP.Tests
             factura.Parse(file);
             Assert.IsTrue(factura.Numero == "0201-05213990");
             Assert.IsTrue(factura.Tipo == "B");
-            Assert.IsTrue(factura.CuitOrigen == "00903780407"); //No sale en la factura, lo obtiene del codigo de barras
+            Assert.IsTrue(factura.CuitOrigen == ""); //No sale en la factura
             Assert.IsTrue(factura.Importe == "1377.78");
             Assert.IsTrue(factura.CuitDestino == "20164979025");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("27/11/2019", culture));
