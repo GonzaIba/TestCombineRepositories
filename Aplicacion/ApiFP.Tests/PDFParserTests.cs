@@ -287,5 +287,25 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Tipo == "");
             Assert.IsTrue(factura.CuitOrigen == "");
         }
+
+        [TestMethod]
+        public void Parse20()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\FAC20.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "0003-00001698");
+            Assert.IsTrue(factura.Tipo == "C");
+            Assert.IsTrue(factura.CuitOrigen == "23243371244");
+            //Assert.IsTrue(factura.Importe == "798.00");
+            Assert.IsTrue(factura.CuitDestino == "30539109215");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("13/05/2020", culture));
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
     }
 }

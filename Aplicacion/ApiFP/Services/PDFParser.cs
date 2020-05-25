@@ -135,8 +135,8 @@ namespace ApiFP.Services
                     continue;
                 }
 
-                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
-                {
+                
+                
                     matchesCodigoBarra = rxCodigoBarra.Matches(lineas[i]);
                     if (matchesCodigoBarra.Count > 0)
                     {
@@ -153,8 +153,10 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(41, 1));
 
                                 String rst = barCode[0];
-                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
-                                    datosExtraidos.Cuit_Origen = rst;
+                                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
+                                    if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                        datosExtraidos.Cuit_Origen = rst;
+
                             }
                             else if (item.Length == 40)
                             {
@@ -166,8 +168,9 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(39, 1));
 
                                 String rst = barCode[0];
-                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
-                                    datosExtraidos.Cuit_Origen = rst;
+                                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
+                                    if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                        datosExtraidos.Cuit_Origen = rst;
                             }
                             else if (item.Length == 46)
                             {
@@ -179,8 +182,9 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(39, 1));
 
                                 String rst = barCode[0];
-                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
-                                    datosExtraidos.Cuit_Origen = rst;
+                                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
+                                    if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                        datosExtraidos.Cuit_Origen = rst;
                             }
                             else if (item.Length == 50)
                             {
@@ -192,12 +196,38 @@ namespace ApiFP.Services
                                 barCode.Add(item.ToString().Substring(39, 1));
 
                                 String rst = barCode[0];
-                                if (Helpers.ValidationHelper.ValidateCUIT(rst))
-                                    datosExtraidos.Cuit_Origen = rst;
+                                if (String.IsNullOrEmpty(datosExtraidos.Cuit_Origen))
+                                    if (Helpers.ValidationHelper.ValidateCUIT(rst))
+                                        datosExtraidos.Cuit_Origen = rst;
                             }
                         }
+                    }                
+            }
+
+
+            if (String.IsNullOrEmpty(datosExtraidos.Tipo))
+            {
+                var tipo = barCode?[1];
+
+                if (!String.IsNullOrEmpty(tipo))
+                {
+                    switch (tipo)
+                    {
+
+                        case "001":
+                            datosExtraidos.Tipo = "A";
+                            break;
+                        case "006":
+                            datosExtraidos.Tipo = "B";
+                            break;
+                        case "011":
+                            datosExtraidos.Tipo = "C";
+                            break;                            
+                        default:
+                            datosExtraidos.Tipo = "";
+                            break;
                     }
-                }
+                }                
             }
 
             return datosExtraidos;
