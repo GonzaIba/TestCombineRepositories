@@ -87,7 +87,7 @@ namespace ApiFP.Infrastructure
             bool validacion = true;
             validacion = validacion && (!string.IsNullOrEmpty(this.Tipo));
             validacion = validacion && (!string.IsNullOrEmpty(this.Numero));
-            validacion = validacion && (!string.IsNullOrEmpty(this.Importe));
+            validacion = validacion && (!string.IsNullOrEmpty(this.Importe) || double.Parse(this.Importe) > 0);
             validacion = validacion && (!string.IsNullOrEmpty(this.CuitDestino));
             validacion = validacion && (!string.IsNullOrEmpty(this.CuitOrigen));
             validacion = validacion && (this.Fecha.HasValue) && (this.Fecha.Value != null);
