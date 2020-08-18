@@ -23,6 +23,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "2000.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("26/12/2018", culture));
+            Assert.IsTrue(factura.Detalle == "SERVICIO DE VOLQUETE ");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -37,6 +38,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "1800.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("31/03/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "otras 001 Set planchetta + tapa + espatula");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -51,6 +53,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "850.00");
             Assert.IsTrue(factura.CuitDestino == "33557848709");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("07/03/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -65,6 +68,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "4109.00");
             Assert.IsTrue(factura.CuitDestino == "30708221542");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("08/01/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "Publicidad Pequeñas Noticias - Aviso simple entre notas 400x300 (ENERO/2019)");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -79,6 +83,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "3464.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("14/06/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "1 Pelikano Hotel Combo 2 Almohadas De Duvet    50x90 1600 Gr");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -93,6 +98,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "1250.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("05/11/2018", culture));
+            //Assert.IsTrue(factura.Detalle == "1 5b2e85ef-86f4-4cf0-8c4b-7aabb38f37ff - Cable    2,5mm 3 Rollos X 50 Mts Cobre Electricidad  Normalizado");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -107,6 +113,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "377.00");
             Assert.IsTrue(factura.CuitDestino == "30715237306");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("04/05/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -121,6 +128,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "2781.79");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("01/02/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "Xubio - Solución       Premium 3000 Observaciones: Abono Febrero 2019");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -135,6 +143,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "2231.24");
             Assert.IsTrue(factura.CuitDestino == "30716248794");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("05/06/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "SERVICIOS DE SOFTWARE - JUNIO 2019 1");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -149,6 +158,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "9075.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("13/06/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "1 Logotipo + manual de marca      1 Landing page publicitaria");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -163,6 +173,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "3427.00");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("25/06/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "CPS-DP- DICRO MACROLED       GU10-20W ECO 7W 220V CALIDO 2700K 124-01 Embutido Movil       Dicro diam 110mm - Blanco");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }        
 
@@ -177,6 +188,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "18293.51");
             Assert.IsTrue(factura.CuitDestino == "20329565980");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("24/01/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "83 Bco Master Stone      1,5 M2 De Bco Tiza Master Stone y bacha Luxor Si71 Johnson aceros");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -191,6 +203,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "1700.00");
             Assert.IsTrue(factura.CuitDestino == "20251069116");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("04/02/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "SERVICIOS CONTABLES DEL MES DE ENERO 2019");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -205,6 +218,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "950.00");
             Assert.IsTrue(factura.CuitDestino == "11111111113");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("21/01/2020", culture));
+            //Assert.IsTrue(factura.Detalle == "LIBRO DE DATOS 2018");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -219,6 +233,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "858.00");
             Assert.IsTrue(factura.CuitDestino == "11111111113");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("03/09/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "+ Reg. Deudores");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -233,6 +248,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "850.00");
             Assert.IsTrue(factura.CuitDestino == "30534418856");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("07/01/2020", culture));
+            //Assert.IsTrue(factura.Detalle == "");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -247,6 +263,7 @@ namespace ApiFP.Tests
             Assert.IsTrue(factura.Importe == "2540.57");
             Assert.IsTrue(factura.CuitDestino == "11111111113");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("21/01/2020", culture));
+            //Assert.IsTrue(factura.Detalle == "Procesamineto de Expensas");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -261,6 +278,7 @@ namespace ApiFP.Tests
             //Assert.IsTrue(factura.Importe == "2204.00");
             Assert.IsTrue(factura.CuitDestino == "30715149555");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("21/11/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "1    POR SERVICIOS DE CONFECCION LIQUIDACION                                 1    POR SERVICIOS DE PROCESAMIENTO DE DATOS");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -275,6 +293,7 @@ namespace ApiFP.Tests
             //Assert.IsTrue(factura.Importe == "675.00");
             Assert.IsTrue(factura.CuitDestino == "30663850446");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("13/11/2019", culture));
+            //Assert.IsTrue(factura.Detalle == "1    POR SERVICIOS DE CONFECCION LIQUIDACION                                 1    POR SERVICIOS DE PROCESAMIENTO DE DATOS");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
 
@@ -305,6 +324,27 @@ namespace ApiFP.Tests
             //Assert.IsTrue(factura.Importe == "798.00");
             Assert.IsTrue(factura.CuitDestino == "30539109215");
             Assert.IsTrue(factura.Fecha == DateTime.Parse("13/05/2020", culture));
+            //Assert.IsTrue(factura.Detalle == "Sistema de gestión online para  1 consorcios Administración Global - 2020-");
+            Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
+        }
+        [TestMethod]
+        public void Parse21()
+        {
+            var factura = new Infrastructure.Factura();
+
+            var serverPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var fileFullPath = serverPath + "\\FacturasEjemplo\\Sipac\\786-0018.pdf";
+            byte[] bytes = File.ReadAllBytes(fileFullPath);
+            string file = Convert.ToBase64String(bytes);
+
+            factura.Parse(file);
+            Assert.IsTrue(factura.Numero == "0005-00119420");
+            Assert.IsTrue(factura.Tipo == "B");
+            Assert.IsTrue(factura.CuitOrigen == "30707831142");
+            Assert.IsTrue(factura.Importe == "3623.00");
+            Assert.IsTrue(factura.CuitDestino == "30604783352");
+            Assert.IsTrue(factura.Fecha == DateTime.Parse("11/09/2019", culture));
+//            Assert.IsTrue(factura.Detalle == "");
             Console.WriteLine($"DETALLE FACTURA: {factura.Detalle}");
         }
     }

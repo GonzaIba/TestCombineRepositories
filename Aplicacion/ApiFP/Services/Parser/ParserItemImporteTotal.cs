@@ -58,7 +58,7 @@ namespace ApiFP.Services.Parser
 
                         String[] palabras;
 
-                        if (lineas[i].Trim() == "Importe Total:")
+                        if ( (lineas[i].Trim() == "Importe Total:") || (lineas[i].Trim() == "Total:"))
                             palabras = lineas[i - 1].Split();
                         else
                             palabras = lineas[i].Split();
