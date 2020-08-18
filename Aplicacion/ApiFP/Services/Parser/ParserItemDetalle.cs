@@ -41,7 +41,8 @@ namespace ApiFP.Services.Parser
                 new Regex(@"CANT. DESCRIPCION", opciones),     //Facturas 14, 15, 16 y 17
                 new Regex(@"tidad        Descripción", opciones),     //Facturas 18 y 19
                 new Regex(@"Detalle", opciones),
-                new Regex(@"Cargos del mes", opciones)
+                new Regex(@"Cargos del mes", opciones),
+                new Regex(@"Importe", opciones)
             };
 
             expresionesFinDetalle = new List<Regex>
