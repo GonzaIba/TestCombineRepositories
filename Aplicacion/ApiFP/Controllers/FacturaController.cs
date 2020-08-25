@@ -164,8 +164,8 @@ namespace ApiFP.Controllers
                         factura.Tipo = createFacturaModel.Tipo;
                         factura.Numero = createFacturaModel.Numero;
                         factura.Importe = createFacturaModel.Importe;
-                        factura.CuitOrigen = createFacturaModel.CuitOrigen;
-                        factura.CuitDestino = createFacturaModel.CuitDestino;
+                        factura.CuitOrigen = createFacturaModel.CuitOrigen.Replace("-", "");
+                        factura.CuitDestino = createFacturaModel.CuitDestino.Replace("-", "");
                         factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false));
                         factura.Detalle = createFacturaModel.Detalle;
                         factura.Servicio = createFacturaModel.Servicio;

@@ -116,7 +116,7 @@ namespace ApiFP.Services
                                         "(tf.EstadoFacturaFK = 3) " + //descargada
                                         "and " +
                                         "(tf.QtyDescargasCC < 2) " +
-                                        "and " +
+                                        "and " + //Descargada por otro centro de computos
                                         "not exists(select * from[DescargasFactura] as td where td.FacturaIdFK = tf.Id and td.CentroComputoIdFK = @centroComputo) " +
                                     ") " +
                                 ") "
@@ -148,7 +148,7 @@ namespace ApiFP.Services
                                         "(tf.EstadoFacturaFK = 3) " + //descargada
                                         "and " +
                                         "(tf.QtyDescargasCC < 2) " +
-                                        "and " +
+                                        "and " + //Descargada por otro centro de computos
                                         "not exists(select * from[DescargasFactura] as td where td.FacturaIdFK = tf.Id and td.CentroComputoIdFK = @centroComputo) " +
                                     ") " +
                                 ") ";
