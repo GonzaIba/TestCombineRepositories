@@ -37,6 +37,9 @@ namespace ApiFP.Controllers
         {
             try
             {
+                LogHelper.GenerateInfo("Create Facturas - UserAgent: " + Request.Headers.UserAgent.ToString());
+
+
                 string userName = User.Identity.GetUserName();
 
                 var batchParam = ControllerContext.Request.GetQueryNameValuePairs().LastOrDefault(x => x.Key == "batch").Value;

@@ -86,7 +86,8 @@ namespace ApiFP.Services
                 "Left join Archivos as arc on fac.Id = arc.FacturaIdFK " +
                 "Left join EstadoFactura as ef on fac.EstadoFacturaFK = ef.Id " +
                 "Where fac.UserIdFK = @user " +
-                    "and FechaCreacion > dateadd(day, -30, getdate()) " +
+                    "and FechaCreacion > dateadd(month, -6, getdate()) " +
+                    "and fac.EstadoFacturaFK = 3 " +
                     "Order by fac.FechaCreacion desc, EstadoFactura", new SqlParameter("@user", userId));
 
             return facturasList.ToList();
