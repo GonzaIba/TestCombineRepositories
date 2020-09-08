@@ -14,7 +14,15 @@ namespace ApiFP.Services
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            await configSendGridasync(message);
+            if (ConfigurationManager.AppSettings["USE_SMTP"] == "Y")
+            {
+                await configSendSmtpasync(message); 
+            }
+            else
+            {
+                await configSendGridasync(message);
+            }
+
         }
 
         private async Task configSendGridasync(IdentityMessage message)
@@ -45,19 +53,13 @@ namespace ApiFP.Services
 
             service.methodSendMail(request);
         }
-        
+
         private async Task configSendSmtpasync(IdentityMessage message)
         {
             // Command-line argument must be the SMTP host.
             SmtpClient client = new SmtpClient(ConfigurationManager.AppSettings["SMTP_HOST"], Convert.ToInt32(ConfigurationManager.AppSettings["SMTP_PORT"]));
-            if (ConfigurationManager.AppSettings["EMAIL_SSL"] == "Y")
-            {
-                client.EnableSsl = true;
-            }
-            else
-            {
-                client.EnableSsl = false;
-            }
+            
+            client.EnableSsl = (ConfigurationManager.AppSettings["EMAIL_SSL"] == "Y");
 
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
@@ -105,16 +107,16 @@ namespace ApiFP.Services
 
             if (e.Cancelled)
             {
-                
+
             }
             if (e.Error != null)
             {
-                
+
             }
             else
             {
-                
-            }            
+
+            }
         }
     }
 }
