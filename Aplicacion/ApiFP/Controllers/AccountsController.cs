@@ -95,7 +95,7 @@ namespace ApiFP.Controllers
 
             var callbackUrl = new Uri(Url.Link("ConfirmEmailRoute", new { userId = user.Id, code = code }));
 
-            await this.AppUserManager.SendEmailAsync(user.Id, "Confirmacion de cuenta portal proveedores", "Para confirmar la suscripcion de su cuenta haga click <a href=\"" + callbackUrl + "\">aquí</a>");
+            await this.AppUserManager.SendEmailAsync(user.Id, ConfigurationManager.AppSettings["EMAIL_REGISTER_SUBJECT"], "Para confirmar la suscripcion de su cuenta haga click <a href=\"" + callbackUrl + "\">aquí</a>");
 
             Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.Id }));
 
@@ -265,7 +265,7 @@ namespace ApiFP.Controllers
 
                 var emailBody = "Para la recuperación de su cuenta de portal proveedores haga click <a href=\"" + callbackUrl + "\">aquí</a>.</br></br> Si usted no ha solicitad recuperar su cuenta por favor desestime este correo.";
 
-                await this.AppUserManager.SendEmailAsync(user.Id, "Recuperación de cuenta portal proveedores", emailBody);
+                await this.AppUserManager.SendEmailAsync(user.Id, ConfigurationManager.AppSettings["EMAIL_PASSWORD_RECOVERY_SUBJECT"], emailBody);
 
             }
             return null;
