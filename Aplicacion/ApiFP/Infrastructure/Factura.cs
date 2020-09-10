@@ -95,6 +95,20 @@ namespace ApiFP.Infrastructure
             return validacion;
         }
 
+        public bool Confirmar()
+        {
+            this.Confirmada = true;
+            this.EstadoFacturaFK = 2;
+            using (var db = new ApplicationDbContext())
+            {
+                db.Entry(this).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            return true;
+
+        }
+
         public void ReadDate(string Date)
         {
             if (!String.IsNullOrEmpty(Date)) { this.Fecha = DateTime.Parse(Date, new CultureInfo("es-ES", false)); };

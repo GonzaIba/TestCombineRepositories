@@ -59,9 +59,9 @@ namespace ApiFP.Controllers
                 }
 
                 if (
-                    (!String.IsNullOrEmpty(createFacturaModel.Numero) && !String.IsNullOrEmpty(createFacturaModel.CuitOrigen) && !String.IsNullOrEmpty(createFacturaModel.Tipo)) 
-                    && 
-                    (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen, createFacturaModel.Tipo) > 0)
+                    (!String.IsNullOrEmpty(createFacturaModel.Numero) && !String.IsNullOrEmpty(createFacturaModel.CuitOrigen) && !String.IsNullOrEmpty(createFacturaModel.Tipo))
+                    &&
+                    (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen.Replace("-", ""), createFacturaModel.Tipo) > 0)
                     )
                 {
                     ModelState.AddModelError(string.Empty, "Error, numero de factura duplicada.");
@@ -77,7 +77,7 @@ namespace ApiFP.Controllers
                     Tipo = createFacturaModel.Tipo,
                     Numero = createFacturaModel.Numero,
                     Importe = createFacturaModel.Importe,
-                    CuitOrigen = createFacturaModel.CuitOrigen.Replace("-",""),
+                    CuitOrigen = createFacturaModel.CuitOrigen.Replace("-", ""),
                     CuitDestino = createFacturaModel.CuitDestino.Replace("-", ""),
                     Detalle = createFacturaModel.Detalle,
                     Servicio = createFacturaModel.Servicio,
@@ -92,9 +92,18 @@ namespace ApiFP.Controllers
                 };
                 factura.ReadDate(createFacturaModel.Fecha);
 
-                factura.EstadoFacturaFK = factura.ConfirmacionValida() ? 1 : 4;
+                if (factura.ConfirmacionValida())
+                {
+                    if (!IsMobile(Request))
+                        factura.EstadoFacturaFK = 1;
+                    else
+                        factura.EstadoFacturaFK = 2;
+                }
+                else
+                {
+                    factura.EstadoFacturaFK = 4;
+                }
 
-                //if (!String.IsNullOrEmpty(createFacturaModel.Fecha)) { factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false)); };
 
                 factura.Insert();
 
@@ -113,6 +122,7 @@ namespace ApiFP.Controllers
 
                     archivo.Insert();
                 }
+
             }
             catch (Exception ex)
             {
@@ -179,7 +189,15 @@ namespace ApiFP.Controllers
                         factura.DomicilioComercial = createFacturaModel.DomicilioComercial;
                         factura.EstadoFacturaFK = factura.ConfirmacionValida() ? 1 : 4;
 
-                        db.SaveChanges();
+                        if (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen.Replace("-", ""), createFacturaModel.Tipo) == 0)
+                        {
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "La factura se encuentra duplicada.");
+                            return BadRequest(ModelState);
+                        }
                     }
                     else
                     {
@@ -271,19 +289,21 @@ namespace ApiFP.Controllers
                 {
                     foreach (Factura factura in facturas)
                     {
-                        if (factura.ConfirmacionValida())
+                        if (factura.ConfirmacionValida()
+                            &&
+                            (DataAccessService.GetDuplicates(factura.Numero, factura.CuitOrigen, factura.Tipo) == 0))
                         {
-                            factura.Confirmada = true;
-                            factura.EstadoFacturaFK = 2;
+                            //validar duplicidad al confirmar.
+                            try
+                            {
+                                factura.Confirmar();
+                            }
+                            catch (Exception ex)
+                            {
+                                ModelState.AddModelError(string.Empty, "Algunas facturas no han sido confirmadas.");
+                            }
                         }
-                        else
-                        {
-                            ModelState.AddModelError(string.Empty, "Algunas facturas no han sido confirmadas.");
-                        }
-
                     }
-
-                    db.SaveChanges();
                 }
                 else
                 {
@@ -304,7 +324,7 @@ namespace ApiFP.Controllers
         [HttpGet]
         public async Task<List<string>> GetCuits([FromUri] string partialCuit)
         {
-             return DataAccessService.GetCuitList(partialCuit);            
+            return DataAccessService.GetCuitList(partialCuit);
         }
 
         [Authorize]
@@ -388,7 +408,7 @@ namespace ApiFP.Controllers
 
             ExcelPackage ExcelPkg = new ExcelPackage();
             ExcelWorksheet workSheet = ExcelPkg.Workbook.Worksheets.Add("Sheet1");
-            
+
             // Header of the Excel sheet 
             workSheet.Cells[1, 1].Value = "Tipo";
             workSheet.Cells[1, 2].Value = "Numero";
@@ -422,7 +442,7 @@ namespace ApiFP.Controllers
                 workSheet.Cells[idx, 11].Value = item.Servicio;
                 workSheet.Cells[idx, 12].Value = item.Percepciones;
                 workSheet.Cells[idx, 13].Value = item.ImpuestosNoGravados;
-                workSheet.Cells[idx, 14].Value = clsEncriptar.Encriptar(DateTime.Now.ToString() + "|" +  item.Id.ToString(), ConfigurationManager.AppSettings["PASS_ENCRYPTER"]) ;
+                workSheet.Cells[idx, 14].Value = clsEncriptar.Encriptar(DateTime.Now.ToString() + "|" + item.Id.ToString(), ConfigurationManager.AppSettings["PASS_ENCRYPTER"]);
 
                 idx += 1;
             }
@@ -449,12 +469,12 @@ namespace ApiFP.Controllers
                 // 5061,5062
 
                 HttpContent requestContent = Request.Content;
-               string invoicesId = requestContent.ReadAsStringAsync().Result;
+                string invoicesId = requestContent.ReadAsStringAsync().Result;
 
                 var ids = invoicesId.Split(',').Select(n => int.Parse(n)).ToArray();
                 List<GetFacturaBindingModel> invoices = new List<GetFacturaBindingModel>();
 
-                foreach(int item in ids)
+                foreach (int item in ids)
                 {
                     invoices.Add(DataAccessService.GetFacturas(User.Identity.GetUserId(), item)[0]);
                 }
@@ -464,7 +484,7 @@ namespace ApiFP.Controllers
 
                 var separador = ConfigurationManager.AppSettings["SEPARADOR_CSV"].ToString();
 
-                sb.AppendLine($"\"Tipo\"{separador}\"Numero\"{separador}\"Importe\"{separador}\"C. Origen\"{separador}\"C. Destino\"{separador}\"Fecha\"{separador}\"Detalle\"{separador}\"Domicilio\"{separador}\"Servicio\"{separador}\"Iva Discriminado\"{separador}\"Retenciones\"{separador}\"Percepciones\"{separador}\"Impuestos no gravados\"{separador}\"ID\"");                
+                sb.AppendLine($"\"Tipo\"{separador}\"Numero\"{separador}\"Importe\"{separador}\"C. Origen\"{separador}\"C. Destino\"{separador}\"Fecha\"{separador}\"Detalle\"{separador}\"Domicilio\"{separador}\"Servicio\"{separador}\"Iva Discriminado\"{separador}\"Retenciones\"{separador}\"Percepciones\"{separador}\"Impuestos no gravados\"{separador}\"ID\"");
                 foreach (var item in invoices)
                 {
                     sb.AppendLine($"{item.Tipo}{separador}{item.Numero}{separador}{item.Importe}{separador}{item.CuitOrigen}{separador}{item.CuitDestino}{separador}{item.Fecha}{separador}{item.Detalle.Replace("\n", " ")}{separador}{item.DomicilioComercial}{separador}{item.Servicio}{separador}{item.IvaDiscriminado}{separador}{item.Retenciones}{separador}{item.Percepciones}{separador}{item.ImpuestosNoGravados}{separador}{item.Id}");
@@ -481,6 +501,12 @@ namespace ApiFP.Controllers
                 result.StatusCode = HttpStatusCode.InternalServerError;
                 return result;
             }
+        }
+
+
+        public bool IsMobile(HttpRequestMessage request)
+        {
+            return request.Headers.UserAgent.ToString().ToLower().Contains("android");
         }
     }
 }
