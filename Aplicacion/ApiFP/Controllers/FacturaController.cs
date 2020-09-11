@@ -55,7 +55,7 @@ namespace ApiFP.Controllers
 
                 if ((batchParam != "Y") && (!createFacturaModel.ValidateMandatory()))
                 {
-                    ModelState.AddModelError(string.Empty, "Error, no han sido provistos todos los datos obligaotios");
+                    ModelState.AddModelError(string.Empty, "Error, no han sido provistos todos los datos obligatorios");
                 }
 
                 if (
@@ -77,8 +77,8 @@ namespace ApiFP.Controllers
                     Tipo = createFacturaModel.Tipo,
                     Numero = createFacturaModel.Numero,
                     Importe = createFacturaModel.Importe,
-                    CuitOrigen = createFacturaModel.CuitOrigen.Replace("-", ""),
-                    CuitDestino = createFacturaModel.CuitDestino.Replace("-", ""),
+                    CuitOrigen = createFacturaModel.CuitOrigen?.Replace("-", ""),
+                    CuitDestino = createFacturaModel.CuitDestino?.Replace("-", ""),
                     Detalle = createFacturaModel.Detalle,
                     Servicio = createFacturaModel.Servicio,
                     IvaDiscriminado = createFacturaModel.IvaDiscriminado,
@@ -86,8 +86,7 @@ namespace ApiFP.Controllers
                     Percepciones = createFacturaModel.Percepciones,
                     ImpuestosNoGravados = createFacturaModel.ImpuestosNoGravados,
                     UserIdFK = User.Identity.GetUserId(),
-                    SinArchivo = createFacturaModel.SinArchivo,
-                    //EstadoFacturaFK = 1,
+                    SinArchivo = createFacturaModel.SinArchivo,                    
                     DomicilioComercial = createFacturaModel.DomicilioComercial
                 };
                 factura.ReadDate(createFacturaModel.Fecha);
@@ -179,7 +178,7 @@ namespace ApiFP.Controllers
                         factura.Importe = createFacturaModel.Importe;
                         factura.CuitOrigen = createFacturaModel.CuitOrigen.Replace("-", "");
                         factura.CuitDestino = createFacturaModel.CuitDestino.Replace("-", "");
-                        factura.Fecha = DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false));
+                        factura.Fecha = String.IsNullOrEmpty(createFacturaModel.Fecha) ? factura.Fecha : DateTime.Parse(createFacturaModel.Fecha, new CultureInfo("es-ES", false));
                         factura.Detalle = createFacturaModel.Detalle;
                         factura.Servicio = createFacturaModel.Servicio;
                         factura.IvaDiscriminado = createFacturaModel.IvaDiscriminado;
@@ -189,19 +188,24 @@ namespace ApiFP.Controllers
                         factura.DomicilioComercial = createFacturaModel.DomicilioComercial;
                         factura.EstadoFacturaFK = factura.ConfirmacionValida() ? 1 : 4;
 
-                        if (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen.Replace("-", ""), createFacturaModel.Tipo) == 0)
+                        if ((!String.IsNullOrEmpty(createFacturaModel.Numero) && !String.IsNullOrEmpty(createFacturaModel.CuitOrigen) && !String.IsNullOrEmpty(createFacturaModel.Tipo))
+                            &&
+                            (createFacturaModel.Numero != factura.Numero || createFacturaModel.CuitOrigen.Replace("-", "")  != factura.CuitOrigen || createFacturaModel.Tipo != factura.Tipo)                                                       
+                            &&
+                            (DataAccessService.GetDuplicates(createFacturaModel.Numero, createFacturaModel.CuitOrigen.Replace("-", ""), createFacturaModel.Tipo) > 0)
+                            )
                         {
-                            db.SaveChanges();
+                            ModelState.AddModelError(string.Empty, "La factura se encuentra duplicada.");
+                            return BadRequest(ModelState);                            
                         }
                         else
                         {
-                            ModelState.AddModelError(string.Empty, "La factura se encuentra duplicada.");
-                            return BadRequest(ModelState);
+                            db.SaveChanges();
                         }
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "La factura ha sido confirmada, no puede ser actualizada.");
+                        ModelState.AddModelError(string.Empty, "La factura ha sido descargada, no puede ser actualizada.");
                         return BadRequest(ModelState);
                     };
                 }
@@ -289,14 +293,11 @@ namespace ApiFP.Controllers
                 {
                     foreach (Factura factura in facturas)
                     {
-                        if (factura.ConfirmacionValida()
-                            &&
-                            (DataAccessService.GetDuplicates(factura.Numero, factura.CuitOrigen, factura.Tipo) == 0))
-                        {
-                            //validar duplicidad al confirmar.
+                        if (factura.ConfirmacionValida())
+                        {                            
                             try
                             {
-                                factura.Confirmar();
+                                factura.Confirmar();                               
                             }
                             catch (Exception ex)
                             {
@@ -307,8 +308,7 @@ namespace ApiFP.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "No se han encontrado las facturas indicadas.");
-                    return BadRequest(ModelState);
+                    ModelState.AddModelError(string.Empty, "No se han encontrado las facturas indicadas.");                    
                 };
             }
 
