@@ -1,0 +1,9 @@
+obj/
+bin/
+.vs/
+v15/
+packages/
+*.csproj.user
+*.log
+runtimes/
+tessdata/
